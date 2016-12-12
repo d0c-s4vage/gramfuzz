@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gramfuzz - A grammar-based fuzzing library &mdash; gramfuzz 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="gramfuzz 1.0.0 documentation" href="#"/>
+        <link rel="next" title="gramfuzz" href="gramfuzz.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> gramfuzz
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="gramfuzz.html">gramfuzz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fields.html">fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rand.html">rand</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="#">gramfuzz</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+      
+    <li>gramfuzz - A grammar-based fuzzing library</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gramfuzz-a-grammar-based-fuzzing-library">
+<h1>gramfuzz - A grammar-based fuzzing library<a class="headerlink" href="#gramfuzz-a-grammar-based-fuzzing-library" title="Permalink to this headline">¶</a></h1>
+<p>gramfuzz allows one to define grammars and use them to
+generate random data for fuzzing.</p>
+<div class="section" id="tldr-example">
+<span id="id1"></span><h2>TLDR Example<a class="headerlink" href="#tldr-example" title="Permalink to this headline">¶</a></h2>
+<p>Suppose we define a grammar for generating names and their prefixes
+and suffixes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># names_grammar.py</span>
+<span class="kn">from</span> <span class="nn">gramfuzz.fields</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span> <span class="nc">NRef</span><span class="p">(</span><span class="n">Ref</span><span class="p">):</span>
+    <span class="n">cat</span> <span class="o">=</span> <span class="s2">&quot;name_def&quot;</span>
+<span class="k">class</span> <span class="nc">NDef</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+    <span class="n">cat</span> <span class="o">=</span> <span class="s2">&quot;name_def&quot;</span>
+
+<span class="n">Def</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
+    <span class="n">Join</span><span class="p">(</span>
+        <span class="n">Opt</span><span class="p">(</span><span class="n">NRef</span><span class="p">(</span><span class="s2">&quot;name_prefix&quot;</span><span class="p">)),</span>
+        <span class="n">NRef</span><span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">),</span>
+        <span class="n">Opt</span><span class="p">(</span><span class="n">NRef</span><span class="p">(</span><span class="s2">&quot;middle_initial&quot;</span><span class="p">)),</span>
+        <span class="n">Opt</span><span class="p">(</span><span class="n">NRef</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">)),</span>
+        <span class="n">Opt</span><span class="p">(</span><span class="n">NRef</span><span class="p">(</span><span class="s2">&quot;name_suffix&quot;</span><span class="p">)),</span>
+    <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
+    <span class="n">cat</span><span class="o">=</span><span class="s2">&quot;name&quot;</span>
+<span class="p">)</span>
+<span class="n">NDef</span><span class="p">(</span><span class="s2">&quot;name_prefix&quot;</span><span class="p">,</span> <span class="n">Or</span><span class="p">(</span><span class="s2">&quot;Sir&quot;</span><span class="p">,</span> <span class="s2">&quot;Ms&quot;</span><span class="p">,</span> <span class="s2">&quot;Mr&quot;</span><span class="p">))</span>
+<span class="n">NDef</span><span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="n">Or</span><span class="p">(</span><span class="s2">&quot;Henry&quot;</span><span class="p">,</span> <span class="s2">&quot;Susy&quot;</span><span class="p">))</span>
+<span class="n">NDef</span><span class="p">(</span><span class="s2">&quot;middle_initial&quot;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="n">NDef</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="n">Or</span><span class="p">(</span><span class="s2">&quot;Blart&quot;</span><span class="p">,</span> <span class="s2">&quot;Tralb&quot;</span><span class="p">))</span>
+<span class="n">NDef</span><span class="p">(</span><span class="s2">&quot;name_suffix&quot;</span><span class="p">,</span> <span class="n">Or</span><span class="p">(</span><span class="s2">&quot;Phd.&quot;</span><span class="p">,</span> <span class="s2">&quot;II&quot;</span><span class="p">,</span> <span class="s2">&quot;III&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We could then use this grammar like so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gramfuzz</span>
+
+<span class="n">fuzzer</span> <span class="o">=</span> <span class="n">gramfuzz</span><span class="o">.</span><span class="n">GramFuzzer</span><span class="p">()</span>
+<span class="n">fuzzer</span><span class="o">.</span><span class="n">load_grammar</span><span class="p">(</span><span class="s2">&quot;names_grammar.py&quot;</span><span class="p">)</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">fuzzer</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">cat</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Which would output something like this:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>Susy
+Henry Blart
+Susy J. Tralb Phd.
+Ms Susy p. Tralb Phd.
+Henry Blart II
+Henry T. Blart
+Sir Susy D.
+Ms Henry Blart II
+Susy Z. Phd.
+Susy Tralb
+</pre></div>
+</div>
+</div>
+<div class="section" id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gramfuzz.html">gramfuzz</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gramfuzz.html#example-revisited">Example Revisited</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gramfuzz.html#preferred-category-groups">Preferred Category Groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gramfuzz.html#module-gramfuzz">gramfuzz Reference Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fields.html">fields</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fields.html#field-base-class">Field Base Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html#operator-overloading">Operator Overloading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html#odds">Odds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html#int-uint-float-ufloat">Int/UInt/Float/UFloat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html#gramfuzz-fields-reference-documentation">gramfuzz.fields Reference Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#utils-reference-documentation">utils Reference Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rand.html">rand</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rand.html#module-gramfuzz.rand">rand Reference Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gramfuzz.html" class="btn btn-neutral float-right" title="gramfuzz" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, James &#39;d0c_s4vage&#39; Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

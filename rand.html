@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rand &mdash; gramfuzz 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="gramfuzz 1.0.0 documentation" href="index.html"/>
+        <link rel="prev" title="utils" href="utils.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> gramfuzz
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gramfuzz.html">gramfuzz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fields.html">fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">rand</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-gramfuzz.rand">rand Reference Documentation</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">gramfuzz</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>rand</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/rand.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rand">
+<h1>rand<a class="headerlink" href="#rand" title="Permalink to this headline">¶</a></h1>
+<p>Gramfuzz uses a simple module (<code class="docutils literal"><span class="pre">rand</span></code>) as an interface
+to Python&#8217;s built-in <code class="docutils literal"><span class="pre">random</span></code> module.</p>
+<p>Since all random actions/function calls get piped through
+<a class="reference internal" href="#module-gramfuzz.rand" title="gramfuzz.rand"><code class="xref any py py-mod docutils literal"><span class="pre">gramfuzz.rand</span></code></a>, enforcing a random seed to be used
+across all of gramfuzz is a simple matter.</p>
+<div class="section" id="module-gramfuzz.rand">
+<span id="rand-reference-documentation"></span><h2>rand Reference Documentation<a class="headerlink" href="#module-gramfuzz.rand" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">rand</span></code> is a module that provides <code class="docutils literal"><span class="pre">random</span></code> utilities,
+such as:</p>
+<ul class="simple">
+<li>globally setting a seed value</li>
+<li>random integers between a range</li>
+<li>random floats between a range</li>
+<li>return <code class="docutils literal"><span class="pre">True</span></code> or <code class="docutils literal"><span class="pre">False</span></code> based on a probability (the <code class="docutils literal"><span class="pre">maybe</span></code> function)</li>
+<li>return random data</li>
+</ul>
+<dl class="function">
+<dt id="gramfuzz.rand.data">
+<code class="descclassname">gramfuzz.rand.</code><code class="descname">data</code><span class="sig-paren">(</span><em>length</em>, <em>charset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/rand.html#data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.rand.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate <code class="docutils literal"><span class="pre">length</span></code> random characters from charset <code class="docutils literal"><span class="pre">charset</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>length</strong> (<em>int</em>) &#8211; The number of characters to randomly generate</li>
+<li><strong>charset</strong> (<em>str</em>) &#8211; The charset of characters to choose from</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gramfuzz.rand.maybe">
+<code class="descclassname">gramfuzz.rand.</code><code class="descname">maybe</code><span class="sig-paren">(</span><em>prob=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/rand.html#maybe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.rand.maybe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> with <code class="docutils literal"><span class="pre">prob</span></code> probability.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prob</strong> (<em>float</em>) &#8211; The probability <code class="docutils literal"><span class="pre">True</span></code> will be returned</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gramfuzz.rand.randfloat">
+<code class="descclassname">gramfuzz.rand.</code><code class="descname">randfloat</code><span class="sig-paren">(</span><em>a</em>, <em>b=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/rand.html#randfloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.rand.randfloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a random float</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> (<em>float</em>) &#8211; Either the minimum value (inclusive) if <code class="docutils literal"><span class="pre">b</span></code> is set, or</td>
+</tr>
+</tbody>
+</table>
+<p>the maximum value if <code class="docutils literal"><span class="pre">b</span></code> is not set (non-inclusive, in which case the minimum
+is implicitly 0.0)
+:param float b: The maximum value to generate (non-inclusive)
+:returns: float</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gramfuzz.rand.randint">
+<code class="descclassname">gramfuzz.rand.</code><code class="descname">randint</code><span class="sig-paren">(</span><em>a</em>, <em>b=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/rand.html#randint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.rand.randint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a random integer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> (<em>int</em>) &#8211; Either the minimum value (inclusive) if <code class="docutils literal"><span class="pre">b</span></code> is set, or</td>
+</tr>
+</tbody>
+</table>
+<p>the maximum value if <code class="docutils literal"><span class="pre">b</span></code> is not set (non-inclusive, in which case the minimum
+is implicitly 0)
+:param int b: The maximum value to generate (non-inclusive)
+:returns: int</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gramfuzz.rand.random">
+<code class="descclassname">gramfuzz.rand.</code><code class="descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; x in the interval [0, 1).<a class="headerlink" href="#gramfuzz.rand.random" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="gramfuzz.rand.seed">
+<code class="descclassname">gramfuzz.rand.</code><code class="descname">seed</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/rand.html#seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.rand.seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the seed for any subsequent random values/choices</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>val</strong> &#8211; The random seed value</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="utils.html" class="btn btn-neutral" title="utils" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, James &#39;d0c_s4vage&#39; Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

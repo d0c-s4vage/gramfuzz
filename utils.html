@@ -1,0 +1,243 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>utils &mdash; gramfuzz 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="gramfuzz 1.0.0 documentation" href="index.html"/>
+        <link rel="next" title="rand" href="rand.html"/>
+        <link rel="prev" title="fields" href="fields.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> gramfuzz
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gramfuzz.html">gramfuzz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fields.html">fields</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#utils-reference-documentation">utils Reference Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rand.html">rand</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">gramfuzz</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>utils</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="utils">
+<h1>utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h1>
+<p>gramfuzz will work with most native Python types, as well
+as any <a class="reference internal" href="fields.html#gramfuzz.fields.Field" title="gramfuzz.fields.Field"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Field</span></code></a> type.</p>
+<p>gramfuzz uses the <a class="reference internal" href="#gramfuzz.utils.val" title="gramfuzz.utils.val"><code class="xref any py py-func docutils literal"><span class="pre">gramfuzz.utils.val</span></code></a> function to convert
+values into data.</p>
+<p>For native Python types, <code class="docutils literal"><span class="pre">str()</span></code> is used to convert the
+object into a string.</p>
+<p>For <a class="reference internal" href="fields.html#gramfuzz.fields.Field" title="gramfuzz.fields.Field"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Field</span></code></a> classes, a new instance is created,
+and then <code class="docutils literal"><span class="pre">build()</span></code> is called on the created instance.</p>
+<p>For <a class="reference internal" href="fields.html#gramfuzz.fields.Field" title="gramfuzz.fields.Field"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Field</span></code></a> instances, <code class="docutils literal"><span class="pre">build()</span></code> is simply
+called on the instance.</p>
+<div class="section" id="utils-reference-documentation">
+<h2>utils Reference Documentation<a class="headerlink" href="#utils-reference-documentation" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-gramfuzz.utils"></span><p>Gramfuzz utility functions</p>
+<dl class="function">
+<dt id="gramfuzz.utils.val">
+<code class="descclassname">gramfuzz.utils.</code><code class="descname">val</code><span class="sig-paren">(</span><em>val</em>, <em>pre=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/utils.html#val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.utils.val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the provided value, while properly handling
+native Python types, <a class="reference internal" href="fields.html#gramfuzz.fields.Field" title="gramfuzz.fields.Field"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Field</span></code></a> instances, and <a class="reference internal" href="fields.html#gramfuzz.fields.Field" title="gramfuzz.fields.Field"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Field</span></code></a>
+subclasses.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rand.html" class="btn btn-neutral float-right" title="rand" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="fields.html" class="btn btn-neutral" title="fields" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, James &#39;d0c_s4vage&#39; Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,565 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gramfuzz &mdash; gramfuzz 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="gramfuzz 1.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="Module code" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> gramfuzz
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../gramfuzz.html">gramfuzz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fields.html">fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rand.html">rand</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">gramfuzz</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Module code</a> &raquo;</li>
+      
+    <li>gramfuzz</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gramfuzz</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module defines the main ``GramFuzzer`` class through</span>
+<span class="sd">which rules are defined and rules are randomly generated.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">gc</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="kn">import</span> <span class="nn">gramfuzz.errors</span> <span class="k">as</span> <span class="nn">errors</span>
+<span class="kn">import</span> <span class="nn">gramfuzz.rand</span> <span class="k">as</span> <span class="nn">rand</span>
+<span class="kn">import</span> <span class="nn">gramfuzz.utils</span> <span class="k">as</span> <span class="nn">utils</span>
+
+
+<div class="viewcode-block" id="GramFuzzer"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer">[docs]</a><span class="k">class</span> <span class="nc">GramFuzzer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ``GramFuzzer`` is a singleton class that is used to</span>
+<span class="sd">    hold rule definitions and to generate grammar rules from a specific</span>
+<span class="sd">    category at random.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">defs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="sd">&quot;&quot;&quot;Rule definitions by category. E.g. ::</span>
+<span class="sd">        </span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;category&quot;: {</span>
+<span class="sd">                &quot;rule1&quot;: [&lt;Rule1Def1&gt;, &lt;Rule1Def2&gt;],</span>
+<span class="sd">                &quot;rule2&quot;: [&lt;Rule2Def1&gt;, &lt;Rule2Def2&gt;],</span>
+<span class="sd">                ...</span>
+<span class="sd">            }</span>
+<span class="sd">        }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">no_prunes</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="sd">&quot;&quot;&quot;Rules that have specifically asked not to be pruned,</span>
+<span class="sd">    even if the rule can&#39;t be reached.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cat_groups</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="sd">&quot;&quot;&quot;Used to store where rules were defined in. E.g. if a rule</span>
+<span class="sd">    ``A`` was defined using the category ``alphabet_rules`` in a file</span>
+<span class="sd">    called ``test_rules.py``, it would show up</span>
+<span class="sd">    in ``cat_groups`` as: ::</span>
+
+<span class="sd">        {</span>
+<span class="sd">            &quot;alphabet_rules&quot;: {</span>
+<span class="sd">                &quot;test_rules&quot;: [&quot;A&quot;]</span>
+<span class="sd">            }</span>
+<span class="sd">        }</span>
+
+<span class="sd">    This lets the user specify probabilities/priorities for rules coming</span>
+<span class="sd">    from certain grammar files</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__instance__</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="GramFuzzer.instance"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.instance">[docs]</a>    <span class="k">def</span> <span class="nf">instance</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the singleton instance of the ``GramFuzzer``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__instance__</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cls</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">__instance__</span></div>
+
+
+<div class="viewcode-block" id="GramFuzzer.__init__"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new ``GramFuzzer`` instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">GramFuzzer</span><span class="o">.</span><span class="n">__instance__</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">no_prunes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cat_groups</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># used during rule generation to keep track of things</span>
+        <span class="c1"># that can be reverted if things go wrong</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_staged_defs</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># the last-defined preferred category-group names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_prefs</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># the last-defined rule definition names derived from the ``_last_prefs``</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_pref_keys</span> <span class="o">=</span> <span class="kc">None</span></div>
+    
+<div class="viewcode-block" id="GramFuzzer.load_grammar"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.load_grammar">[docs]</a>    <span class="k">def</span> <span class="nf">load_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load a grammar file (python file containing grammar definitions) by</span>
+<span class="sd">        file path. When loaded, the global variable ``GRAMFUZZER`` will be set</span>
+<span class="sd">        within the module. This is not always needed, but can be useful.</span>
+
+<span class="sd">        :param str path: The path to the grammar file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;path does not exist: </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">code</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="s2">&quot;exec&quot;</span><span class="p">)</span>
+
+        <span class="n">exec</span> <span class="n">code</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;GRAMFUZZER&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">}</span></div>
+    
+<div class="viewcode-block" id="GramFuzzer.prune"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.prune">[docs]</a>    <span class="k">def</span> <span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_cats</span><span class="p">,</span> <span class="n">target_cat</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Iterate over every rule defined in every category in ``check_cats``</span>
+<span class="sd">        to see if each rule can be reached from a rule defined in ``target_cat``.</span>
+
+<span class="sd">        If a rule defined in ``check_cats`` cannot be reached from a rule in ``target_cat``</span>
+<span class="sd">        and the rule has not explicitly asked to not be pruned, the rule will be</span>
+<span class="sd">        removed from memory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">target_cat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># iterate over the rules until we cannot prune anymore</span>
+        <span class="n">to_delete</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">prev_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_to_del_length</span><span class="p">(</span><span class="n">to_delete</span><span class="p">)</span>
+
+            <span class="c1"># check each rule in each category in check_cats</span>
+            <span class="k">for</span> <span class="n">check_cat</span> <span class="ow">in</span> <span class="n">check_cats</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">check_name</span><span class="p">,</span><span class="n">check_vals</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">check_cat</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">check_val</span> <span class="ow">in</span> <span class="n">check_vals</span><span class="p">:</span>
+                        
+                        <span class="c1"># if this specific rule cannot be reached from any rule</span>
+                        <span class="c1"># defined in ``target_cat``, prune it</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">prune_if_unreachable_from</span><span class="p">(</span>
+                            <span class="n">rule_cat</span>  <span class="o">=</span> <span class="n">check_cat</span><span class="p">,</span>
+                            <span class="n">rule_name</span> <span class="o">=</span> <span class="n">check_name</span><span class="p">,</span>
+                            <span class="n">rule_val</span>  <span class="o">=</span> <span class="n">check_val</span><span class="p">,</span>
+                            <span class="n">from_cat</span>  <span class="o">=</span> <span class="n">target_cat</span><span class="p">,</span>
+                            <span class="n">to_delete</span> <span class="o">=</span> <span class="n">to_delete</span>
+                        <span class="p">)</span>
+            
+            <span class="c1"># we found nothing else to prune, so break</span>
+            <span class="k">if</span> <span class="n">prev_length</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_to_del_length</span><span class="p">(</span><span class="n">to_delete</span><span class="p">):</span>
+                <span class="k">break</span>
+
+        <span class="c1"># delete every rule queued for deletion</span>
+        <span class="k">for</span> <span class="n">del_cat</span><span class="p">,</span><span class="n">del_info</span> <span class="ow">in</span> <span class="n">to_delete</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">del_name</span><span class="p">,</span><span class="n">del_vals</span> <span class="ow">in</span> <span class="n">del_info</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">del_cat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">del_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">del_cat</span><span class="p">]:</span>
+                    <span class="k">break</span>
+
+                <span class="k">for</span> <span class="n">del_val</span> <span class="ow">in</span> <span class="n">del_vals</span><span class="p">:</span>
+                    <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">del_cat</span><span class="p">][</span><span class="n">del_name</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">del_val</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">:</span>
+                        <span class="n">vals</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">del_val</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">del_cat</span><span class="p">][</span><span class="n">del_name</span><span class="p">]</span></div>
+    
+<div class="viewcode-block" id="GramFuzzer.prune_if_unreachable_from"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.prune_if_unreachable_from">[docs]</a>    <span class="k">def</span> <span class="nf">prune_if_unreachable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_cat</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">,</span> <span class="n">rule_val</span><span class="p">,</span> <span class="n">from_cat</span><span class="p">,</span> <span class="n">to_delete</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prune a rule if it cannot be reached by any rule in ``from_cat``</span>
+
+<span class="sd">        :param str rule_cat: The category of the rule</span>
+<span class="sd">        :param str rule_name: The name of the rule</span>
+<span class="sd">        :param rule_val: The value of the rule</span>
+<span class="sd">        :param str from_cat: The category to check if the rule is reachable from</span>
+<span class="sd">        :param list to_delete: The collection to add the rule to if it should be pruned</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># collect all Refs contained within the rule_val</span>
+        <span class="n">all_refs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_refs</span><span class="p">(</span><span class="n">rule_val</span><span class="p">)</span>
+
+        <span class="c1"># the rule will be pruned if one or more referenced rules in ``rule_val`` cannot</span>
+        <span class="c1"># be reached from a rule in ``from_cat``</span>
+        <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">all_refs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ref</span><span class="o">.</span><span class="n">refname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">from_cat</span><span class="p">]:</span><span class="c1"># or (from_cat in to_delete and ref.refname in to_delete[from_cat]):</span>
+                <span class="n">to_delete</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">rule_cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">rule_name</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">rule_val</span><span class="p">)</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">all_refs</span></div>
+    
+    <span class="k">def</span> <span class="nf">_get_to_del_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_delete</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">cat</span><span class="p">,</span><span class="n">names</span> <span class="ow">in</span> <span class="n">to_delete</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">vals</span> <span class="ow">in</span> <span class="n">names</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">length</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">length</span>
+    
+    <span class="k">def</span> <span class="nf">_collect_refs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_val</span><span class="p">,</span> <span class="n">acc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">acc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+
+        <span class="kn">from</span> <span class="nn">gramfuzz.fields</span> <span class="k">import</span> <span class="n">Ref</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item_val</span><span class="p">,</span> <span class="n">Ref</span><span class="p">):</span>
+            <span class="n">acc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item_val</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item_val</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">item_val</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_collect_refs</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">acc</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">acc</span>
+    
+    <span class="c1"># --------------------------------------</span>
+    <span class="c1"># public, but intended for internal use</span>
+    <span class="c1"># --------------------------------------</span>
+    
+<div class="viewcode-block" id="GramFuzzer.add_definition"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.add_definition">[docs]</a>    <span class="k">def</span> <span class="nf">add_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">def_name</span><span class="p">,</span> <span class="n">def_val</span><span class="p">,</span> <span class="n">no_prune</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gram_file</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a new rule definition named ``def_name`` having value ``def_value`` to</span>
+<span class="sd">        the category ``cat``.</span>
+
+<span class="sd">        :param str cat: The category to add the rule to</span>
+<span class="sd">        :param str def_name: The name of the rule definition</span>
+<span class="sd">        :param def_val: The value of the rule definition</span>
+<span class="sd">        :param bool no_prune: If the rule should explicitly *NOT*</span>
+<span class="sd">            be pruned even if it has been determined to be unreachable (default=``False``)</span>
+<span class="sd">        :param str gram_file: The file the rule was defined in (default=``&quot;default&quot;``).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_to_cat_group</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">gram_file</span><span class="p">,</span> <span class="n">def_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">no_prune</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">no_prunes</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">def_name</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_staged_defs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># if we&#39;re tracking changes during rule generation, add any new rules</span>
+            <span class="c1"># to _staged_defs so they can be reverted if something goes wrong</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_staged_defs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cat</span><span class="p">,</span> <span class="n">def_name</span><span class="p">,</span> <span class="n">def_val</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">def_name</span><span class="p">,</span> <span class="n">deque</span><span class="p">())</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">def_val</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="GramFuzzer.add_to_cat_group"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.add_to_cat_group">[docs]</a>    <span class="k">def</span> <span class="nf">add_to_cat_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">cat_group</span><span class="p">,</span> <span class="n">def_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Associate the provided rule definition name ``def_name`` with the</span>
+<span class="sd">        category group ``cat_group`` in the category ``cat``.</span>
+
+<span class="sd">        :param str cat: The category the rule definition was declared in</span>
+<span class="sd">        :param str cat_group: The group within the category the rule belongs to</span>
+<span class="sd">        :param str def_name: The name of the rule definition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cat_groups</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">cat_group</span><span class="p">,</span> <span class="n">deque</span><span class="p">())</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">def_name</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="GramFuzzer.get_ref"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.get_ref">[docs]</a>    <span class="k">def</span> <span class="nf">get_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">refname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return one of the rules in the category ``cat`` with the name</span>
+<span class="sd">        ``refname``. If multiple rule defintions exist for the defintion name</span>
+<span class="sd">        ``refname``, use :any:`gramfuzz.rand` to choose a rule at random.</span>
+
+<span class="sd">        :param str cat: The category to look for the rule in.</span>
+<span class="sd">        :param str refname: The name of the rule definition. If the rule definition&#39;s name is</span>
+<span class="sd">            ``&quot;*&quot;``, then a rule name will be chosen at random from within the category ``cat``.</span>
+<span class="sd">        :returns: gramfuzz.fields.Def</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span><span class="p">(</span><span class="s2">&quot;referenced definition category (</span><span class="si">{!r}</span><span class="s2">) not defined&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cat</span><span class="p">))</span>
+        
+        <span class="k">if</span> <span class="n">refname</span> <span class="o">==</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span>
+            <span class="n">refname</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            
+        <span class="k">if</span> <span class="n">refname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span><span class="p">(</span><span class="s2">&quot;referenced definition (</span><span class="si">{!r}</span><span class="s2">) not defined&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">refname</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">rand</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="n">refname</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="GramFuzzer.gen"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.gen">[docs]</a>    <span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">preferred</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preferred_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate ``num`` rules from category ``cat``, optionally specifying</span>
+<span class="sd">        preferred category groups ``preferred`` that should be preferred at</span>
+<span class="sd">        probability ``preferred_ratio`` over other randomly-chosen rule definitions.</span>
+
+<span class="sd">        :param str cat: The name of the category to generate ``num`` rules from</span>
+<span class="sd">        :param int num: The number of rules to generate</span>
+<span class="sd">        :param list preferred: A list of preferred category groups to generate rules from</span>
+<span class="sd">        :param float preferred_ratio: The percent probability that the preferred</span>
+<span class="sd">        groups will be chosen over randomly choosen rule definitions from category ``cat``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">preferred</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">preferred</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="n">cat_defs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span>
+
+        <span class="c1"># optimizations</span>
+        <span class="n">_res_append</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">append</span>
+        <span class="n">_res_extend</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">extend</span>
+        <span class="n">_choice</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">choice</span>
+        <span class="n">_maybe</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">maybe</span>
+        <span class="n">_val</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span>
+
+        <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_pref_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pref_keys</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">preferred</span><span class="p">)</span>
+        <span class="c1"># be sure to set this *after* fetching the pref keys (above^)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_prefs</span> <span class="o">=</span> <span class="n">preferred</span>
+
+        <span class="n">total_errors</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="n">total_gend</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">total_gend</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">:</span>
+            <span class="c1"># use a rule definition from one of the preferred category</span>
+            <span class="c1"># groups</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_pref_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">_maybe</span><span class="p">(</span><span class="n">preferred_ratio</span><span class="p">):</span>
+                <span class="n">rand_key</span> <span class="o">=</span> <span class="n">_choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_pref_keys</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">rand_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cat_defs</span><span class="p">:</span>
+                    <span class="c1"># TODO this means it was removed / pruned b/c it was unreachable??</span>
+                    <span class="c1"># TODO look into this more</span>
+                    <span class="n">rand_key</span> <span class="o">=</span> <span class="n">_choice</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+
+            <span class="c1"># else just choose a key at random from the category</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rand_key</span> <span class="o">=</span> <span class="n">_choice</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+
+            <span class="c1"># pruning failed, this rule is not defined/reachable</span>
+            <span class="k">if</span> <span class="n">rand_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cat_defs</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">v</span> <span class="o">=</span> <span class="n">_choice</span><span class="p">(</span><span class="n">cat_defs</span><span class="p">[</span><span class="n">rand_key</span><span class="p">])</span>
+
+            <span class="c1"># not used directly by GramFuzzer, but could be useful</span>
+            <span class="c1"># to subclasses of GramFuzzer</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="n">pre</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pre_revert</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+            <span class="n">val_res</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">val_res</span> <span class="o">=</span> <span class="n">_val</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">pre</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">total_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">revert</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">revert</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">val_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">_res_extend</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span>
+                <span class="n">_res_append</span><span class="p">(</span><span class="n">val_res</span><span class="p">)</span>
+
+                <span class="n">total_gend</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">post_revert</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">total_gend</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span></div>
+    
+<div class="viewcode-block" id="GramFuzzer.pre_revert"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.pre_revert">[docs]</a>    <span class="k">def</span> <span class="nf">pre_revert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Signal to begin saving any changes that might need to be reverted</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_staged_defs</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="GramFuzzer.post_revert"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.post_revert">[docs]</a>    <span class="k">def</span> <span class="nf">post_revert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">total_num</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Commit any staged rule definition changes (rule generation went</span>
+<span class="sd">        smoothly).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_staged_defs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">for</span> <span class="n">cat</span><span class="p">,</span><span class="n">def_name</span><span class="p">,</span><span class="n">def_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_staged_defs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">def_name</span><span class="p">,</span> <span class="n">deque</span><span class="p">())</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">def_value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_staged_defs</span> <span class="o">=</span> <span class="kc">None</span></div>
+    
+<div class="viewcode-block" id="GramFuzzer.revert"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.revert">[docs]</a>    <span class="k">def</span> <span class="nf">revert</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Revert after a single def errored during generate (throw away all</span>
+<span class="sd">        staged rule definition changes)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_staged_defs</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_pref_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">preferred</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">preferred</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_prefs</span><span class="p">:</span>
+            <span class="n">pref_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_pref_keys</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pref_keys</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">pref</span> <span class="ow">in</span> <span class="n">preferred</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cat_groups</span><span class="p">[</span><span class="n">cat</span><span class="p">]:</span>
+                    <span class="n">pref_keys</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cat_groups</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="n">pref</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">pref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">]:</span>
+                    <span class="n">pref_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pref</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pref_keys</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, James &#39;d0c_s4vage&#39; Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

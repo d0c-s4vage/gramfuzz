@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gramfuzz.rand &mdash; gramfuzz 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="gramfuzz 1.0.0 documentation" href="../../index.html"/>
+        <link rel="up" title="gramfuzz" href="../gramfuzz.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gramfuzz
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../gramfuzz.html">gramfuzz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fields.html">fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rand.html">rand</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">gramfuzz</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+          <li><a href="../gramfuzz.html">gramfuzz</a> &raquo;</li>
+      
+    <li>gramfuzz.rand</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gramfuzz.rand</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">``rand`` is a module that provides ``random`` utilities,</span>
+<span class="sd">such as:</span>
+
+<span class="sd">* globally setting a seed value</span>
+<span class="sd">* random integers between a range</span>
+<span class="sd">* random floats between a range</span>
+<span class="sd">* return ``True`` or ``False`` based on a probability (the ``maybe`` function)</span>
+<span class="sd">* return random data</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">r</span>
+
+
+<span class="n">RANDOM</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+<span class="n">_randint</span> <span class="o">=</span> <span class="n">RANDOM</span><span class="o">.</span><span class="n">randint</span>
+<span class="n">random</span> <span class="o">=</span> <span class="n">_random</span> <span class="o">=</span> <span class="n">RANDOM</span><span class="o">.</span><span class="n">random</span>
+<span class="n">choice</span> <span class="o">=</span> <span class="n">_choice</span> <span class="o">=</span> <span class="n">RANDOM</span><span class="o">.</span><span class="n">choice</span>
+
+
+<div class="viewcode-block" id="seed"><a class="viewcode-back" href="../../rand.html#gramfuzz.rand.seed">[docs]</a><span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set the seed for any subsequent random values/choices</span>
+
+<span class="sd">    :param val: The random seed value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RANDOM</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="randint"><a class="viewcode-back" href="../../rand.html#gramfuzz.rand.randint">[docs]</a><span class="k">def</span> <span class="nf">randint</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a random integer</span>
+
+<span class="sd">    :param int a: Either the minimum value (inclusive) if ``b`` is set, or</span>
+<span class="sd">    the maximum value if ``b`` is not set (non-inclusive, in which case the minimum</span>
+<span class="sd">    is implicitly 0)</span>
+<span class="sd">    :param int b: The maximum value to generate (non-inclusive)</span>
+<span class="sd">    :returns: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># need to minus 1 b/c randint has an inclusive maximum</span>
+    <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_randint</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="randfloat"><a class="viewcode-back" href="../../rand.html#gramfuzz.rand.randfloat">[docs]</a><span class="k">def</span> <span class="nf">randfloat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a random float</span>
+
+<span class="sd">    :param float a: Either the minimum value (inclusive) if ``b`` is set, or</span>
+<span class="sd">    the maximum value if ``b`` is not set (non-inclusive, in which case the minimum</span>
+<span class="sd">    is implicitly 0.0)</span>
+<span class="sd">    :param float b: The maximum value to generate (non-inclusive)</span>
+<span class="sd">    :returns: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">max_</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="n">min_</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">min_</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="n">max_</span> <span class="o">=</span> <span class="n">b</span>
+
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">max_</span> <span class="o">-</span> <span class="n">min_</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">_random</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">*=</span> <span class="n">diff</span>
+    <span class="n">res</span> <span class="o">+=</span> <span class="n">min_</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="maybe"><a class="viewcode-back" href="../../rand.html#gramfuzz.rand.maybe">[docs]</a><span class="k">def</span> <span class="nf">maybe</span><span class="p">(</span><span class="n">prob</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return ``True`` with ``prob`` probability.</span>
+
+<span class="sd">    :param float prob: The probability ``True`` will be returned</span>
+<span class="sd">    :returns: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">prob</span></div>
+
+
+<div class="viewcode-block" id="data"><a class="viewcode-back" href="../../rand.html#gramfuzz.rand.data">[docs]</a><span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">charset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate ``length`` random characters from charset ``charset``</span>
+
+<span class="sd">    :param int length: The number of characters to randomly generate</span>
+<span class="sd">    :param str charset: The charset of characters to choose from</span>
+<span class="sd">    :returns: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_choice</span><span class="p">(</span><span class="n">charset</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">length</span><span class="p">))</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, James &#39;d0c_s4vage&#39; Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
