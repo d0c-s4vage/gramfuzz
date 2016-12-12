@@ -207,8 +207,8 @@ class GramFuzzer(object):
         :param str cat: The category to add the rule to
         :param str def_name: The name of the rule definition
         :param def_val: The value of the rule definition
-        :param bool no_prune: If the rule should explicitly *NOT* be pruned even if it has
-        been determined to be unreachable (default=``False``)
+        :param bool no_prune: If the rule should explicitly *NOT*
+            be pruned even if it has been determined to be unreachable (default=``False``)
         :param str gram_file: The file the rule was defined in (default=``"default"``).
         """
         self.add_to_cat_group(cat, gram_file, def_name)
@@ -236,11 +236,11 @@ class GramFuzzer(object):
     def get_ref(self, cat, refname):
         """Return one of the rules in the category ``cat`` with the name
         ``refname``. If multiple rule defintions exist for the defintion name
-        ``refname``, use ``gramfuzz.rand`` to choose a rule at random.
+        ``refname``, use :any:`gramfuzz.rand` to choose a rule at random.
 
         :param str cat: The category to look for the rule in.
         :param str refname: The name of the rule definition. If the rule definition's name is
-        ``"*"``, then a rule name will be chosen at random from within the category ``cat``.
+            ``"*"``, then a rule name will be chosen at random from within the category ``cat``.
         :returns: gramfuzz.fields.Def
         """
         if cat not in self.defs:
@@ -290,8 +290,8 @@ class GramFuzzer(object):
         while total_gend < num:
             # use a rule definition from one of the preferred category
             # groups
-            if len(pref_keys) > 0 and _maybe(preferred_ratio):
-                rand_key = _choice(pref_keys)
+            if len(self._last_pref_keys) > 0 and _maybe(preferred_ratio):
+                rand_key = _choice(self._last_pref_keys)
                 if rand_key not in cat_defs:
                     # TODO this means it was removed / pruned b/c it was unreachable??
                     # TODO look into this more
@@ -334,12 +334,12 @@ class GramFuzzer(object):
 
         return res
     
-    def pre_revert(self):
+    def pre_revert(self, info=None):
         """Signal to begin saving any changes that might need to be reverted
         """
         self._staged_defs = deque()
     
-    def post_revert(self, res, curr_num, total_num):
+    def post_revert(self, cat, res, total_num, num, info):
         """Commit any staged rule definition changes (rule generation went
         smoothly).
         """
