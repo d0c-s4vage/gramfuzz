@@ -32,7 +32,7 @@ def loop(fn):
 
 class TestFields(unittest.TestCase):
     def setUp(self):
-        pass
+        gramfuzz.GramFuzzer.__instance__ = None
     
     def tearDown(self):
         pass

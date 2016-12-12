@@ -65,6 +65,8 @@ class GramFuzzer(object):
     def instance(cls):
         """Return the singleton instance of the ``GramFuzzer``
         """
+        if cls.__instance__ is None:
+            cls()
         return cls.__instance__
 
 
