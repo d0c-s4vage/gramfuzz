@@ -6,6 +6,14 @@
 `gramfuzz` is a grammar-based fuzzer that lets one define
 complex grammars to model text and binary data formats.
 
+## Installation
+
+Install `v1.0.0` via pip:
+
+```
+pip install gramfuzz
+```
+
 ## Documentation
 
 For detailed documentation, please [view the full docs here](https://d0c-s4vage.github.io/gramfuzz/)
