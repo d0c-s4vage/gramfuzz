@@ -17,7 +17,7 @@ This module defines all of the core gramfuzz fields:
 * String
 
 Each field has a ``build()`` method, which accepts one argument
-(pre) that can be used to assign prerequisites of the build result.
+(``pre``) that can be used to assign prerequisites of the build result.
 """
 
 
@@ -34,13 +34,15 @@ import gramfuzz.utils as utils
 
 
 class MetaField(type):
-    """Used as the metaclass of the core ``Field`` class. MetaField
+    """Used as the metaclass of the core :any:`gramfuzz.fields.Field` class. ``MetaField``
     defines ``__and__`` and ``__or__`` and ``__repr__`` methods.
     The overridden and and or operatories allow classes themselves
-    to be wrapped in an `And` or `Or` without having to instantiate
-    them first.
+    to be wrapped in an :any:`gramfuzz.fields.And` or :any:`gramfuzz.fields.Or`
+    without having to instantiate them first.
 
-    E.g. the two lines below are equivalent: ::python
+    E.g. the two lines below are equivalent:
+
+    .. code-block:: python
         
         And(Int(), Float())
         (Int & Float)
@@ -51,14 +53,18 @@ class MetaField(type):
     Do note however that this can only be done if the first (farthest
     to the left) operand is a Field class or instance.
 
-    E.g. the first line below will work, but the second line will not will not: ::python
+    E.g. the first line below will work, but the second line will not will not:
+
+    .. code-block:: python
 
         Or(5, Int)
         5 | Int
 
     It is also recommended that using the overloaded ``&`` and ``|`` operators should
     only be done in very simple cases, since it is impossible for the code
-        to know the difference between the two statements below: ::python
+    to know the difference between the two statements below:
+
+    .. code-block:: python
 
             (Int | Float) | Uint
             Int | Float | UInt
@@ -98,7 +104,9 @@ class Field(object):
     odds = []
     """``odds`` is a list of tuples that define probability values.
     
-    Each item in the list must be a tuple of the form: ::python
+    Each item in the list must be a tuple of the form:
+
+    .. code-block:: python
 
         (X, Y)
 
@@ -141,7 +149,7 @@ class Field(object):
     
     def _odds_val(self):
         """Determine a new random value derived from the
-        defined ``self.odds`` value.
+        defined :any:`gramfuzz.fields.Field.odds` value.
 
         :returns: The derived value
         """
@@ -272,7 +280,7 @@ class String(UInt):
     """Unlike numeric ``Field`` types, the odds value for the ``String`` field
     defines the *length* of the field, not characters used in the string.
 
-    See the ``Field.odds`` for details on the format of the ``odds`` probability
+    See the :any:`gramfuzz.fields.Field.odds` member for details on the format of the ``odds`` probability
     list.
     """
 
@@ -348,9 +356,11 @@ class Join(Field):
         :param list values: The values to join
         :param str sep: The string with which to separate each of the values (default=``","``)
         :param int max: The maximum number of times (inclusive) to build the first item in ``values``.
-        This can be useful when a variable number of items in a list is needed. E.g.: ::python
+            This can be useful when a variable number of items in a list is needed. E.g.:
+
+            .. code-block:: python
             
-            Join(Int, max=5, sep=",")
+                Join(Int, max=5, sep=",")
         """
         self.values = list(values)
         self.sep = kwargs.setdefault("sep", self.sep)
@@ -544,13 +554,13 @@ class Def(Field):
     """The ``Def`` class is used to define grammar *rules*. A defined rule
     has three parts:
 
-    1. Name - A rule name can be declared multiple times. When a rule name with multiple
+    # Name - A rule name can be declared multiple times. When a rule name with multiple
     definitions is generated, one of the rule definitions will be chosen at random.
 
-    2. Values - The values of the rule. These will be concatenated (acts the same
+    # Values - The values of the rule. These will be concatenated (acts the same
     as an ``And``).
 
-    3. Category - Which category to define the rule in. This is an important step and
+    # Category - Which category to define the rule in. This is an important step and
     guides the fuzzer into choosing the correct rule definitions when randomly choosing
     rules to generate.
 
@@ -575,23 +585,27 @@ class Def(Field):
     a way to reach this rule. (default=``False``)
     """
 
+    cat = "default"
+    """The default category of this ``Def`` class (default=``"default"``)
+    """
+
     def __init__(self, name, *values, **options):
         """Create a new rule definition. Simply instantiating a new rule definition
         will add it to the current ``GramFuzzer`` instance.
 
         :param str name: The name of the rule being defined
         :param list values: The list of values that define the value of the rule
-        (will be concatenated when built)
+            (will be concatenated when built)
         :param str cat: The category to create the rule in (default=``"default"``).
         :param bool no_prune: If this rule should not be pruned *EVEN IF* it is found to be
-        unreachable (default=``False``)
+            unreachable (default=``False``)
         """
         self.name = name
         self.options = options
         self.values = list(values)
 
         self.sep = self.options.setdefault("sep", self.sep)
-        self.cat = self.options.setdefault("cat", "default")
+        self.cat = self.options.setdefault("cat", self.cat)
         self.no_prune = self.options.setdefault("no_prune", self.no_prune)
 
         self.fuzzer = GramFuzzer.instance()
@@ -632,24 +646,32 @@ class Ref(Field):
     """The ``Ref`` class is used to reference defined rules by their name. If a
     rule name is defined multiple times, one will be chosen at random.
 
-    For example, suppose we have a rule that returns an integer: ::python
+    For example, suppose we have a rule that returns an integer:
+
+    .. code-block:: python
 
         Def("integer", UInt)
 
     We could define another rule that creates a ``Float`` by referencing the
-    integer rule twice, and placing a period between them: ::python
+    integer rule twice, and placing a period between them:
+
+    .. code-block:: python
 
         Def("float", Ref("integer"), ".", Ref("integer"))
     """
 
-    def __init__(self, refname, cat="default"):
+    cat = "default"
+    """The default category where the referenced rule definition will be looked for
+    """
+
+    def __init__(self, refname, **kwargs):
         """Create a new ``Ref`` instance
 
         :param str refname: The name of the rule to reference
         :param str cat: The name of the category the rule is defined in
         """
         self.refname = refname
-        self.cat = cat
+        self.cat = kwargs.setdefault("cat", self.cat)
 
         self.fuzzer = GramFuzzer.instance()
     

@@ -12,7 +12,7 @@ import gramfuzz
 
 def val(val, pre=None):
     """Build the provided value, while properly handling
-    native Python types, ``Field`` instances, and ``Field``
+    native Python types, :any:`gramfuzz.fields.Field` instances, and :any:`gramfuzz.fields.Field`
     subclasses.
 
     :param list pre: The prerequisites list
