@@ -87,13 +87,25 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="gramfuzz.html">gramfuzz</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">fields</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#field-base-class">Field Base Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#operator-overloading">Operator Overloading</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#gotcha">Gotcha</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#int-uint-float-ufloat">Int/UInt/Float/UFloat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#string">String</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#and">And</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#or">Or</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#join">Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q">Q</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#opt">Opt</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#odds">Odds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#int-uint-float-ufloat">Int/UInt/Float/UFloat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#details">Details</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#field-base-class">Field Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operator-overloading">Operator Overloading</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gotcha">Gotcha</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#odds">Odds</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#gramfuzz-fields-reference-documentation">gramfuzz.fields Reference Documentation</a></li>
 </ul>
 </li>
@@ -149,8 +161,146 @@
 <p>Unlike other data-parsing libraries (such as <a class="reference external" href="https://github.com/d0c-s4vage/pfp">pfp</a>),
 gramfuzz only defines the most basic data types to be used for
 grammar-driven data generation.</p>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="int-uint-float-ufloat">
+<h3>Int/UInt/Float/UFloat<a class="headerlink" href="#int-uint-float-ufloat" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#gramfuzz.fields.Int" title="gramfuzz.fields.Int"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Int</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.UInt" title="gramfuzz.fields.UInt"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.UInt</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.Float" title="gramfuzz.fields.Float"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Float</span></code></a>,
+and <a class="reference internal" href="#gramfuzz.fields.UFloat" title="gramfuzz.fields.UFloat"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.UFloat</span></code></a> classes are the only numeric classes defined in gramfuzz.</p>
+<p>Most things can be accomplished using these classes, their <code class="docutils literal"><span class="pre">min</span></code>/<code class="docutils literal"><span class="pre">max</span></code> settings,
+and their <code class="docutils literal"><span class="pre">odds</span></code> settings.</p>
+</div>
+<div class="section" id="string">
+<h3>String<a class="headerlink" href="#string" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#gramfuzz.fields.String" title="gramfuzz.fields.String"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.String</span></code></a> class can be used to generate arbitrary-length strings. All of the
+settings from the <code class="docutils literal"><span class="pre">Int</span></code> class still apply to the <code class="docutils literal"><span class="pre">String</span></code> class (<code class="docutils literal"><span class="pre">min</span></code>, <code class="docutils literal"><span class="pre">max</span></code>,
+<code class="docutils literal"><span class="pre">odds</span></code>), except that they influence the length of the string, not the characters
+it contains.</p>
+<p>The <code class="docutils literal"><span class="pre">String</span></code> class has another paramter: <code class="docutils literal"><span class="pre">charset</span></code>. This is used to specify
+which characters should make up the random strings. Several pre-defined charsets
+exist within the <code class="docutils literal"><span class="pre">String</span></code> class:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">charset_alpha_lower</span></code></li>
+<li><code class="docutils literal"><span class="pre">charset_alpha_upper</span></code></li>
+<li><code class="docutils literal"><span class="pre">charset_alpha</span></code></li>
+<li><code class="docutils literal"><span class="pre">charset_spaces</span></code></li>
+<li><code class="docutils literal"><span class="pre">charset_num</span></code></li>
+<li><code class="docutils literal"><span class="pre">charset_alphanum</span></code></li>
+<li><code class="docutils literal"><span class="pre">charset_all</span></code></li>
+</ul>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">String</span><span class="p">(</span><span class="n">charset</span><span class="o">=</span><span class="s2">&quot;abcdefg&quot;</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<span class="c1"># &#39;aca&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="and">
+<h3>And<a class="headerlink" href="#and" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#gramfuzz.fields.And" title="gramfuzz.fields.And"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.And</span></code></a> class can be used to concatenate different values
+together:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<span class="c1"># &#39;98hello&#39;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">And</span></code> does not take any special parameters.</p>
+</div>
+<div class="section" id="or">
+<h3>Or<a class="headerlink" href="#or" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#gramfuzz.fields.Or" title="gramfuzz.fields.Or"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Or</span></code></a> class can be used to choose randomly between several
+different options:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">o</span> <span class="o">=</span> <span class="n">Or</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="s2">&quot;Hello&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<span class="c1"># Hello</span>
+<span class="c1"># Hello</span>
+<span class="c1"># -91</span>
+<span class="c1"># -60</span>
+<span class="c1"># 68</span>
+<span class="c1"># Hello</span>
+<span class="c1"># 13</span>
+<span class="c1"># Hello</span>
+<span class="c1"># Hello</span>
+<span class="c1"># Hello</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="join">
+<h3>Join<a class="headerlink" href="#join" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#gramfuzz.fields.Join" title="gramfuzz.fields.Join"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Join</span></code></a> class can be used to join values together using a
+separator. It also has a <code class="docutils literal"><span class="pre">max</span></code> value that can be used to indicate how many
+times the first value should be repeated (any values other than the first one
+will be ignored):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">j</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span>
+    <span class="s2">&quot;some_function(&quot;</span><span class="p">,</span>
+    <span class="n">Join</span><span class="p">(</span>
+        <span class="n">Or</span><span class="p">(</span><span class="n">Int</span><span class="o">|</span><span class="n">Q</span><span class="p">(</span><span class="n">String</span><span class="p">)),</span>
+    <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="s2">&quot;)&quot;</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<span class="c1"># some_function(-4294967294, &quot;sEaKWSOGabHf&quot;, &quot;ZkLXWYAUyEuW&quot;, 95, &quot;FHnVYTvB&quot;)</span>
+<span class="c1"># some_function(&quot;koBklVcoJbDC&quot;, -60)</span>
+<span class="c1"># some_function(-65537)</span>
+<span class="c1"># some_function(96)</span>
+<span class="c1"># some_function(-87, -82, &quot;x&quot;, &quot;LKvYXEJHegjMGh&quot;)</span>
+<span class="c1"># some_function(&quot;TSMQeGZbXNH&quot;)</span>
+<span class="c1"># some_function(-254, -55, -91, &quot;N&quot;)</span>
+<span class="c1"># some_function(-44, 84, 59, &quot;FBPHBf&quot;, &quot;NBZxlVq&quot;)</span>
+<span class="c1"># some_function(&quot;BvASDsxrTnycyLBChsM&quot;, &quot;p&quot;)</span>
+<span class="c1"># some_function(-85, &quot;X&quot;, &quot;HiGdE&quot;, &quot;XgJoNBk&quot;, 254)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="q">
+<h3>Q<a class="headerlink" href="#q" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#gramfuzz.fields.Q" title="gramfuzz.fields.Q"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Q</span></code></a> class can be used to surround values in quotes, optionally
+specifying one of two string-escaping methods:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">String</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<span class="c1"># &quot;znFHLTkwgniAXtNhI&quot;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="s2">&quot;&#39;he</span><span class="se">\&quot;</span><span class="s2">llo&#39;&quot;</span><span class="p">,</span> <span class="n">escape</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<span class="c1"># &#39;\&#39;he&quot;llo\&#39;&#39;&quot;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="s2">&quot;&lt;h1&gt;&#39;hello&#39;&lt;/h1&gt;&quot;</span><span class="p">,</span> <span class="n">html_js_escape</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<span class="c1"># &#39;\x3ch1\x3e\&#39;hello\&#39;\x3c/h1\x3e&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">escape</span></code> - use Python&#8217;s repr to escape the string</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">html_js_escape</span></code> - use Python&#8217;s <code class="docutils literal"><span class="pre">&quot;string_escape&quot;</span></code> encoding, as well as replacing <code class="docutils literal"><span class="pre">&lt;</span></code></dt>
+<dd>and <code class="docutils literal"><span class="pre">&gt;</span></code> with their escaped hex formats</dd>
+</dl>
+</li>
+</ul>
+<p>The <code class="docutils literal"><span class="pre">Q</span></code> class also accessts a <code class="docutils literal"><span class="pre">quote</span></code> keyword argument. This only applies if none
+of the escaping methods are specified, and is merely prepended and appended to the
+string.</p>
+</div>
+<div class="section" id="opt">
+<h3>Opt<a class="headerlink" href="#opt" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#gramfuzz.fields.Opt" title="gramfuzz.fields.Opt"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Opt</span></code></a> inherits from the <code class="docutils literal"><span class="pre">And</span></code> class can be used to
+wrap values, optionally raising an <code class="docutils literal"><span class="pre">OptGram</span></code> exception when built.</p>
+<p>If an <code class="docutils literal"><span class="pre">OptGram</span></code> exception is raised, the current value being built will be ignored.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">j</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span>
+    <span class="s2">&quot;some_function(&quot;</span><span class="p">,</span>
+    <span class="n">Join</span><span class="p">(</span>
+        <span class="n">Int</span><span class="p">,</span>
+        <span class="n">Q</span><span class="p">(</span><span class="n">String</span><span class="p">),</span>
+        <span class="n">Opt</span><span class="p">(</span><span class="n">Float</span><span class="p">),</span> <span class="c1"># optional argument</span>
+    <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="s2">&quot;)&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="details">
+<h2>Details<a class="headerlink" href="#details" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="field-base-class">
-<h2>Field Base Class<a class="headerlink" href="#field-base-class" title="Permalink to this headline">¶</a></h2>
+<h3>Field Base Class<a class="headerlink" href="#field-base-class" title="Permalink to this headline">¶</a></h3>
 <p>All fields inherit from the <a class="reference internal" href="#gramfuzz.fields.Field" title="gramfuzz.fields.Field"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Field</span></code></a> class.</p>
 <p><code class="docutils literal"><span class="pre">Field</span></code> classes may be used in grammar rule definitions, as well as instances
 of <code class="docutils literal"><span class="pre">Field</span></code> classes (thanks to the <a class="reference internal" href="#gramfuzz.fields.MetaField" title="gramfuzz.fields.MetaField"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.MetaField</span></code></a> class and the
@@ -176,7 +326,7 @@ look something like this instead:</p>
 hard-coding specific settings throughout a grammar.</p>
 </div>
 <div class="section" id="operator-overloading">
-<h2>Operator Overloading<a class="headerlink" href="#operator-overloading" title="Permalink to this headline">¶</a></h2>
+<h3>Operator Overloading<a class="headerlink" href="#operator-overloading" title="Permalink to this headline">¶</a></h3>
 <p>gramfuzz defines two main classes for concatenating or randomly
 choosing between values: <a class="reference internal" href="#gramfuzz.fields.And" title="gramfuzz.fields.And"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.And</span></code></a> and <a class="reference internal" href="#gramfuzz.fields.Or" title="gramfuzz.fields.Or"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Or</span></code></a>.</p>
 <p>The <code class="docutils literal"><span class="pre">And</span></code> and <code class="docutils literal"><span class="pre">Or</span></code> classes can be explicitly used:</p>
@@ -211,7 +361,7 @@ below, which uses explicit <code class="docutils literal"><span class="pre">And<
 <p>For this reason, I tend to use the overloaded operators only in simple situations.
 Complex logic/scenarious I tend to only use explicit <code class="docutils literal"><span class="pre">And</span></code> and <code class="docutils literal"><span class="pre">Or</span></code>.</p>
 <div class="section" id="gotcha">
-<h3>Gotcha<a class="headerlink" href="#gotcha" title="Permalink to this headline">¶</a></h3>
+<h4>Gotcha<a class="headerlink" href="#gotcha" title="Permalink to this headline">¶</a></h4>
 <p>One important gotcha is shown below:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="mi">5</span> <span class="o">|</span> <span class="n">Int</span> <span class="o">|</span> <span class="n">Float</span>
 </pre></div>
@@ -228,7 +378,7 @@ if they are not the first operand.</p>
 </div>
 </div>
 <div class="section" id="odds">
-<h2>Odds<a class="headerlink" href="#odds" title="Permalink to this headline">¶</a></h2>
+<h3>Odds<a class="headerlink" href="#odds" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="#gramfuzz.fields.Int" title="gramfuzz.fields.Int"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Int</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.UInt" title="gramfuzz.fields.UInt"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.UInt</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.Float" title="gramfuzz.fields.Float"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Float</span></code></a>,
 <a class="reference internal" href="#gramfuzz.fields.UFloat" title="gramfuzz.fields.UFloat"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.UFloat</span></code></a>, and <a class="reference internal" href="#gramfuzz.fields.String" title="gramfuzz.fields.String"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.String</span></code></a> classes each make use of
 the <a class="reference internal" href="#gramfuzz.fields.Field.odds" title="gramfuzz.fields.Field.odds"><code class="xref any py py-attr docutils literal"><span class="pre">gramfuzz.fields.Field.odds</span></code></a> member when generating data, as well as (optionally)
@@ -254,12 +404,6 @@ the <code class="docutils literal"><span class="pre">odds</span></code> list sho
 <li><a class="reference internal" href="#gramfuzz.fields.Int.__init__" title="gramfuzz.fields.Int.__init__"><code class="xref any py py-meth docutils literal"><span class="pre">gramfuzz.fields.Int.__init__</span></code></a> (for min/max)</li>
 </ul>
 </div>
-<div class="section" id="int-uint-float-ufloat">
-<h2>Int/UInt/Float/UFloat<a class="headerlink" href="#int-uint-float-ufloat" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="#gramfuzz.fields.Int" title="gramfuzz.fields.Int"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Int</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.UInt" title="gramfuzz.fields.UInt"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.UInt</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.Float" title="gramfuzz.fields.Float"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Float</span></code></a>,
-and <a class="reference internal" href="#gramfuzz.fields.UFloat" title="gramfuzz.fields.UFloat"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.UFloat</span></code></a> classes are the only numeric classes defined in gramfuzz.</p>
-<p>Most things can be accomplished using these classes, their <code class="docutils literal"><span class="pre">min</span></code>/<code class="docutils literal"><span class="pre">max</span></code> settings,
-and their <code class="docutils literal"><span class="pre">odds</span></code> settings.</p>
 </div>
 <div class="section" id="gramfuzz-fields-reference-documentation">
 <h2>gramfuzz.fields Reference Documentation<a class="headerlink" href="#gramfuzz-fields-reference-documentation" title="Permalink to this headline">¶</a></h2>
