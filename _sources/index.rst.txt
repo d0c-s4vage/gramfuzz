@@ -9,6 +9,16 @@ gramfuzz - A grammar-based fuzzing library
 gramfuzz allows one to define grammars and use them to
 generate random data for fuzzing.
 
+Installation
+^^^^^^^^^^^^
+
+gramfuzz is available on PyPI and can be installed via pip!
+
+.. code-block:: bash
+
+   pip install gramfuzz
+
+
 .. _tldr_example:
 
 TLDR Example
