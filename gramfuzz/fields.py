@@ -98,6 +98,10 @@ class Field(object):
 
     __metaclass__ = MetaField
 
+    # a value of 0 means that it will generate things normally
+    # this is the expected behavior of leaf nodes
+    ref_length = 0
+
     min = 0
     max = 0x100
 
@@ -399,12 +403,14 @@ class And(Field):
     This class works nicely with ``Opt`` values.
     """
 
+    sep = ""
+
     def __init__(self, *values, **kwargs):
         """Create a new ``And`` field instance.
         
         :param list values: The list of values to be concatenated
         """
-
+        self.sep = kwargs.setdefault("sep", self.sep)
         self.values = list(values)
         # to be used internally, is not intended to be set directly by a user
         self.rolling = kwargs.setdefault("rolling", False)
@@ -437,7 +443,7 @@ class And(Field):
                     pre.clear()
                 continue
 
-        return "".join(res)
+        return self.sep.join(res)
 
 
 class Q(And):
@@ -493,6 +499,10 @@ class Or(Field):
 
         :param list values: The list of values to choose randomly from
         """
+        # when building with shortest=True, one of these values will
+        # be chosen instead of self.values
+        self.shortest_vals = None
+
         self.values = list(values)
         if "options" in kwargs and len(values) == 0:
             self.values = kwargs["options"]
@@ -625,6 +635,11 @@ class Def(Field):
         for value in self.values:
             try:
                 res.append(utils.val(value, pre))
+            except RuntimeError as e:
+                if "maximum recursion" in e:
+                    if value.failsafe is not None:
+                        res.append(utils.val(value, pre))
+                        continue
             except errors.FlushGrams as e:
                 prev = "".join(res)
                 res.clear()
@@ -637,11 +652,15 @@ class Def(Field):
                     stmts.append(prev)
                     pre.clear()
                 continue
+            except errors.OptGram as e:
+                continue
             except errors.GramFuzzError as e:
-                raise errors.GramFuzzError("{} : {}".format(self.name, str(e)))
+                print("{} : {}".format(self.name, str(e)))
+                raise
 
         return self.sep.join(res)
 
+REF_LEVEL = 0
 class Ref(Field):
     """The ``Ref`` class is used to reference defined rules by their name. If a
     rule name is defined multiple times, one will be chosen at random.
@@ -664,6 +683,10 @@ class Ref(Field):
     """The default category where the referenced rule definition will be looked for
     """
 
+    max_recursion = 10
+
+    failsafe = None
+
     def __init__(self, refname, **kwargs):
         """Create a new ``Ref`` instance
 
@@ -672,6 +695,7 @@ class Ref(Field):
         """
         self.refname = refname
         self.cat = kwargs.setdefault("cat", self.cat)
+        self.failsafe = kwargs.setdefault("failsafe", self.failsafe)
 
         self.fuzzer = GramFuzzer.instance()
     
@@ -681,11 +705,17 @@ class Ref(Field):
 
         :param list pre: The prerequisites list
         """
+        global REF_LEVEL
+        REF_LEVEL += 1
+
         if pre is None:
             pre = []
 
         definition = self.fuzzer.get_ref(self.cat, self.refname)
-        return utils.val(definition, pre)
+        res = utils.val(definition, pre)
+
+        REF_LEVEL -= 1
+        return res
     
     def _get_ref_cls_depth(self, cls=None, count=0):
         if cls is None:

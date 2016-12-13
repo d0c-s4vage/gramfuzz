@@ -103,6 +103,86 @@ class GramFuzzer(object):
             code = compile(data, path, "exec")
 
         exec code in {"GRAMFUZZER": self}
+
+    def find_shortest_paths(self, cat):
+        leaf_rules = deque()
+        non_leaf_rules = deque()
+        rule_ref_lengths = {}
+
+        # first find all rule definitions that *don't* have
+        # any references - these are the leaf nodes
+        for rule_name, rules in self.defs.get(cat, {}).iteritems():
+            for rule in rules:
+                refs = self._collect_refs(rule)
+                if len(refs) == 0:
+                    leaf_rules.append(rule)
+                    rule_ref_lengths[rule.name] = (0, rule)
+                    rule.ref_length = 0
+                else:
+                    non_leaf_rules.append(rule)
+
+        # for every referenced rule, determine how many steps away
+        # the rule is
+        post_process = deque()
+        while len(non_leaf_rules) > 0:
+            curr_rule = non_leaf_rules.popleft()
+            ref_length = self._process_shortest_ref(curr_rule, rule_ref_lengths)
+            if ref_length is None:
+                non_leaf_rules.append(curr_rule)
+                continue
+
+            if curr_rule.name not in rule_ref_lengths or ref_length < rule_ref_lengths[curr_rule.name][0]:
+                rule_ref_lengths[curr_rule.name] = (ref_length, [curr_rule])
+            elif ref_length == rule_ref_lengths[curr_rule.name][0]:
+                rule_ref_lengths[curr_rule.name][1].append(curr_rule)
+
+            post_process.append(curr_rule)
+
+    def _process_shortest_ref(self, field, rule_ref_lengths):
+        import gramfuzz.fields as fields
+
+        # return None if it can't be determined yet
+        if isinstance(field, fields.Or):
+            min_ref = 0xffffff
+            min_vals = []
+            for val in field.values:
+                val_ref = self._process_shortest_ref(val, rule_ref_lengths)
+                if val_ref is None:
+                    continue
+                elif val_ref < min_ref:
+                    min_ref = val_ref
+                    min_vals = [val]
+                elif val_ref == min_ref:
+                    min_vals.append(val)
+
+            if min_ref == 0xffffff:
+                return None
+
+            return min_ref
+
+        # these all be all refs from Ands, Joins, etc, while ignoring
+        # any optional fields (since those will be ignored with shortest=True
+        # set on a call to build()
+        if hasattr(field, "values"):
+            max_ref_length = -1
+            for val in field.values:
+                ref_val_length = self._process_shortest_ref(val, rule_ref_lengths)
+                if ref_val_length is None:
+                    return None
+                if ref_val_length > max_ref_length:
+                    max_ref_length = ref_val_length
+
+            if max_ref_length == -1:
+                return None
+            return max_ref_length + 1
+
+        if isinstance(field, fields.Ref):
+            ref_val = rule_ref_lengths.get(field.refname, (-1, []))[0]
+            if ref_val == -1:
+                return None
+            return ref_val + 1
+
+        return None
     
     def prune(self, check_cats, target_cat):
         """Iterate over every rule defined in every category in ``check_cats``
@@ -182,9 +262,13 @@ class GramFuzzer(object):
                 length += len(vals)
         return length
     
-    def _collect_refs(self, item_val, acc=None):
+    def _collect_refs(self, item_val, acc=None, no_opt=False):
         if acc is None:
             acc = deque()
+
+        from gramfuzz.fields import Opt
+        if no_opt and isinstance(item_val, Opt):
+            return acc
 
         from gramfuzz.fields import Ref
         if isinstance(item_val, Ref):
@@ -255,7 +339,7 @@ class GramFuzzer(object):
         return rand.choice(self.defs[cat][refname])
 
 
-    def gen(self, cat, num, preferred=None, preferred_ratio=0.5):
+    def gen(self, cat, num, preferred=None, preferred_ratio=0.5, max_recursion=None):
         """Generate ``num`` rules from category ``cat``, optionally specifying
         preferred category groups ``preferred`` that should be preferred at
         probability ``preferred_ratio`` over other randomly-chosen rule definitions.
@@ -264,8 +348,13 @@ class GramFuzzer(object):
         :param int num: The number of rules to generate
         :param list preferred: A list of preferred category groups to generate rules from
         :param float preferred_ratio: The percent probability that the preferred
-        groups will be chosen over randomly choosen rule definitions from category ``cat``.
+            groups will be chosen over randomly choosen rule definitions from category ``cat``.
+        :param int max_recursion: The maximum amount to allow references to recurse
         """
+        if max_recursion is not None:
+            import gramfuzz.fields
+            gramfuzz.fields.Ref.max_recursion = max_recursion
+
         if preferred is None:
             preferred = []
 
@@ -318,10 +407,12 @@ class GramFuzzer(object):
             try:
                 val_res = _val(v, pre)
             except errors.GramFuzzError as e:
-                total_errors.append(e)
-                self.revert(info)
-                continue
+                raise
+                #total_errors.append(e)
+                #self.revert(info)
+                #continue
             except RuntimeError as e:
+                print("RUNTIME ERROR")
                 self.revert(info)
                 continue
 
@@ -349,7 +440,7 @@ class GramFuzzer(object):
             self.defs.setdefault(cat, {}).setdefault(def_name, deque()).append(def_value)
         self._staged_defs = None
     
-    def revert(self):
+    def revert(self, info=None):
         """Revert after a single def errored during generate (throw away all
         staged rule definition changes)
         """
