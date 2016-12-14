@@ -10,7 +10,7 @@ Gramfuzz utility functions
 import gramfuzz
 
 
-def val(val, pre=None):
+def val(val, pre=None, shortest=False):
     """Build the provided value, while properly handling
     native Python types, :any:`gramfuzz.fields.Field` instances, and :any:`gramfuzz.fields.Field`
     subclasses.
@@ -28,6 +28,6 @@ def val(val, pre=None):
         val = val()
 
     if isinstance(val, F):
-        val = str(val.build(pre))
+        val = str(val.build(pre, shortest=shortest))
 
     return str(val)

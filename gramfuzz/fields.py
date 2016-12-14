@@ -98,6 +98,24 @@ class Field(object):
 
     __metaclass__ = MetaField
 
+    shortest_is_nothing = False
+    """This is used during :any:`gramfuzz.GramFuzzer.find_shortest_paths`. Sometimes
+    the fuzzer cannot know based on the values in a field what that field's
+    minimal behavior will be.
+
+    Setting this to ``True`` will explicitly let the ``GramFuzzer`` instance
+    know what the minimal outcome will be.
+
+    *NOTE* when implementing a custom Field subclass and setting ``shortest_is_nothing``
+    to ``True``, be sure to handle the case when ``build(shortest=True)``
+    is called so that a ``gramfuzz.errors.OptGram`` error is raised (which
+    skips the current field from being generated).
+    """
+
+    # a value of 0 means that it will generate things normally
+    # this is the expected behavior of leaf nodes
+    ref_length = 0
+
     min = 0
     max = 0x100
 
@@ -222,17 +240,18 @@ class Int(Field):
         self.max = kwargs.setdefault("max", self.max)
         self.odds = kwargs.setdefault("odds", self.odds)
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the integer, optionally providing a ``pre`` list
         that *may* be used to define prerequisites for a Field being built.
 
         :param list pre: A list of prerequisites to be collected during the building of a Field.
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
 
         if self.value is not None and rand.maybe():
-            return utils.val(self.value, pre)
+            return utils.val(self.value, pre, shortest=shortest)
 
         if self.min == self.max:
             return self.min
@@ -328,18 +347,19 @@ class String(UInt):
 
         self.charset = kwargs.setdefault("charset", self.charset)
 
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the String instance
 
         :param list pre: The prerequisites list (optional, default=None)
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
 
         if self.value is not None and rand.maybe():
-            return utils.val(self.value, pre)
+            return utils.val(self.value, pre, shortest=shortest)
 
-        length = super(String, self).build(pre)
+        length = super(String, self).build(pre, shortest=shortest)
         res = rand.data(length, self.charset)
         return res
 
@@ -366,10 +386,11 @@ class Join(Field):
         self.sep = kwargs.setdefault("sep", self.sep)
         self.max = kwargs.setdefault("max", None)
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the ``Join`` field instance.
         
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
 
         if pre is None:
@@ -378,16 +399,13 @@ class Join(Field):
         if self.max is not None:
             # +1 to make it inclusive
             vals = [self.values[0]] * rand.randint(1, self.max+1)
-            if len(vals) == 0:
-                import pdb
-                pdb.set_trace()
         else:
             vals = self.values
 
         joins = []
         for val in vals:
             try:
-                v = utils.val(val, pre)
+                v = utils.val(val, pre, shortest=shortest)
                 joins.append(v)
             except errors.OptGram as e:
                 continue
@@ -399,21 +417,24 @@ class And(Field):
     This class works nicely with ``Opt`` values.
     """
 
+    sep = ""
+
     def __init__(self, *values, **kwargs):
         """Create a new ``And`` field instance.
         
         :param list values: The list of values to be concatenated
         """
-
+        self.sep = kwargs.setdefault("sep", self.sep)
         self.values = list(values)
         # to be used internally, is not intended to be set directly by a user
         self.rolling = kwargs.setdefault("rolling", False)
         self.fuzzer = GramFuzzer.instance()
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the ``And`` instance
 
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
@@ -421,7 +442,7 @@ class And(Field):
         res = deque()
         for x in self.values:
             try:
-                res.append(utils.val(x, pre))
+                res.append(utils.val(x, pre, shortest=shortest))
             except errors.OptGram as e:
                 continue
             except errors.FlushGrams as e:
@@ -437,7 +458,7 @@ class And(Field):
                     pre.clear()
                 continue
 
-        return "".join(res)
+        return self.sep.join(res)
 
 
 class Q(And):
@@ -468,12 +489,13 @@ class Q(And):
         self.html_js_escape = kwargs.setdefault("html_js_escape", self.html_js_escape)
         self.quote = kwargs.setdefault("quote", self.quote)
 
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the ``Quote`` instance
 
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
-        res = super(Q, self).build(pre)
+        res = super(Q, self).build(pre, shortest=shortest)
 
         if self.escape:
             return repr(res)
@@ -493,20 +515,31 @@ class Or(Field):
 
         :param list values: The list of values to choose randomly from
         """
+        # when building with shortest=True, one of these values will
+        # be chosen instead of self.values
+        self.shortest_vals = None
+
         self.values = list(values)
         if "options" in kwargs and len(values) == 0:
             self.values = kwargs["options"]
         self.rolling = kwargs.setdefault("rolling", False)
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the ``Or`` instance
 
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
 
-        return utils.val(rand.choice(self.values), pre)
+        # self.shortest_vals will be set by the GramFuzzer and will
+        # contain a list of value options that have a minimal reference
+        # chain
+        if shortest and self.shortest_vals is not None:
+            return utils.val(rand.choice(self.shortest_vals), pre, shortest=shortest)
+        else:
+            return utils.val(rand.choice(self.values), pre, shortest=shortest)
 
 
 class Opt(And):
@@ -517,6 +550,8 @@ class Opt(And):
     When an ``errors.OptGram`` exception is raised, the current value being built
     is then skipped
     """
+
+    shortest_is_nothing = True
 
     prob = 0.5
     """The probability of an ``Opt`` instance raising an ``errors.OptGram``
@@ -533,10 +568,11 @@ class Opt(And):
         super(Opt, self).__init__(*values, **kwargs)
         self.prob = kwargs.setdefault("prob", self.prob)
 
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the current ``Opt`` instance
 
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
@@ -544,7 +580,7 @@ class Opt(And):
         if rand.maybe(self.prob):
             raise errors.OptGram
 
-        return super(Opt, self).build(pre)
+        return super(Opt, self).build(pre, shortest=shortest)
 
 # ----------------------------
 # Non-direct classes
@@ -613,10 +649,11 @@ class Def(Field):
         module_name = os.path.basename(inspect.stack()[1][1]).replace(".pyc", "").replace(".py", "")
         self.fuzzer.add_definition(self.cat, self.name, self, no_prune=self.no_prune, gram_file=module_name)
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build this rule definition
         
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
@@ -624,7 +661,7 @@ class Def(Field):
         res = deque()
         for value in self.values:
             try:
-                res.append(utils.val(value, pre))
+                res.append(utils.val(value, pre, shortest=shortest))
             except errors.FlushGrams as e:
                 prev = "".join(res)
                 res.clear()
@@ -637,11 +674,15 @@ class Def(Field):
                     stmts.append(prev)
                     pre.clear()
                 continue
+            except errors.OptGram as e:
+                continue
             except errors.GramFuzzError as e:
-                raise errors.GramFuzzError("{} : {}".format(self.name, str(e)))
+                print("{} : {}".format(self.name, str(e)))
+                raise
 
         return self.sep.join(res)
 
+REF_LEVEL = 0
 class Ref(Field):
     """The ``Ref`` class is used to reference defined rules by their name. If a
     rule name is defined multiple times, one will be chosen at random.
@@ -664,6 +705,10 @@ class Ref(Field):
     """The default category where the referenced rule definition will be looked for
     """
 
+    max_recursion = 10
+
+    failsafe = None
+
     def __init__(self, refname, **kwargs):
         """Create a new ``Ref`` instance
 
@@ -672,32 +717,71 @@ class Ref(Field):
         """
         self.refname = refname
         self.cat = kwargs.setdefault("cat", self.cat)
+        self.failsafe = kwargs.setdefault("failsafe", self.failsafe)
 
         self.fuzzer = GramFuzzer.instance()
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the ``Ref`` instance by fetching the rule from
         the GramFuzzer instance and building it
 
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
+        global REF_LEVEL
+        REF_LEVEL += 1
+
         if pre is None:
             pre = []
 
         definition = self.fuzzer.get_ref(self.cat, self.refname)
-        return utils.val(definition, pre)
-    
-    def _get_ref_cls_depth(self, cls=None, count=0):
-        if cls is None:
-            cls = self.__class__
+        res = utils.val(
+            definition,
+            pre,
+            shortest=(shortest or REF_LEVEL > self.max_recursion)
+        )
 
-        if cls is Ref:
-            return count
-
-        for base in self.__class__.__bases__:
-            return self._get_ref_cls_depth(base, count+1)
-
-        return None
+        REF_LEVEL -= 1
+        return res
     
     def __repr__(self):
         return "<{}[{}]>".format(self.__class__.__name__, self.refname)
+
+
+# -------------------------------------
+# syntactic sugar
+# -------------------------------------
+
+
+class PLUS(Join):
+    """Acts like the + in a regex - one or more of the values.
+    The values are Anded together one or more times, up to ``max``
+    times.
+    """
+    sep = " "
+
+    def __init__(self, *values, **kwargs):
+        kwargs.setdefault("max", 10)
+        kwargs.setdefault("sep", self.sep)
+        value = And(*values)
+        super(PLUS, self).__init__(value, **kwargs)
+
+class STAR(PLUS):
+    """Acts like the ``*`` in a regex - zero or more of the values.
+    The values are Anded together zero or more times, up to ``max``
+    times.
+    """
+    shortest_is_nothing = True
+
+    def build(self, pre=None, shortest=False):
+        """Build the STAR field.
+
+        :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
+        """
+        if pre is None:
+            pre = []
+        if rand.maybe() and not shortest:
+            return super(STAR, self).build(pre, shortest=shortest)
+        else:
+            raise errors.OptGram
