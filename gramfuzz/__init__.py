@@ -122,10 +122,11 @@ class GramFuzzer(object):
                     non_leaf_rules.append(rule)
 
         # for every referenced rule, determine how many steps away
-        # the rule is
+        # from a leaf node it is
         post_process = deque()
         while len(non_leaf_rules) > 0:
             curr_rule = non_leaf_rules.popleft()
+
             ref_length = self._process_shortest_ref(curr_rule, rule_ref_lengths)
             if ref_length is None:
                 non_leaf_rules.append(curr_rule)
@@ -138,15 +139,29 @@ class GramFuzzer(object):
 
             post_process.append(curr_rule)
 
-    def _process_shortest_ref(self, field, rule_ref_lengths):
+        self._assign_or_shortest_vals(post_process, rule_ref_lengths)
+
+    def _assign_or_shortest_vals(self, fields, rule_ref_lengths):
+        for field in fields:
+            self._process_shortest_ref(field, rule_ref_lengths, assign_or=True)
+
+    def _process_shortest_ref(self, field, rule_ref_lengths, assign_or=False):
         import gramfuzz.fields as fields
+
+        # strings, ints, hard-coded non-gramfuzz values
+        if not isinstance(field, fields.Field) or getattr(field, "shortest_is_nothing", False):
+            return 0
 
         # return None if it can't be determined yet
         if isinstance(field, fields.Or):
             min_ref = 0xffffff
             min_vals = []
             for val in field.values:
-                val_ref = self._process_shortest_ref(val, rule_ref_lengths)
+                val_ref = self._process_shortest_ref(
+                    val,
+                    rule_ref_lengths,
+                    assign_or = assign_or,
+                )
                 if val_ref is None:
                     continue
                 elif val_ref < min_ref:
@@ -158,15 +173,25 @@ class GramFuzzer(object):
             if min_ref == 0xffffff:
                 return None
 
+            if assign_or:
+                field.shortest_vals = min_vals
+
             return min_ref
 
         # these all be all refs from Ands, Joins, etc, while ignoring
         # any optional fields (since those will be ignored with shortest=True
-        # set on a call to build()
+        # set on a call to build()).
+        #
+        # Also for Defs, Ands, Joins, etc, we'll be returning the maximum
+        # ref length, since every reference *must* be generated
         if hasattr(field, "values"):
             max_ref_length = -1
             for val in field.values:
-                ref_val_length = self._process_shortest_ref(val, rule_ref_lengths)
+                ref_val_length = self._process_shortest_ref(
+                    val,
+                    rule_ref_lengths,
+                    assign_or = assign_or,
+                )
                 if ref_val_length is None:
                     return None
                 if ref_val_length > max_ref_length:
@@ -174,12 +199,13 @@ class GramFuzzer(object):
 
             if max_ref_length == -1:
                 return None
-            return max_ref_length + 1
+            return max_ref_length
 
         if isinstance(field, fields.Ref):
             ref_val = rule_ref_lengths.get(field.refname, (-1, []))[0]
             if ref_val == -1:
                 return None
+            # ONLY ADD ONE WHEN IT's A REF!!!!!
             return ref_val + 1
 
         return None
@@ -267,7 +293,7 @@ class GramFuzzer(object):
             acc = deque()
 
         from gramfuzz.fields import Opt
-        if no_opt and isinstance(item_val, Opt):
+        if no_opt and (isinstance(item_val, Opt) or item_val.shortest_is_nothing):
             return acc
 
         from gramfuzz.fields import Ref

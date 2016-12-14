@@ -98,6 +98,8 @@ class Field(object):
 
     __metaclass__ = MetaField
 
+    shortest_is_nothing = False
+
     # a value of 0 means that it will generate things normally
     # this is the expected behavior of leaf nodes
     ref_length = 0
@@ -226,7 +228,7 @@ class Int(Field):
         self.max = kwargs.setdefault("max", self.max)
         self.odds = kwargs.setdefault("odds", self.odds)
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the integer, optionally providing a ``pre`` list
         that *may* be used to define prerequisites for a Field being built.
 
@@ -236,7 +238,7 @@ class Int(Field):
             pre = []
 
         if self.value is not None and rand.maybe():
-            return utils.val(self.value, pre)
+            return utils.val(self.value, pre, shortest=shortest)
 
         if self.min == self.max:
             return self.min
@@ -332,7 +334,7 @@ class String(UInt):
 
         self.charset = kwargs.setdefault("charset", self.charset)
 
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the String instance
 
         :param list pre: The prerequisites list (optional, default=None)
@@ -341,9 +343,9 @@ class String(UInt):
             pre = []
 
         if self.value is not None and rand.maybe():
-            return utils.val(self.value, pre)
+            return utils.val(self.value, pre, shortest=shortest)
 
-        length = super(String, self).build(pre)
+        length = super(String, self).build(pre, shortest=shortest)
         res = rand.data(length, self.charset)
         return res
 
@@ -370,7 +372,7 @@ class Join(Field):
         self.sep = kwargs.setdefault("sep", self.sep)
         self.max = kwargs.setdefault("max", None)
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the ``Join`` field instance.
         
         :param list pre: The prerequisites list
@@ -382,16 +384,13 @@ class Join(Field):
         if self.max is not None:
             # +1 to make it inclusive
             vals = [self.values[0]] * rand.randint(1, self.max+1)
-            if len(vals) == 0:
-                import pdb
-                pdb.set_trace()
         else:
             vals = self.values
 
         joins = []
         for val in vals:
             try:
-                v = utils.val(val, pre)
+                v = utils.val(val, pre, shortest=shortest)
                 joins.append(v)
             except errors.OptGram as e:
                 continue
@@ -416,7 +415,7 @@ class And(Field):
         self.rolling = kwargs.setdefault("rolling", False)
         self.fuzzer = GramFuzzer.instance()
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the ``And`` instance
 
         :param list pre: The prerequisites list
@@ -427,7 +426,7 @@ class And(Field):
         res = deque()
         for x in self.values:
             try:
-                res.append(utils.val(x, pre))
+                res.append(utils.val(x, pre, shortest=shortest))
             except errors.OptGram as e:
                 continue
             except errors.FlushGrams as e:
@@ -474,12 +473,12 @@ class Q(And):
         self.html_js_escape = kwargs.setdefault("html_js_escape", self.html_js_escape)
         self.quote = kwargs.setdefault("quote", self.quote)
 
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the ``Quote`` instance
 
         :param list pre: The prerequisites list
         """
-        res = super(Q, self).build(pre)
+        res = super(Q, self).build(pre, shortest=shortest)
 
         if self.escape:
             return repr(res)
@@ -508,7 +507,7 @@ class Or(Field):
             self.values = kwargs["options"]
         self.rolling = kwargs.setdefault("rolling", False)
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the ``Or`` instance
 
         :param list pre: The prerequisites list
@@ -516,7 +515,10 @@ class Or(Field):
         if pre is None:
             pre = []
 
-        return utils.val(rand.choice(self.values), pre)
+        if shortest and self.shortest_vals is not None:
+            return utils.val(rand.choice(self.shortest_vals), pre, shortest=shortest)
+        else:
+            return utils.val(rand.choice(self.values), pre, shortest=shortest)
 
 
 class Opt(And):
@@ -527,6 +529,8 @@ class Opt(And):
     When an ``errors.OptGram`` exception is raised, the current value being built
     is then skipped
     """
+
+    shortest_is_nothing = True
 
     prob = 0.5
     """The probability of an ``Opt`` instance raising an ``errors.OptGram``
@@ -543,7 +547,7 @@ class Opt(And):
         super(Opt, self).__init__(*values, **kwargs)
         self.prob = kwargs.setdefault("prob", self.prob)
 
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the current ``Opt`` instance
 
         :param list pre: The prerequisites list
@@ -551,10 +555,12 @@ class Opt(And):
         if pre is None:
             pre = []
 
-        if rand.maybe(self.prob):
+        # if we want to generate the most direct full rule, then we'll
+        # ignore all optional values
+        if shortest or rand.maybe(self.prob):
             raise errors.OptGram
 
-        return super(Opt, self).build(pre)
+        return super(Opt, self).build(pre, shortest=shortest)
 
 # ----------------------------
 # Non-direct classes
@@ -623,7 +629,7 @@ class Def(Field):
         module_name = os.path.basename(inspect.stack()[1][1]).replace(".pyc", "").replace(".py", "")
         self.fuzzer.add_definition(self.cat, self.name, self, no_prune=self.no_prune, gram_file=module_name)
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build this rule definition
         
         :param list pre: The prerequisites list
@@ -634,12 +640,7 @@ class Def(Field):
         res = deque()
         for value in self.values:
             try:
-                res.append(utils.val(value, pre))
-            except RuntimeError as e:
-                if "maximum recursion" in e:
-                    if value.failsafe is not None:
-                        res.append(utils.val(value, pre))
-                        continue
+                res.append(utils.val(value, pre, shortest=shortest))
             except errors.FlushGrams as e:
                 prev = "".join(res)
                 res.clear()
@@ -699,7 +700,7 @@ class Ref(Field):
 
         self.fuzzer = GramFuzzer.instance()
     
-    def build(self, pre=None):
+    def build(self, pre=None, shortest=False):
         """Build the ``Ref`` instance by fetching the rule from
         the GramFuzzer instance and building it
 
@@ -708,26 +709,23 @@ class Ref(Field):
         global REF_LEVEL
         REF_LEVEL += 1
 
+#        print("{}building ref {}".format(
+#            " " * REF_LEVEL,
+#            self.refname
+#        ))
+
         if pre is None:
             pre = []
 
         definition = self.fuzzer.get_ref(self.cat, self.refname)
-        res = utils.val(definition, pre)
+        res = utils.val(
+            definition,
+            pre,
+            shortest=(shortest or REF_LEVEL > self.max_recursion)
+        )
 
         REF_LEVEL -= 1
         return res
-    
-    def _get_ref_cls_depth(self, cls=None, count=0):
-        if cls is None:
-            cls = self.__class__
-
-        if cls is Ref:
-            return count
-
-        for base in self.__class__.__bases__:
-            return self._get_ref_cls_depth(base, count+1)
-
-        return None
     
     def __repr__(self):
         return "<{}[{}]>".format(self.__class__.__name__, self.refname)
