@@ -99,6 +99,18 @@ class Field(object):
     __metaclass__ = MetaField
 
     shortest_is_nothing = False
+    """This is used during :any:`gramfuzz.GramFuzzer.find_shortest_paths`. Sometimes
+    the fuzzer cannot know based on the values in a field what that field's
+    minimal behavior will be.
+
+    Setting this to ``True`` will explicitly let the ``GramFuzzer`` instance
+    know what the minimal outcome will be.
+
+    *NOTE* when implementing a custom Field subclass and setting ``shortest_is_nothing``
+    to ``True``, be sure to handle the case when ``build(shortest=True)``
+    is called so that a ``gramfuzz.errors.OptGram`` error is raised (which
+    skips the current field from being generated).
+    """
 
     # a value of 0 means that it will generate things normally
     # this is the expected behavior of leaf nodes
@@ -233,6 +245,7 @@ class Int(Field):
         that *may* be used to define prerequisites for a Field being built.
 
         :param list pre: A list of prerequisites to be collected during the building of a Field.
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
@@ -338,6 +351,7 @@ class String(UInt):
         """Build the String instance
 
         :param list pre: The prerequisites list (optional, default=None)
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
@@ -376,6 +390,7 @@ class Join(Field):
         """Build the ``Join`` field instance.
         
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
 
         if pre is None:
@@ -419,6 +434,7 @@ class And(Field):
         """Build the ``And`` instance
 
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
@@ -477,6 +493,7 @@ class Q(And):
         """Build the ``Quote`` instance
 
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         res = super(Q, self).build(pre, shortest=shortest)
 
@@ -511,10 +528,14 @@ class Or(Field):
         """Build the ``Or`` instance
 
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
 
+        # self.shortest_vals will be set by the GramFuzzer and will
+        # contain a list of value options that have a minimal reference
+        # chain
         if shortest and self.shortest_vals is not None:
             return utils.val(rand.choice(self.shortest_vals), pre, shortest=shortest)
         else:
@@ -551,13 +572,12 @@ class Opt(And):
         """Build the current ``Opt`` instance
 
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
 
-        # if we want to generate the most direct full rule, then we'll
-        # ignore all optional values
-        if shortest or rand.maybe(self.prob):
+        if rand.maybe(self.prob):
             raise errors.OptGram
 
         return super(Opt, self).build(pre, shortest=shortest)
@@ -633,6 +653,7 @@ class Def(Field):
         """Build this rule definition
         
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         if pre is None:
             pre = []
@@ -705,14 +726,10 @@ class Ref(Field):
         the GramFuzzer instance and building it
 
         :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
         """
         global REF_LEVEL
         REF_LEVEL += 1
-
-#        print("{}building ref {}".format(
-#            " " * REF_LEVEL,
-#            self.refname
-#        ))
 
         if pre is None:
             pre = []
@@ -729,3 +746,42 @@ class Ref(Field):
     
     def __repr__(self):
         return "<{}[{}]>".format(self.__class__.__name__, self.refname)
+
+
+# -------------------------------------
+# syntactic sugar
+# -------------------------------------
+
+
+class PLUS(Join):
+    """Acts like the + in a regex - one or more of the values.
+    The values are Anded together one or more times, up to ``max``
+    times.
+    """
+    sep = " "
+
+    def __init__(self, *values, **kwargs):
+        kwargs.setdefault("max", 10)
+        kwargs.setdefault("sep", self.sep)
+        value = And(*values)
+        super(PLUS, self).__init__(value, **kwargs)
+
+class STAR(PLUS):
+    """Acts like the ``*`` in a regex - zero or more of the values.
+    The values are Anded together zero or more times, up to ``max``
+    times.
+    """
+    shortest_is_nothing = True
+
+    def build(self, pre=None, shortest=False):
+        """Build the STAR field.
+
+        :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
+        """
+        if pre is None:
+            pre = []
+        if rand.maybe() and not shortest:
+            return super(STAR, self).build(pre, shortest=shortest)
+        else:
+            raise errors.OptGram
