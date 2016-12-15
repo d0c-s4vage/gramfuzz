@@ -8,7 +8,7 @@ complex grammars to model text and binary data formats.
 
 ## Installation
 
-Install `v1.0.0` via pip:
+Install via pip:
 
 ```
 pip install gramfuzz
