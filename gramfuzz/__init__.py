@@ -87,6 +87,9 @@ class GramFuzzer(object):
 
         # the last-defined rule definition names derived from the ``_last_prefs``
         self._last_pref_keys = None
+
+        # a simple flag to tell if data needs to be auto processed or not
+        self._rules_processed = False
     
     def load_grammar(self, path):
         """Load a grammar file (python file containing grammar definitions) by
@@ -104,48 +107,78 @@ class GramFuzzer(object):
 
         exec code in {"GRAMFUZZER": self}
 
-    def find_shortest_paths(self, cat):
+    def preprocess_rules(self):
+        """Calculate shortest reference-paths of each rule (and Or field),
+        and prune all unreachable rules.
+        """
+        to_prune = self._find_shortest_paths()
+        self._prune_rules(to_prune)
+
+        self._rules_processed = True
+
+    def _find_shortest_paths(self):
         leaf_rules = deque()
         non_leaf_rules = deque()
         rule_ref_lengths = {}
 
         # first find all rule definitions that *don't* have
         # any references - these are the leaf nodes
-        for rule_name, rules in self.defs.get(cat, {}).iteritems():
-            for rule in rules:
-                refs = self._collect_refs(rule)
-                if len(refs) == 0:
-                    leaf_rules.append(rule)
-                    rule_ref_lengths[rule.name] = (0, rule)
-                    rule.ref_length = 0
-                else:
-                    non_leaf_rules.append(rule)
+        for cat in self.defs.keys():
+            for rule_name, rules in self.defs.get(cat, {}).iteritems():
+                for rule in rules:
+                    refs = self._collect_refs(rule)
+                    if len(refs) == 0:
+                        leaf_rules.append(rule)
+                        rule_ref_lengths[cat + "-:-" + rule.name] = (0, rule)
+                        rule.ref_length = 0
+                    else:
+                        non_leaf_rules.append((cat, rule))
 
         # for every referenced rule, determine how many steps away
         # from a leaf node it is
         post_process = deque()
+        unprocessed_count = 0
         while len(non_leaf_rules) > 0:
-            curr_rule = non_leaf_rules.popleft()
+            # this means we've looped twice over everything
+            # without being able to process the remaining nodes
+            if unprocessed_count // len(non_leaf_rules) == 2:
+                break
 
-            ref_length = self._process_shortest_ref(curr_rule, rule_ref_lengths)
+            cat, curr_rule = non_leaf_rules.popleft()
+
+            ref_length = self._process_shortest_ref(cat, curr_rule, rule_ref_lengths)
             if ref_length is None:
-                non_leaf_rules.append(curr_rule)
+                non_leaf_rules.append((cat, curr_rule))
+                unprocessed_count += 1
                 continue
 
-            if curr_rule.name not in rule_ref_lengths or ref_length < rule_ref_lengths[curr_rule.name][0]:
-                rule_ref_lengths[curr_rule.name] = (ref_length, [curr_rule])
-            elif ref_length == rule_ref_lengths[curr_rule.name][0]:
-                rule_ref_lengths[curr_rule.name][1].append(curr_rule)
+            unprocessed_count = 0
 
-            post_process.append(curr_rule)
+            ref_key = cat + "-:-" + curr_rule.name
+            if ref_key not in rule_ref_lengths or ref_length < rule_ref_lengths[ref_key][0]:
+                rule_ref_lengths[ref_key] = (ref_length, [curr_rule])
+            elif ref_length == rule_ref_lengths[ref_key][0]:
+                rule_ref_lengths[ref_key][1].append(curr_rule)
+
+            post_process.append((cat, curr_rule))
 
         self._assign_or_shortest_vals(post_process, rule_ref_lengths)
 
-    def _assign_or_shortest_vals(self, fields, rule_ref_lengths):
-        for field in fields:
-            self._process_shortest_ref(field, rule_ref_lengths, assign_or=True)
+        # these should be pruned
+        return non_leaf_rules
 
-    def _process_shortest_ref(self, field, rule_ref_lengths, assign_or=False):
+    def _prune_rules(self, non_leaf_rules):
+        for cat,rule in non_leaf_rules:
+            rule_list = self.defs.get(cat, {}).get(rule.name, [])
+            rule_list.remove(rule)
+            if len(rule_list) == 0:
+                del self.defs.get(cat, {})[rule.name]
+
+    def _assign_or_shortest_vals(self, fields, rule_ref_lengths):
+        for cat,field in fields:
+            self._process_shortest_ref(cat, field, rule_ref_lengths, assign_or=True)
+
+    def _process_shortest_ref(self, cat, field, rule_ref_lengths, assign_or=False):
         import gramfuzz.fields as fields
 
         # strings, ints, hard-coded non-gramfuzz values
@@ -158,6 +191,7 @@ class GramFuzzer(object):
             min_vals = []
             for val in field.values:
                 val_ref = self._process_shortest_ref(
+                    cat,
                     val,
                     rule_ref_lengths,
                     assign_or = assign_or,
@@ -188,6 +222,7 @@ class GramFuzzer(object):
             max_ref_length = -1
             for val in field.values:
                 ref_val_length = self._process_shortest_ref(
+                    cat,
                     val,
                     rule_ref_lengths,
                     assign_or = assign_or,
@@ -202,92 +237,15 @@ class GramFuzzer(object):
             return max_ref_length
 
         if isinstance(field, fields.Ref):
-            ref_val = rule_ref_lengths.get(field.refname, (-1, []))[0]
+            ref_key = field.cat + "-:-" + field.refname
+            ref_val = rule_ref_lengths.get(ref_key, (-1, []))[0]
             if ref_val == -1:
                 return None
             # ONLY ADD ONE WHEN IT's A REF!!!!!
             return ref_val + 1
 
         return None
-    
-    def prune(self, check_cats, target_cat):
-        """Iterate over every rule defined in every category in ``check_cats``
-        to see if each rule can be reached from a rule defined in ``target_cat``.
 
-        If a rule defined in ``check_cats`` cannot be reached from a rule in ``target_cat``
-        and the rule has not explicitly asked to not be pruned, the rule will be
-        removed from memory.
-        """
-        if target_cat not in self.defs:
-            return
-
-        # iterate over the rules until we cannot prune anymore
-        to_delete = {}
-        while True:
-            prev_length = self._get_to_del_length(to_delete)
-
-            # check each rule in each category in check_cats
-            for check_cat in check_cats:
-                for check_name,check_vals in self.defs[check_cat].iteritems():
-                    for check_val in check_vals:
-                        
-                        # if this specific rule cannot be reached from any rule
-                        # defined in ``target_cat``, prune it
-                        self.prune_if_unreachable_from(
-                            rule_cat  = check_cat,
-                            rule_name = check_name,
-                            rule_val  = check_val,
-                            from_cat  = target_cat,
-                            to_delete = to_delete
-                        )
-            
-            # we found nothing else to prune, so break
-            if prev_length == self._get_to_del_length(to_delete):
-                break
-
-        # delete every rule queued for deletion
-        for del_cat,del_info in to_delete.iteritems():
-            for del_name,del_vals in del_info.iteritems():
-                if del_cat not in self.defs:
-                    break
-                if del_name not in self.defs[del_cat]:
-                    break
-
-                for del_val in del_vals:
-                    vals = self.defs[del_cat][del_name]
-                    if del_val in vals:
-                        vals.remove(del_val)
-                    if len(vals) == 0:
-                        del self.defs[del_cat][del_name]
-    
-    def prune_if_unreachable_from(self, rule_cat, rule_name, rule_val, from_cat, to_delete):
-        """Prune a rule if it cannot be reached by any rule in ``from_cat``
-
-        :param str rule_cat: The category of the rule
-        :param str rule_name: The name of the rule
-        :param rule_val: The value of the rule
-        :param str from_cat: The category to check if the rule is reachable from
-        :param list to_delete: The collection to add the rule to if it should be pruned
-        """
-        # collect all Refs contained within the rule_val
-        all_refs = self._collect_refs(rule_val)
-
-        # the rule will be pruned if one or more referenced rules in ``rule_val`` cannot
-        # be reached from a rule in ``from_cat``
-        for ref in all_refs:
-            if ref.refname not in self.defs[from_cat]:# or (from_cat in to_delete and ref.refname in to_delete[from_cat]):
-                to_delete.setdefault(rule_cat, {}).setdefault(rule_name, set()).add(rule_val)
-                break
-
-        return all_refs
-    
-    def _get_to_del_length(self, to_delete):
-        length = 0
-        for cat,names in to_delete.iteritems():
-            for name,vals in names.iteritems():
-                length += len(vals)
-        return length
-    
     def _collect_refs(self, item_val, acc=None, no_opt=False):
         if acc is None:
             acc = deque()
@@ -321,6 +279,8 @@ class GramFuzzer(object):
             be pruned even if it has been determined to be unreachable (default=``False``)
         :param str gram_file: The file the rule was defined in (default=``"default"``).
         """
+        self._rules_processed = False
+
         self.add_to_cat_group(cat, gram_file, def_name)
 
         if no_prune:
@@ -365,7 +325,7 @@ class GramFuzzer(object):
         return rand.choice(self.defs[cat][refname])
 
 
-    def gen(self, cat, num, preferred=None, preferred_ratio=0.5, max_recursion=None):
+    def gen(self, cat, num, preferred=None, preferred_ratio=0.5, max_recursion=None, auto_process=True):
         """Generate ``num`` rules from category ``cat``, optionally specifying
         preferred category groups ``preferred`` that should be preferred at
         probability ``preferred_ratio`` over other randomly-chosen rule definitions.
@@ -376,7 +336,19 @@ class GramFuzzer(object):
         :param float preferred_ratio: The percent probability that the preferred
             groups will be chosen over randomly choosen rule definitions from category ``cat``.
         :param int max_recursion: The maximum amount to allow references to recurse
+        :param bool auto_process: Whether rules should be automatically pruned and
+            shortest reference paths determined. See :any:`gramfuzz.GramFuzzer.prune` and
+            :any:`gramfuzz.GramFuzzer._find_shortest_paths` for what would automatically
+            be done.
         """
+        if auto_process and self._rules_processed == False:
+            # TODO prune needs to be reworked, shouldn't require two cats
+            # to work
+            # self.prune(....)
+
+            # calculate shortest paths for this category
+            self.preprocess_rules()
+
         if max_recursion is not None:
             import gramfuzz.fields
             gramfuzz.fields.Ref.max_recursion = max_recursion
