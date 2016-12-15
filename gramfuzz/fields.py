@@ -682,7 +682,7 @@ class Def(Field):
 
         return self.sep.join(res)
 
-REF_LEVEL = 0
+REF_LEVEL = 1
 class Ref(Field):
     """The ``Ref`` class is used to reference defined rules by their name. If a
     rule name is defined multiple times, one will be chosen at random.
@@ -738,7 +738,7 @@ class Ref(Field):
         res = utils.val(
             definition,
             pre,
-            shortest=(shortest or REF_LEVEL > self.max_recursion)
+            shortest=(shortest or REF_LEVEL >= self.max_recursion)
         )
 
         REF_LEVEL -= 1

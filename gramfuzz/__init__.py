@@ -337,20 +337,16 @@ class GramFuzzer(object):
             groups will be chosen over randomly choosen rule definitions from category ``cat``.
         :param int max_recursion: The maximum amount to allow references to recurse
         :param bool auto_process: Whether rules should be automatically pruned and
-            shortest reference paths determined. See :any:`gramfuzz.GramFuzzer.prune` and
-            :any:`gramfuzz.GramFuzzer._find_shortest_paths` for what would automatically
-            be done.
+            shortest reference paths determined. See :any:`gramfuzz.GramFuzzer.preprocess_rules`
+            for what would automatically be done.
         """
-        if auto_process and self._rules_processed == False:
-            # TODO prune needs to be reworked, shouldn't require two cats
-            # to work
-            # self.prune(....)
+        import gramfuzz.fields
+        gramfuzz.fields.REF_LEVEL = 1
 
-            # calculate shortest paths for this category
+        if auto_process and self._rules_processed == False:
             self.preprocess_rules()
 
         if max_recursion is not None:
-            import gramfuzz.fields
             gramfuzz.fields.Ref.max_recursion = max_recursion
 
         if preferred is None:
