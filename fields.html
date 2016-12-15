@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>fields &mdash; gramfuzz 1.0.0 documentation</title>
+  <title>fields &mdash; gramfuzz 1.1.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="gramfuzz 1.0.0 documentation" href="index.html"/>
+    <link rel="top" title="gramfuzz 1.1.0 documentation" href="index.html"/>
         <link rel="next" title="utils" href="utils.html"/>
         <link rel="prev" title="gramfuzz" href="gramfuzz.html"/> 
 
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.1.0
               </div>
             
           
@@ -443,13 +443,17 @@ This class works nicely with <code class="docutils literal"><span class="pre">Op
 
 <dl class="method">
 <dt id="gramfuzz.fields.And.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#And.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.And.build" title="Permalink to this definition">¶</a></dt>
+<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#And.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.And.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the <code class="docutils literal"><span class="pre">And</span></code> instance</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
+<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -503,13 +507,17 @@ unreachable (default=``False``)</li>
 
 <dl class="method">
 <dt id="gramfuzz.fields.Def.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Def.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Def.build" title="Permalink to this definition">¶</a></dt>
+<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Def.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Def.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build this rule definition</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
+<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -558,6 +566,20 @@ the following:</p>
 <p>Note that the sum of each probability percent in the list must equal 1.0.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="gramfuzz.fields.Field.shortest_is_nothing">
+<code class="descname">shortest_is_nothing</code><em class="property"> = False</em><a class="headerlink" href="#gramfuzz.fields.Field.shortest_is_nothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is used during <code class="xref any docutils literal"><span class="pre">gramfuzz.GramFuzzer.find_shortest_paths</span></code>. Sometimes
+the fuzzer cannot know based on the values in a field what that field&#8217;s
+minimal behavior will be.</p>
+<p>Setting this to <code class="docutils literal"><span class="pre">True</span></code> will explicitly let the <code class="docutils literal"><span class="pre">GramFuzzer</span></code> instance
+know what the minimal outcome will be.</p>
+<p><em>NOTE</em> when implementing a custom Field subclass and setting <code class="docutils literal"><span class="pre">shortest_is_nothing</span></code>
+to <code class="docutils literal"><span class="pre">True</span></code>, be sure to handle the case when <code class="docutils literal"><span class="pre">build(shortest=True)</span></code>
+is called so that a <code class="docutils literal"><span class="pre">gramfuzz.errors.OptGram</span></code> error is raised (which
+skips the current field from being generated).</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -594,14 +616,18 @@ boundary conditions.</p>
 
 <dl class="method">
 <dt id="gramfuzz.fields.Int.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Int.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Int.build" title="Permalink to this definition">¶</a></dt>
+<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Int.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Int.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the integer, optionally providing a <code class="docutils literal"><span class="pre">pre</span></code> list
 that <em>may</em> be used to define prerequisites for a Field being built.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pre</strong> (<em>list</em>) &#8211; A list of prerequisites to be collected during the building of a Field.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pre</strong> (<em>list</em>) &#8211; A list of prerequisites to be collected during the building of a Field.</li>
+<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -640,13 +666,17 @@ This can be useful when a variable number of items in a list is needed. E.g.:</p
 
 <dl class="method">
 <dt id="gramfuzz.fields.Join.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Join.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Join.build" title="Permalink to this definition">¶</a></dt>
+<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Join.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Join.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the <code class="docutils literal"><span class="pre">Join</span></code> field instance.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
+<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -715,13 +745,17 @@ is then skipped</p>
 
 <dl class="method">
 <dt id="gramfuzz.fields.Opt.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Opt.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Opt.build" title="Permalink to this definition">¶</a></dt>
+<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Opt.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Opt.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the current <code class="docutils literal"><span class="pre">Opt</span></code> instance</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
+<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -757,17 +791,34 @@ at random as the result of a call to the <code class="docutils literal"><span cl
 
 <dl class="method">
 <dt id="gramfuzz.fields.Or.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Or.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Or.build" title="Permalink to this definition">¶</a></dt>
+<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Or.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Or.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the <code class="docutils literal"><span class="pre">Or</span></code> instance</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
+<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gramfuzz.fields.PLUS">
+<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">PLUS</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#PLUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.PLUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acts like the + in a regex - one or more of the values.
+The values are Anded together one or more times, up to <code class="docutils literal"><span class="pre">max</span></code>
+times.</p>
+<dl class="method">
+<dt id="gramfuzz.fields.PLUS.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#PLUS.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.PLUS.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -796,13 +847,17 @@ at random as the result of a call to the <code class="docutils literal"><span cl
 
 <dl class="method">
 <dt id="gramfuzz.fields.Q.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Q.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Q.build" title="Permalink to this definition">¶</a></dt>
+<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Q.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Q.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the <code class="docutils literal"><span class="pre">Quote</span></code> instance</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
+<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -862,14 +917,18 @@ integer rule twice, and placing a period between them:</p>
 
 <dl class="method">
 <dt id="gramfuzz.fields.Ref.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Ref.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Ref.build" title="Permalink to this definition">¶</a></dt>
+<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Ref.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Ref.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the <code class="docutils literal"><span class="pre">Ref</span></code> instance by fetching the rule from
 the GramFuzzer instance and building it</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
+<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -879,6 +938,32 @@ the GramFuzzer instance and building it</p>
 <dt id="gramfuzz.fields.Ref.cat">
 <code class="descname">cat</code><em class="property"> = 'default'</em><a class="headerlink" href="#gramfuzz.fields.Ref.cat" title="Permalink to this definition">¶</a></dt>
 <dd><p>The default category where the referenced rule definition will be looked for</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gramfuzz.fields.STAR">
+<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">STAR</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#STAR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.STAR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acts like the <code class="docutils literal"><span class="pre">*</span></code> in a regex - zero or more of the values.
+The values are Anded together zero or more times, up to <code class="docutils literal"><span class="pre">max</span></code>
+times.</p>
+<dl class="method">
+<dt id="gramfuzz.fields.STAR.build">
+<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#STAR.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.STAR.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the STAR field.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
+<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -909,13 +994,17 @@ the GramFuzzer instance and building it</p>
 
 <dl class="method">
 <dt id="gramfuzz.fields.String.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#String.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.String.build" title="Permalink to this definition">¶</a></dt>
+<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#String.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.String.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the String instance</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list (optional, default=None)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list (optional, default=None)</li>
+<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -1036,7 +1125,7 @@ list.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0.0',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

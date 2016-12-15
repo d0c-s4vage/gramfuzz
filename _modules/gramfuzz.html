@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gramfuzz &mdash; gramfuzz 1.0.0 documentation</title>
+  <title>gramfuzz &mdash; gramfuzz 1.1.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="gramfuzz 1.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="gramfuzz 1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="Module code" href="index.html"/> 
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.1.0
               </div>
             
           
@@ -221,7 +221,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_prefs</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># the last-defined rule definition names derived from the ``_last_prefs``</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_last_pref_keys</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_pref_keys</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># a simple flag to tell if data needs to be auto processed or not</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rules_processed</span> <span class="o">=</span> <span class="kc">False</span></div>
     
 <div class="viewcode-block" id="GramFuzzer.load_grammar"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.load_grammar">[docs]</a>    <span class="k">def</span> <span class="nf">load_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load a grammar file (python file containing grammar definitions) by</span>
@@ -238,88 +241,153 @@
             <span class="n">code</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="s2">&quot;exec&quot;</span><span class="p">)</span>
 
         <span class="n">exec</span> <span class="n">code</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;GRAMFUZZER&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">}</span></div>
-    
-<div class="viewcode-block" id="GramFuzzer.prune"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.prune">[docs]</a>    <span class="k">def</span> <span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_cats</span><span class="p">,</span> <span class="n">target_cat</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Iterate over every rule defined in every category in ``check_cats``</span>
-<span class="sd">        to see if each rule can be reached from a rule defined in ``target_cat``.</span>
 
-<span class="sd">        If a rule defined in ``check_cats`` cannot be reached from a rule in ``target_cat``</span>
-<span class="sd">        and the rule has not explicitly asked to not be pruned, the rule will be</span>
-<span class="sd">        removed from memory.</span>
+<div class="viewcode-block" id="GramFuzzer.preprocess_rules"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.preprocess_rules">[docs]</a>    <span class="k">def</span> <span class="nf">preprocess_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate shortest reference-paths of each rule (and Or field),</span>
+<span class="sd">        and prune all unreachable rules.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">target_cat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">:</span>
-            <span class="k">return</span>
+        <span class="n">to_prune</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_shortest_paths</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prune_rules</span><span class="p">(</span><span class="n">to_prune</span><span class="p">)</span>
 
-        <span class="c1"># iterate over the rules until we cannot prune anymore</span>
-        <span class="n">to_delete</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">prev_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_to_del_length</span><span class="p">(</span><span class="n">to_delete</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rules_processed</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-            <span class="c1"># check each rule in each category in check_cats</span>
-            <span class="k">for</span> <span class="n">check_cat</span> <span class="ow">in</span> <span class="n">check_cats</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">check_name</span><span class="p">,</span><span class="n">check_vals</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">check_cat</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-                    <span class="k">for</span> <span class="n">check_val</span> <span class="ow">in</span> <span class="n">check_vals</span><span class="p">:</span>
-                        
-                        <span class="c1"># if this specific rule cannot be reached from any rule</span>
-                        <span class="c1"># defined in ``target_cat``, prune it</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">prune_if_unreachable_from</span><span class="p">(</span>
-                            <span class="n">rule_cat</span>  <span class="o">=</span> <span class="n">check_cat</span><span class="p">,</span>
-                            <span class="n">rule_name</span> <span class="o">=</span> <span class="n">check_name</span><span class="p">,</span>
-                            <span class="n">rule_val</span>  <span class="o">=</span> <span class="n">check_val</span><span class="p">,</span>
-                            <span class="n">from_cat</span>  <span class="o">=</span> <span class="n">target_cat</span><span class="p">,</span>
-                            <span class="n">to_delete</span> <span class="o">=</span> <span class="n">to_delete</span>
-                        <span class="p">)</span>
-            
-            <span class="c1"># we found nothing else to prune, so break</span>
-            <span class="k">if</span> <span class="n">prev_length</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_to_del_length</span><span class="p">(</span><span class="n">to_delete</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_find_shortest_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">leaf_rules</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="n">non_leaf_rules</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="n">rule_ref_lengths</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># first find all rule definitions that *don&#39;t* have</span>
+        <span class="c1"># any references - these are the leaf nodes</span>
+        <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">rule_name</span><span class="p">,</span> <span class="n">rules</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+                    <span class="n">refs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_refs</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">refs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">leaf_rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+                        <span class="n">rule_ref_lengths</span><span class="p">[</span><span class="n">cat</span> <span class="o">+</span> <span class="s2">&quot;-:-&quot;</span> <span class="o">+</span> <span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rule</span><span class="p">)</span>
+                        <span class="n">rule</span><span class="o">.</span><span class="n">ref_length</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">non_leaf_rules</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cat</span><span class="p">,</span> <span class="n">rule</span><span class="p">))</span>
+
+        <span class="c1"># for every referenced rule, determine how many steps away</span>
+        <span class="c1"># from a leaf node it is</span>
+        <span class="n">post_process</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="n">unprocessed_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_leaf_rules</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># this means we&#39;ve looped twice over everything</span>
+            <span class="c1"># without being able to process the remaining nodes</span>
+            <span class="k">if</span> <span class="n">unprocessed_count</span> <span class="o">//</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_leaf_rules</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="k">break</span>
 
-        <span class="c1"># delete every rule queued for deletion</span>
-        <span class="k">for</span> <span class="n">del_cat</span><span class="p">,</span><span class="n">del_info</span> <span class="ow">in</span> <span class="n">to_delete</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">del_name</span><span class="p">,</span><span class="n">del_vals</span> <span class="ow">in</span> <span class="n">del_info</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">del_cat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">:</span>
-                    <span class="k">break</span>
-                <span class="k">if</span> <span class="n">del_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">del_cat</span><span class="p">]:</span>
-                    <span class="k">break</span>
+            <span class="n">cat</span><span class="p">,</span> <span class="n">curr_rule</span> <span class="o">=</span> <span class="n">non_leaf_rules</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
 
-                <span class="k">for</span> <span class="n">del_val</span> <span class="ow">in</span> <span class="n">del_vals</span><span class="p">:</span>
-                    <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">del_cat</span><span class="p">][</span><span class="n">del_name</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">del_val</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">:</span>
-                        <span class="n">vals</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">del_val</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">del_cat</span><span class="p">][</span><span class="n">del_name</span><span class="p">]</span></div>
-    
-<div class="viewcode-block" id="GramFuzzer.prune_if_unreachable_from"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.prune_if_unreachable_from">[docs]</a>    <span class="k">def</span> <span class="nf">prune_if_unreachable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_cat</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">,</span> <span class="n">rule_val</span><span class="p">,</span> <span class="n">from_cat</span><span class="p">,</span> <span class="n">to_delete</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Prune a rule if it cannot be reached by any rule in ``from_cat``</span>
+            <span class="n">ref_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_shortest_ref</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">curr_rule</span><span class="p">,</span> <span class="n">rule_ref_lengths</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ref_length</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">non_leaf_rules</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cat</span><span class="p">,</span> <span class="n">curr_rule</span><span class="p">))</span>
+                <span class="n">unprocessed_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
 
-<span class="sd">        :param str rule_cat: The category of the rule</span>
-<span class="sd">        :param str rule_name: The name of the rule</span>
-<span class="sd">        :param rule_val: The value of the rule</span>
-<span class="sd">        :param str from_cat: The category to check if the rule is reachable from</span>
-<span class="sd">        :param list to_delete: The collection to add the rule to if it should be pruned</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># collect all Refs contained within the rule_val</span>
-        <span class="n">all_refs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_refs</span><span class="p">(</span><span class="n">rule_val</span><span class="p">)</span>
+            <span class="n">unprocessed_count</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="c1"># the rule will be pruned if one or more referenced rules in ``rule_val`` cannot</span>
-        <span class="c1"># be reached from a rule in ``from_cat``</span>
-        <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">all_refs</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">ref</span><span class="o">.</span><span class="n">refname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">from_cat</span><span class="p">]:</span><span class="c1"># or (from_cat in to_delete and ref.refname in to_delete[from_cat]):</span>
-                <span class="n">to_delete</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">rule_cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">rule_name</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">rule_val</span><span class="p">)</span>
-                <span class="k">break</span>
+            <span class="n">ref_key</span> <span class="o">=</span> <span class="n">cat</span> <span class="o">+</span> <span class="s2">&quot;-:-&quot;</span> <span class="o">+</span> <span class="n">curr_rule</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">if</span> <span class="n">ref_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rule_ref_lengths</span> <span class="ow">or</span> <span class="n">ref_length</span> <span class="o">&lt;</span> <span class="n">rule_ref_lengths</span><span class="p">[</span><span class="n">ref_key</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">rule_ref_lengths</span><span class="p">[</span><span class="n">ref_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ref_length</span><span class="p">,</span> <span class="p">[</span><span class="n">curr_rule</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">ref_length</span> <span class="o">==</span> <span class="n">rule_ref_lengths</span><span class="p">[</span><span class="n">ref_key</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">rule_ref_lengths</span><span class="p">[</span><span class="n">ref_key</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_rule</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">all_refs</span></div>
-    
-    <span class="k">def</span> <span class="nf">_get_to_del_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_delete</span><span class="p">):</span>
-        <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">cat</span><span class="p">,</span><span class="n">names</span> <span class="ow">in</span> <span class="n">to_delete</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">vals</span> <span class="ow">in</span> <span class="n">names</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-                <span class="n">length</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">length</span>
-    
-    <span class="k">def</span> <span class="nf">_collect_refs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_val</span><span class="p">,</span> <span class="n">acc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="n">post_process</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cat</span><span class="p">,</span> <span class="n">curr_rule</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_assign_or_shortest_vals</span><span class="p">(</span><span class="n">post_process</span><span class="p">,</span> <span class="n">rule_ref_lengths</span><span class="p">)</span>
+
+        <span class="c1"># these should be pruned</span>
+        <span class="k">return</span> <span class="n">non_leaf_rules</span>
+
+    <span class="k">def</span> <span class="nf">_prune_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">non_leaf_rules</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">cat</span><span class="p">,</span><span class="n">rule</span> <span class="ow">in</span> <span class="n">non_leaf_rules</span><span class="p">:</span>
+            <span class="n">rule_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">rule_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rule_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})[</span><span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_assign_or_shortest_vals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">rule_ref_lengths</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">cat</span><span class="p">,</span><span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_process_shortest_ref</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">rule_ref_lengths</span><span class="p">,</span> <span class="n">assign_or</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_process_shortest_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">rule_ref_lengths</span><span class="p">,</span> <span class="n">assign_or</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">gramfuzz.fields</span> <span class="k">as</span> <span class="nn">fields</span>
+
+        <span class="c1"># strings, ints, hard-coded non-gramfuzz values</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="o">.</span><span class="n">Field</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s2">&quot;shortest_is_nothing&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="c1"># return None if it can&#39;t be determined yet</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="o">.</span><span class="n">Or</span><span class="p">):</span>
+            <span class="n">min_ref</span> <span class="o">=</span> <span class="mh">0xffffff</span>
+            <span class="n">min_vals</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                <span class="n">val_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_shortest_ref</span><span class="p">(</span>
+                    <span class="n">cat</span><span class="p">,</span>
+                    <span class="n">val</span><span class="p">,</span>
+                    <span class="n">rule_ref_lengths</span><span class="p">,</span>
+                    <span class="n">assign_or</span> <span class="o">=</span> <span class="n">assign_or</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">val_ref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">elif</span> <span class="n">val_ref</span> <span class="o">&lt;</span> <span class="n">min_ref</span><span class="p">:</span>
+                    <span class="n">min_ref</span> <span class="o">=</span> <span class="n">val_ref</span>
+                    <span class="n">min_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">val_ref</span> <span class="o">==</span> <span class="n">min_ref</span><span class="p">:</span>
+                    <span class="n">min_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">min_ref</span> <span class="o">==</span> <span class="mh">0xffffff</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="n">assign_or</span><span class="p">:</span>
+                <span class="n">field</span><span class="o">.</span><span class="n">shortest_vals</span> <span class="o">=</span> <span class="n">min_vals</span>
+
+            <span class="k">return</span> <span class="n">min_ref</span>
+
+        <span class="c1"># these all be all refs from Ands, Joins, etc, while ignoring</span>
+        <span class="c1"># any optional fields (since those will be ignored with shortest=True</span>
+        <span class="c1"># set on a call to build()).</span>
+        <span class="c1">#</span>
+        <span class="c1"># Also for Defs, Ands, Joins, etc, we&#39;ll be returning the maximum</span>
+        <span class="c1"># ref length, since every reference *must* be generated</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">):</span>
+            <span class="n">max_ref_length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                <span class="n">ref_val_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_shortest_ref</span><span class="p">(</span>
+                    <span class="n">cat</span><span class="p">,</span>
+                    <span class="n">val</span><span class="p">,</span>
+                    <span class="n">rule_ref_lengths</span><span class="p">,</span>
+                    <span class="n">assign_or</span> <span class="o">=</span> <span class="n">assign_or</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">ref_val_length</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">ref_val_length</span> <span class="o">&gt;</span> <span class="n">max_ref_length</span><span class="p">:</span>
+                    <span class="n">max_ref_length</span> <span class="o">=</span> <span class="n">ref_val_length</span>
+
+            <span class="k">if</span> <span class="n">max_ref_length</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">max_ref_length</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="o">.</span><span class="n">Ref</span><span class="p">):</span>
+            <span class="n">ref_key</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">cat</span> <span class="o">+</span> <span class="s2">&quot;-:-&quot;</span> <span class="o">+</span> <span class="n">field</span><span class="o">.</span><span class="n">refname</span>
+            <span class="n">ref_val</span> <span class="o">=</span> <span class="n">rule_ref_lengths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ref_key</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">[]))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ref_val</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="c1"># ONLY ADD ONE WHEN IT&#39;s A REF!!!!!</span>
+            <span class="k">return</span> <span class="n">ref_val</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_collect_refs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_val</span><span class="p">,</span> <span class="n">acc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">no_opt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">acc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acc</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+
+        <span class="kn">from</span> <span class="nn">gramfuzz.fields</span> <span class="k">import</span> <span class="n">Opt</span>
+        <span class="k">if</span> <span class="n">no_opt</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item_val</span><span class="p">,</span> <span class="n">Opt</span><span class="p">)</span> <span class="ow">or</span> <span class="n">item_val</span><span class="o">.</span><span class="n">shortest_is_nothing</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">acc</span>
 
         <span class="kn">from</span> <span class="nn">gramfuzz.fields</span> <span class="k">import</span> <span class="n">Ref</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item_val</span><span class="p">,</span> <span class="n">Ref</span><span class="p">):</span>
@@ -346,6 +414,8 @@
 <span class="sd">            be pruned even if it has been determined to be unreachable (default=``False``)</span>
 <span class="sd">        :param str gram_file: The file the rule was defined in (default=``&quot;default&quot;``).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rules_processed</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_to_cat_group</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">gram_file</span><span class="p">,</span> <span class="n">def_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">no_prune</span><span class="p">:</span>
@@ -390,7 +460,7 @@
         <span class="k">return</span> <span class="n">rand</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="n">refname</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="GramFuzzer.gen"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.gen">[docs]</a>    <span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">preferred</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preferred_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<div class="viewcode-block" id="GramFuzzer.gen"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.gen">[docs]</a>    <span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">preferred</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preferred_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_recursion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">auto_process</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate ``num`` rules from category ``cat``, optionally specifying</span>
 <span class="sd">        preferred category groups ``preferred`` that should be preferred at</span>
 <span class="sd">        probability ``preferred_ratio`` over other randomly-chosen rule definitions.</span>
@@ -399,8 +469,21 @@
 <span class="sd">        :param int num: The number of rules to generate</span>
 <span class="sd">        :param list preferred: A list of preferred category groups to generate rules from</span>
 <span class="sd">        :param float preferred_ratio: The percent probability that the preferred</span>
-<span class="sd">        groups will be chosen over randomly choosen rule definitions from category ``cat``.</span>
+<span class="sd">            groups will be chosen over randomly choosen rule definitions from category ``cat``.</span>
+<span class="sd">        :param int max_recursion: The maximum amount to allow references to recurse</span>
+<span class="sd">        :param bool auto_process: Whether rules should be automatically pruned and</span>
+<span class="sd">            shortest reference paths determined. See :any:`gramfuzz.GramFuzzer.preprocess_rules`</span>
+<span class="sd">            for what would automatically be done.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">gramfuzz.fields</span>
+        <span class="n">gramfuzz</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">REF_LEVEL</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">auto_process</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rules_processed</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preprocess_rules</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">max_recursion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">gramfuzz</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">Ref</span><span class="o">.</span><span class="n">max_recursion</span> <span class="o">=</span> <span class="n">max_recursion</span>
+
         <span class="k">if</span> <span class="n">preferred</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">preferred</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -453,10 +536,12 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">val_res</span> <span class="o">=</span> <span class="n">_val</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">pre</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">total_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">revert</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
-                <span class="k">continue</span>
+                <span class="k">raise</span>
+                <span class="c1">#total_errors.append(e)</span>
+                <span class="c1">#self.revert(info)</span>
+                <span class="c1">#continue</span>
             <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RUNTIME ERROR&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">revert</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
                 <span class="k">continue</span>
 
@@ -484,7 +569,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">def_name</span><span class="p">,</span> <span class="n">deque</span><span class="p">())</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">def_value</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_staged_defs</span> <span class="o">=</span> <span class="kc">None</span></div>
     
-<div class="viewcode-block" id="GramFuzzer.revert"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.revert">[docs]</a>    <span class="k">def</span> <span class="nf">revert</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GramFuzzer.revert"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.revert">[docs]</a>    <span class="k">def</span> <span class="nf">revert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Revert after a single def errored during generate (throw away all</span>
 <span class="sd">        staged rule definition changes)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -535,7 +620,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.0',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

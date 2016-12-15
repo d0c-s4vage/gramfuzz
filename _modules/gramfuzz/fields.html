@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gramfuzz.fields &mdash; gramfuzz 1.0.0 documentation</title>
+  <title>gramfuzz.fields &mdash; gramfuzz 1.1.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="gramfuzz 1.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="gramfuzz 1.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="gramfuzz" href="../gramfuzz.html"/> 
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.1.0
               </div>
             
           
@@ -235,6 +235,24 @@
 
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">MetaField</span>
 
+    <span class="n">shortest_is_nothing</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="sd">&quot;&quot;&quot;This is used during :any:`gramfuzz.GramFuzzer.find_shortest_paths`. Sometimes</span>
+<span class="sd">    the fuzzer cannot know based on the values in a field what that field&#39;s</span>
+<span class="sd">    minimal behavior will be.</span>
+
+<span class="sd">    Setting this to ``True`` will explicitly let the ``GramFuzzer`` instance</span>
+<span class="sd">    know what the minimal outcome will be.</span>
+
+<span class="sd">    *NOTE* when implementing a custom Field subclass and setting ``shortest_is_nothing``</span>
+<span class="sd">    to ``True``, be sure to handle the case when ``build(shortest=True)``</span>
+<span class="sd">    is called so that a ``gramfuzz.errors.OptGram`` error is raised (which</span>
+<span class="sd">    skips the current field from being generated).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># a value of 0 means that it will generate things normally</span>
+    <span class="c1"># this is the expected behavior of leaf nodes</span>
+    <span class="n">ref_length</span> <span class="o">=</span> <span class="mi">0</span>
+
     <span class="nb">min</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="nb">max</span> <span class="o">=</span> <span class="mh">0x100</span>
 
@@ -359,17 +377,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">odds</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;odds&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">odds</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="Int.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Int.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Int.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Int.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build the integer, optionally providing a ``pre`` list</span>
 <span class="sd">        that *may* be used to define prerequisites for a Field being built.</span>
 
 <span class="sd">        :param list pre: A list of prerequisites to be collected during the building of a Field.</span>
+<span class="sd">        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">pre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">pre</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rand</span><span class="o">.</span><span class="n">maybe</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">pre</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="n">shortest</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">min</span>
@@ -465,18 +484,19 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">charset</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;charset&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">charset</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="String.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.String.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="String.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.String.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build the String instance</span>
 
 <span class="sd">        :param list pre: The prerequisites list (optional, default=None)</span>
+<span class="sd">        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">pre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">pre</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rand</span><span class="o">.</span><span class="n">maybe</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">pre</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="n">shortest</span><span class="p">)</span>
 
-        <span class="n">length</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="n">shortest</span><span class="p">)</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">charset</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">res</span></div></div>
 
@@ -503,10 +523,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;sep&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="Join.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Join.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Join.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Join.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build the ``Join`` field instance.</span>
 <span class="sd">        </span>
 <span class="sd">        :param list pre: The prerequisites list</span>
+<span class="sd">        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">pre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -515,16 +536,13 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># +1 to make it inclusive</span>
             <span class="n">vals</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">rand</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="kn">import</span> <span class="nn">pdb</span>
-                <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span>
 
         <span class="n">joins</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">v</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">pre</span><span class="p">)</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="n">shortest</span><span class="p">)</span>
                 <span class="n">joins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">OptGram</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">continue</span>
@@ -536,21 +554,24 @@
 <span class="sd">    This class works nicely with ``Opt`` values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
 <div class="viewcode-block" id="And.__init__"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.And.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a new ``And`` field instance.</span>
 <span class="sd">        </span>
 <span class="sd">        :param list values: The list of values to be concatenated</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;sep&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
         <span class="c1"># to be used internally, is not intended to be set directly by a user</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rolling</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;rolling&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fuzzer</span> <span class="o">=</span> <span class="n">GramFuzzer</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span></div>
     
-<div class="viewcode-block" id="And.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.And.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="And.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.And.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build the ``And`` instance</span>
 
 <span class="sd">        :param list pre: The prerequisites list</span>
+<span class="sd">        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">pre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">pre</span> <span class="o">=</span> <span class="p">[]</span>
@@ -558,7 +579,7 @@
         <span class="n">res</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pre</span><span class="p">))</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="n">shortest</span><span class="p">))</span>
             <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">OptGram</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">FlushGrams</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -574,7 +595,7 @@
                     <span class="n">pre</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
                 <span class="k">continue</span>
 
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Q"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Q">[docs]</a><span class="k">class</span> <span class="nc">Q</span><span class="p">(</span><span class="n">And</span><span class="p">):</span>
@@ -605,12 +626,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">html_js_escape</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;html_js_escape&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">html_js_escape</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">quote</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;quote&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quote</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Q.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Q.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Q.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Q.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build the ``Quote`` instance</span>
 
 <span class="sd">        :param list pre: The prerequisites list</span>
+<span class="sd">        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="n">shortest</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">escape</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
@@ -630,20 +652,31 @@
 
 <span class="sd">        :param list values: The list of values to choose randomly from</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># when building with shortest=True, one of these values will</span>
+        <span class="c1"># be chosen instead of self.values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shortest_vals</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;options&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rolling</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;rolling&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="Or.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Or.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Or.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Or.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build the ``Or`` instance</span>
 
 <span class="sd">        :param list pre: The prerequisites list</span>
+<span class="sd">        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">pre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">pre</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="n">pre</span><span class="p">)</span></div></div>
+        <span class="c1"># self.shortest_vals will be set by the GramFuzzer and will</span>
+        <span class="c1"># contain a list of value options that have a minimal reference</span>
+        <span class="c1"># chain</span>
+        <span class="k">if</span> <span class="n">shortest</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">shortest_vals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shortest_vals</span><span class="p">),</span> <span class="n">pre</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="n">shortest</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="n">pre</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="n">shortest</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Opt"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Opt">[docs]</a><span class="k">class</span> <span class="nc">Opt</span><span class="p">(</span><span class="n">And</span><span class="p">):</span>
@@ -654,6 +687,8 @@
 <span class="sd">    When an ``errors.OptGram`` exception is raised, the current value being built</span>
 <span class="sd">    is then skipped</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">shortest_is_nothing</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="n">prob</span> <span class="o">=</span> <span class="mf">0.5</span>
     <span class="sd">&quot;&quot;&quot;The probability of an ``Opt`` instance raising an ``errors.OptGram``</span>
@@ -670,10 +705,11 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">Opt</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prob</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;prob&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prob</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Opt.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Opt.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Opt.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Opt.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build the current ``Opt`` instance</span>
 
 <span class="sd">        :param list pre: The prerequisites list</span>
+<span class="sd">        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">pre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">pre</span> <span class="o">=</span> <span class="p">[]</span>
@@ -681,7 +717,7 @@
         <span class="k">if</span> <span class="n">rand</span><span class="o">.</span><span class="n">maybe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prob</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">OptGram</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Opt</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Opt</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="n">shortest</span><span class="p">)</span></div></div>
 
 <span class="c1"># ----------------------------</span>
 <span class="c1"># Non-direct classes</span>
@@ -750,10 +786,11 @@
         <span class="n">module_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.pyc&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fuzzer</span><span class="o">.</span><span class="n">add_definition</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">no_prune</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">no_prune</span><span class="p">,</span> <span class="n">gram_file</span><span class="o">=</span><span class="n">module_name</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="Def.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Def.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Def.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Def.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build this rule definition</span>
 <span class="sd">        </span>
 <span class="sd">        :param list pre: The prerequisites list</span>
+<span class="sd">        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">pre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">pre</span> <span class="o">=</span> <span class="p">[]</span>
@@ -761,7 +798,7 @@
         <span class="n">res</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">pre</span><span class="p">))</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="n">shortest</span><span class="p">))</span>
             <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">FlushGrams</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">prev</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
                 <span class="n">res</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -774,11 +811,15 @@
                     <span class="n">stmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prev</span><span class="p">)</span>
                     <span class="n">pre</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
                 <span class="k">continue</span>
+            <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">OptGram</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+                <span class="k">raise</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div></div>
 
+<span class="n">REF_LEVEL</span> <span class="o">=</span> <span class="mi">1</span>
 <div class="viewcode-block" id="Ref"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Ref">[docs]</a><span class="k">class</span> <span class="nc">Ref</span><span class="p">(</span><span class="n">Field</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The ``Ref`` class is used to reference defined rules by their name. If a</span>
 <span class="sd">    rule name is defined multiple times, one will be chosen at random.</span>
@@ -801,6 +842,10 @@
     <span class="sd">&quot;&quot;&quot;The default category where the referenced rule definition will be looked for</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">max_recursion</span> <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="n">failsafe</span> <span class="o">=</span> <span class="kc">None</span>
+
 <div class="viewcode-block" id="Ref.__init__"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Ref.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a new ``Ref`` instance</span>
 
@@ -809,35 +854,74 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refname</span> <span class="o">=</span> <span class="n">refname</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cat</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cat</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">failsafe</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;failsafe&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">failsafe</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fuzzer</span> <span class="o">=</span> <span class="n">GramFuzzer</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span></div>
     
-<div class="viewcode-block" id="Ref.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Ref.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Ref.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.Ref.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build the ``Ref`` instance by fetching the rule from</span>
 <span class="sd">        the GramFuzzer instance and building it</span>
 
 <span class="sd">        :param list pre: The prerequisites list</span>
+<span class="sd">        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">global</span> <span class="n">REF_LEVEL</span>
+        <span class="n">REF_LEVEL</span> <span class="o">+=</span> <span class="mi">1</span>
+
         <span class="k">if</span> <span class="n">pre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">pre</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzzer</span><span class="o">.</span><span class="n">get_ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">refname</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">pre</span><span class="p">)</span></div>
-    
-    <span class="k">def</span> <span class="nf">_get_ref_cls_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">cls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span><span class="p">(</span>
+            <span class="n">definition</span><span class="p">,</span>
+            <span class="n">pre</span><span class="p">,</span>
+            <span class="n">shortest</span><span class="o">=</span><span class="p">(</span><span class="n">shortest</span> <span class="ow">or</span> <span class="n">REF_LEVEL</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_recursion</span><span class="p">)</span>
+        <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">cls</span> <span class="ow">is</span> <span class="n">Ref</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">count</span>
-
-        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__bases__</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ref_cls_depth</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">count</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">REF_LEVEL</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">res</span></div>
     
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{}</span><span class="s2">[</span><span class="si">{}</span><span class="s2">]&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">refname</span><span class="p">)</span></div>
+
+
+<span class="c1"># -------------------------------------</span>
+<span class="c1"># syntactic sugar</span>
+<span class="c1"># -------------------------------------</span>
+
+
+<div class="viewcode-block" id="PLUS"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.PLUS">[docs]</a><span class="k">class</span> <span class="nc">PLUS</span><span class="p">(</span><span class="n">Join</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Acts like the + in a regex - one or more of the values.</span>
+<span class="sd">    The values are Anded together one or more times, up to ``max``</span>
+<span class="sd">    times.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+
+<div class="viewcode-block" id="PLUS.__init__"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.PLUS.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;sep&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PLUS</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="STAR"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.STAR">[docs]</a><span class="k">class</span> <span class="nc">STAR</span><span class="p">(</span><span class="n">PLUS</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Acts like the ``*`` in a regex - zero or more of the values.</span>
+<span class="sd">    The values are Anded together zero or more times, up to ``max``</span>
+<span class="sd">    times.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">shortest_is_nothing</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="STAR.build"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.STAR.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Build the STAR field.</span>
+
+<span class="sd">        :param list pre: The prerequisites list</span>
+<span class="sd">        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pre</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">rand</span><span class="o">.</span><span class="n">maybe</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">shortest</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">STAR</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">shortest</span><span class="o">=</span><span class="n">shortest</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">OptGram</span></div></div>
 </pre></div>
 
            </div>
@@ -871,7 +955,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.0',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
