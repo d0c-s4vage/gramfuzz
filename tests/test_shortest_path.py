@@ -31,7 +31,7 @@ class TestShortestPath(unittest.TestCase):
         ))
         test2 = Def("test2", "blah2")
 
-        self.fuzzer.find_shortest_paths("default")
+        self.fuzzer._find_shortest_paths()
 
         for x in xrange(100):
             res = test1.build(shortest=True)
@@ -46,7 +46,7 @@ class TestShortestPath(unittest.TestCase):
         test2 = Def("test2", "blah2") # <-- this blah2 should be generated
         test3 = Def("test3", Ref("test2"))
 
-        self.fuzzer.find_shortest_paths("default")
+        self.fuzzer._find_shortest_paths()
 
         for x in xrange(100):
             res = test1.build(shortest=True)
@@ -62,7 +62,23 @@ class TestShortestPath(unittest.TestCase):
         test3 = Def("test3", Or(Ref("test2"), "blah3")) # <-- this blah3 should be generated
         test4 = Def("test4", Ref("test3"))
 
-        self.fuzzer.find_shortest_paths("default")
+        self.fuzzer._find_shortest_paths()
+
+        for x in xrange(100):
+            res = test1.build(shortest=True)
+            self.assertEqual(res, "blah3")
+
+    def test_cross_category(self):
+        test1 = Def("test1", Or(
+            Ref("test2"),
+            And(Ref("test2"), Ref("test1")),
+            Ref("test3", cat="other"),
+        ))
+        test2 = Def("test2", Ref("test4") | Ref("test3", cat="other"))
+        test3 = Def("test3", Or(Ref("test2"), "blah3"), cat="other") # <-- this blah3 should be generated
+        test4 = Def("test4", Ref("test3", cat="other"))
+
+        self.fuzzer._find_shortest_paths()
 
         for x in xrange(100):
             res = test1.build(shortest=True)
@@ -81,7 +97,7 @@ class TestShortestPath(unittest.TestCase):
         )
         Def("name", "THE NAME")
 
-        self.fuzzer.find_shortest_paths("default")
+        self.fuzzer._find_shortest_paths()
 
         for x in xrange(100):
             res = fpdef.build(shortest=True)
