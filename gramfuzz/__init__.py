@@ -169,6 +169,8 @@ class GramFuzzer(object):
 
     def _prune_rules(self, non_leaf_rules):
         for cat,rule in non_leaf_rules:
+            if cat in self.no_prunes and rule.name in self.no_prunes[cat]:
+                continue
             rule_list = self.defs.get(cat, {}).get(rule.name, [])
             rule_list.remove(rule)
             if len(rule_list) == 0:

@@ -41,6 +41,25 @@ Def("c", UInt)
         self.assertNotIn("a", self.fuzzer.defs["default"])
         self.assertIn("c", self.fuzzer.defs["default"])
 
+    def test_no_prune_rules(self):
+        named_tmp = tempfile.NamedTemporaryFile()
+        named_tmp.write(r"""
+import gramfuzz
+from gramfuzz.fields import *
+
+# should get pruned since b isn't defined
+Def("a", UInt, Ref("b"), no_prune=True)
+Def("c", UInt)
+        """)
+        named_tmp.flush()
+        self.fuzzer.load_grammar(named_tmp.name)
+        named_tmp.close()
+
+        self.fuzzer.preprocess_rules()
+
+        self.assertIn("a", self.fuzzer.defs["default"])
+        self.assertIn("c", self.fuzzer.defs["default"])
+
     def test_prune_rules_circular(self):
         named_tmp = tempfile.NamedTemporaryFile()
         named_tmp.write(r"""
