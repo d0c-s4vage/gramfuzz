@@ -22,6 +22,49 @@ class TestFuzzer(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_set_max_recursion(self):
+        self.fuzzer.set_max_recursion(100)
+        self.assertEqual(Ref.max_recursion, 100)
+
+    def test_default_cat_for_cat_group(self):
+        named_tmp = tempfile.NamedTemporaryFile()
+        named_tmp.write(r"""
+import gramfuzz
+from gramfuzz.fields import *
+
+GRAMFUZZ_TOP_LEVEL_CAT = "other"
+
+# should get pruned since b isn't defined
+Def("a", UInt, Ref("b", cat="other"), cat="other")
+Def("c", UInt, cat="other")
+        """)
+        named_tmp.flush()
+        self.fuzzer.load_grammar(named_tmp.name)
+        cat_group = os.path.basename(named_tmp.name)
+        named_tmp.close()
+
+        self.assertIn(cat_group, self.fuzzer.cat_group_defaults)
+        self.assertEqual(self.fuzzer.cat_group_defaults[cat_group], "other")
+
+    def test_gen_cat_group(self):
+        named_tmp = tempfile.NamedTemporaryFile()
+        named_tmp.write(r"""
+import gramfuzz
+from gramfuzz.fields import *
+
+GRAMFUZZ_TOP_LEVEL_CAT = "other"
+
+# should get pruned since b isn't defined
+Def("a", "hello", cat="other")
+        """)
+        named_tmp.flush()
+        self.fuzzer.load_grammar(named_tmp.name)
+        cat_group = os.path.basename(named_tmp.name)
+        named_tmp.close()
+
+        res = self.fuzzer.gen(cat_group=cat_group, num=1)[0]
+        self.assertEqual(res, "hello")
+
     def test_prune_rules(self):
         named_tmp = tempfile.NamedTemporaryFile()
         named_tmp.write(r"""

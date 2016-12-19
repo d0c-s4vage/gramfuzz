@@ -29,7 +29,8 @@ class TestShortestPath(unittest.TestCase):
             And(Ref("test2"), Ref("test1")),
             "blah" # <-- this blah should be generated
         ))
-        test2 = Def("test2", "blah2")
+        test2 = Def("test2", "blah2", Ref("test3"))
+        test3 = Def("test3", "blah3")
 
         self.fuzzer._find_shortest_paths()
 

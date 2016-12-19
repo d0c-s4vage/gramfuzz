@@ -112,10 +112,6 @@ class Field(object):
     skips the current field from being generated).
     """
 
-    # a value of 0 means that it will generate things normally
-    # this is the expected behavior of leaf nodes
-    ref_length = 0
-
     min = 0
     max = 0x100
 
@@ -397,8 +393,11 @@ class Join(Field):
             pre = []
 
         if self.max is not None:
-            # +1 to make it inclusive
-            vals = [self.values[0]] * rand.randint(1, self.max+1)
+            if shortest:
+                vals = [self.values[0]]
+            else:
+                # +1 to make it inclusive
+                vals = [self.values[0]] * rand.randint(1, self.max+1)
         else:
             vals = self.values
 
@@ -577,7 +576,7 @@ class Opt(And):
         if pre is None:
             pre = []
 
-        if rand.maybe(self.prob):
+        if shortest or rand.maybe(self.prob):
             raise errors.OptGram
 
         return super(Opt, self).build(pre, shortest=shortest)
@@ -705,7 +704,7 @@ class Ref(Field):
     """The default category where the referenced rule definition will be looked for
     """
 
-    max_recursion = 5
+    max_recursion = 20
 
     failsafe = None
 
@@ -731,18 +730,24 @@ class Ref(Field):
         global REF_LEVEL
         REF_LEVEL += 1
 
-        if pre is None:
-            pre = []
+        try:
+            if pre is None:
+                pre = []
 
-        definition = self.fuzzer.get_ref(self.cat, self.refname)
-        res = utils.val(
-            definition,
-            pre,
-            shortest=(shortest or REF_LEVEL >= self.max_recursion)
-        )
+            #print("{:04d} - {} - {}:{}".format(REF_LEVEL, shortest, self.cat, self.refname))
 
-        REF_LEVEL -= 1
-        return res
+            definition = self.fuzzer.get_ref(self.cat, self.refname)
+            res = utils.val(
+                definition,
+                pre,
+                shortest=(shortest or REF_LEVEL >= self.max_recursion)
+            )
+
+            return res
+
+        # this needs to happen no matter what
+        finally:
+            REF_LEVEL -= 1
     
     def __repr__(self):
         return "<{}[{}]>".format(self.__class__.__name__, self.refname)
@@ -758,13 +763,14 @@ class PLUS(Join):
     The values are Anded together one or more times, up to ``max``
     times.
     """
-    sep = " "
+    sep = ""
 
     def __init__(self, *values, **kwargs):
         kwargs.setdefault("max", 10)
         kwargs.setdefault("sep", self.sep)
         value = And(*values)
         super(PLUS, self).__init__(value, **kwargs)
+
 
 class STAR(PLUS):
     """Acts like the ``*`` in a regex - zero or more of the values.
@@ -781,7 +787,10 @@ class STAR(PLUS):
         """
         if pre is None:
             pre = []
-        if rand.maybe() and not shortest:
+
+        if shortest:
+            raise errors.OptGram
+        elif rand.maybe():
             return super(STAR, self).build(pre, shortest=shortest)
         else:
             raise errors.OptGram

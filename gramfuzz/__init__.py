@@ -77,6 +77,7 @@ class GramFuzzer(object):
         self.defs = {}
         self.no_prunes = {}
         self.cat_groups = {}
+        self.cat_group_defaults = {}
 
         # used during rule generation to keep track of things
         # that can be reverted if things go wrong
@@ -105,7 +106,22 @@ class GramFuzzer(object):
             data = f.read()
             code = compile(data, path, "exec")
 
-        exec code in {"GRAMFUZZER": self}
+        locals_ = {"GRAMFUZZER": self}
+        exec code in locals_
+
+        if "GRAMFUZZ_TOP_LEVEL_CAT" in locals_:
+            cat_group = os.path.basename(path).replace(".py", "")
+            self.set_cat_group_top_level_cat(cat_group, locals_["GRAMFUZZ_TOP_LEVEL_CAT"])
+
+    def set_max_recursion(self, level):
+        """Set the maximum reference-recursion depth (not the Python system maximum stack
+        recursion level). This controls how many levels deep of nested references are allowed
+        before gramfuzz attempts to generate the shortest (reference-wise) rules possible.
+
+        :param int level: The new maximum reference level
+        """
+        import gramfuzz.fields
+        gramfuzz.fields.Ref.max_recursion = level
 
     def preprocess_rules(self):
         """Calculate shortest reference-paths of each rule (and Or field),
@@ -129,8 +145,7 @@ class GramFuzzer(object):
                     refs = self._collect_refs(rule)
                     if len(refs) == 0:
                         leaf_rules.append(rule)
-                        rule_ref_lengths[cat + "-:-" + rule.name] = (0, rule)
-                        rule.ref_length = 0
+                        rule_ref_lengths[cat + "-:-" + rule.name] = (0, [rule])
                     else:
                         non_leaf_rules.append((cat, rule))
 
@@ -243,7 +258,17 @@ class GramFuzzer(object):
             ref_val = rule_ref_lengths.get(ref_key, (-1, []))[0]
             if ref_val == -1:
                 return None
-            # ONLY ADD ONE WHEN IT's A REF!!!!!
+            ref_rule_val = rule_ref_lengths[ref_key][1][0]
+
+            # if the referenced value is a native python type,
+            # don't increment the reference value
+            #
+            # E.g. If it's a Ref("string"), and Def("string") doesn't contain
+            # any references, don't increment the value
+            if ref_val == 0 and len(self._collect_refs(ref_rule_val)) == 0:
+                return 0
+                
+            # add one if the reference value is more than 0
             return ref_val + 1
 
         return None
@@ -294,6 +319,16 @@ class GramFuzzer(object):
             self._staged_defs.append((cat, def_name, def_val))
         else:
             self.defs.setdefault(cat, {}).setdefault(def_name, deque()).append(def_val)
+
+    def set_cat_group_top_level_cat(self, cat_group, top_level_cat):
+        """Set the default category when generating data from the grammars defined
+        in cat group. *Note* a cat group is usually just the basename of the grammar
+        file, minus the ``.py``.
+
+        :param str cat_group: The category group to set the default top-level cat for
+        :param str top_level_cat: The top-level (default) category of the cat group
+        """
+        self.cat_group_defaults[cat_group] = top_level_cat
     
     def add_to_cat_group(self, cat, cat_group, def_name):
         """Associate the provided rule definition name ``def_name`` with the
@@ -327,13 +362,17 @@ class GramFuzzer(object):
         return rand.choice(self.defs[cat][refname])
 
 
-    def gen(self, cat, num, preferred=None, preferred_ratio=0.5, max_recursion=None, auto_process=True):
+    def gen(self, num, cat=None, cat_group=None, preferred=None, preferred_ratio=0.5, max_recursion=None, auto_process=True):
         """Generate ``num`` rules from category ``cat``, optionally specifying
         preferred category groups ``preferred`` that should be preferred at
         probability ``preferred_ratio`` over other randomly-chosen rule definitions.
 
-        :param str cat: The name of the category to generate ``num`` rules from
         :param int num: The number of rules to generate
+        :param str cat: The name of the category to generate ``num`` rules from
+        :param str cat_group: The category group (ie python file) to generate rules from. This
+            was added specifically to make it easier to generate data based on the name
+            of the file the grammar was defined in, and is intended to work with the
+            ``GRAMFUZZ_TOP_LEVEL_CAT`` values that may be defined in a loaded grammar file.
         :param list preferred: A list of preferred category groups to generate rules from
         :param float preferred_ratio: The percent probability that the preferred
             groups will be chosen over randomly choosen rule definitions from category ``cat``.
@@ -345,11 +384,25 @@ class GramFuzzer(object):
         import gramfuzz.fields
         gramfuzz.fields.REF_LEVEL = 1
 
+        if cat is None and cat_group is None:
+            raise gramfuzz.errors.GramFuzzError("cat and cat_group are None, one must be set")
+
+        if cat is None and cat_group is not None:
+            if cat_group not in self.cat_group_defaults:
+                raise gramfuzz.errors.GramFuzzError(
+                    "cat_group {!r} did not define a GRAMFUZZ_TOP_LEVEL_CAT variable"
+                )
+            cat = self.cat_group_defaults[cat_group]
+            if not isinstance(cat, basestring):
+                raise gramfuzz.errors.GramFuzzError(
+                    "cat_group {!r}'s GRAMFUZZ_TOP_LEVEL_CAT variable was not a string"
+                )
+
         if auto_process and self._rules_processed == False:
             self.preprocess_rules()
 
         if max_recursion is not None:
-            gramfuzz.fields.Ref.max_recursion = max_recursion
+            self.set_max_recursion(max_recursion)
 
         if preferred is None:
             preferred = []

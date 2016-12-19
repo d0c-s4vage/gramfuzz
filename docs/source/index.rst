@@ -62,6 +62,9 @@ We could then use this grammar like so:
    fuzzer = gramfuzz.GramFuzzer()
    fuzzer.load_grammar("names_grammar.py")
    names = fuzzer.gen(cat="name", num=10)
+   # or like this if GRAMFUZZ_TOP_LEVEL_CAT="name" was defined in the
+   # names_grammar.py file:
+   #     names = fuzzer.gen(cat_group="names_grammar", num=10)
    print("\n".join(names))
 
 Which would output something like this:
