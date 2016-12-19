@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gramfuzz &mdash; gramfuzz 1.1.0 documentation</title>
+  <title>gramfuzz &mdash; gramfuzz 1.2.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="gramfuzz 1.1.0 documentation" href="../index.html"/>
+    <link rel="top" title="gramfuzz 1.2.0 documentation" href="../index.html"/>
         <link rel="up" title="Module code" href="index.html"/> 
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                1.1.0
+                1.2.0
               </div>
             
           
@@ -155,6 +155,9 @@
 <span class="kn">import</span> <span class="nn">gramfuzz.utils</span> <span class="k">as</span> <span class="nn">utils</span>
 
 
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.2.0&quot;</span>
+
+
 <div class="viewcode-block" id="GramFuzzer"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer">[docs]</a><span class="k">class</span> <span class="nc">GramFuzzer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ``GramFuzzer`` is a singleton class that is used to</span>
@@ -212,6 +215,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">defs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">no_prunes</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cat_groups</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cat_group_defaults</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># used during rule generation to keep track of things</span>
         <span class="c1"># that can be reverted if things go wrong</span>
@@ -235,12 +239,41 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;path does not exist: </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        
+        <span class="c1"># this will let grammars reference eachother with relative</span>
+        <span class="c1"># imports.</span>
+        <span class="c1">#</span>
+        <span class="c1"># E.g.:</span>
+        <span class="c1">#     grams/</span>
+        <span class="c1">#         gram1.py</span>
+        <span class="c1">#         gram2.py</span>
+        <span class="c1">#</span>
+        <span class="c1"># gram1.py can do &quot;import gram2&quot; to require rules in gram2.py to</span>
+        <span class="c1"># be loaded</span>
+        <span class="n">grammar_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">grammar_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grammar_path</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-            <span class="n">code</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="s2">&quot;exec&quot;</span><span class="p">)</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="s2">&quot;exec&quot;</span><span class="p">)</span>
 
-        <span class="n">exec</span> <span class="n">code</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;GRAMFUZZER&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">}</span></div>
+        <span class="n">locals_</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;GRAMFUZZER&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">}</span>
+        <span class="n">exec</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">locals_</span>
+
+        <span class="k">if</span> <span class="s2">&quot;TOP_CAT&quot;</span> <span class="ow">in</span> <span class="n">locals_</span><span class="p">:</span>
+            <span class="n">cat_group</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_cat_group_top_level_cat</span><span class="p">(</span><span class="n">cat_group</span><span class="p">,</span> <span class="n">locals_</span><span class="p">[</span><span class="s2">&quot;TOP_CAT&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="GramFuzzer.set_max_recursion"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.set_max_recursion">[docs]</a>    <span class="k">def</span> <span class="nf">set_max_recursion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the maximum reference-recursion depth (not the Python system maximum stack</span>
+<span class="sd">        recursion level). This controls how many levels deep of nested references are allowed</span>
+<span class="sd">        before gramfuzz attempts to generate the shortest (reference-wise) rules possible.</span>
+
+<span class="sd">        :param int level: The new maximum reference level</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">gramfuzz.fields</span>
+        <span class="n">gramfuzz</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">Ref</span><span class="o">.</span><span class="n">max_recursion</span> <span class="o">=</span> <span class="n">level</span></div>
 
 <div class="viewcode-block" id="GramFuzzer.preprocess_rules"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.preprocess_rules">[docs]</a>    <span class="k">def</span> <span class="nf">preprocess_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate shortest reference-paths of each rule (and Or field),</span>
@@ -264,8 +297,7 @@
                     <span class="n">refs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_refs</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">refs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">leaf_rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
-                        <span class="n">rule_ref_lengths</span><span class="p">[</span><span class="n">cat</span> <span class="o">+</span> <span class="s2">&quot;-:-&quot;</span> <span class="o">+</span> <span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rule</span><span class="p">)</span>
-                        <span class="n">rule</span><span class="o">.</span><span class="n">ref_length</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">rule_ref_lengths</span><span class="p">[</span><span class="n">cat</span> <span class="o">+</span> <span class="s2">&quot;-:-&quot;</span> <span class="o">+</span> <span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">rule</span><span class="p">])</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">non_leaf_rules</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cat</span><span class="p">,</span> <span class="n">rule</span><span class="p">))</span>
 
@@ -304,6 +336,8 @@
 
     <span class="k">def</span> <span class="nf">_prune_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">non_leaf_rules</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">cat</span><span class="p">,</span><span class="n">rule</span> <span class="ow">in</span> <span class="n">non_leaf_rules</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_prunes</span> <span class="ow">and</span> <span class="n">rule</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_prunes</span><span class="p">[</span><span class="n">cat</span><span class="p">]:</span>
+                <span class="k">continue</span>
             <span class="n">rule_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span>
             <span class="n">rule_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rule_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -376,7 +410,17 @@
             <span class="n">ref_val</span> <span class="o">=</span> <span class="n">rule_ref_lengths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ref_key</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">[]))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">ref_val</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="c1"># ONLY ADD ONE WHEN IT&#39;s A REF!!!!!</span>
+            <span class="n">ref_rule_val</span> <span class="o">=</span> <span class="n">rule_ref_lengths</span><span class="p">[</span><span class="n">ref_key</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># if the referenced value is a native python type,</span>
+            <span class="c1"># don&#39;t increment the reference value</span>
+            <span class="c1">#</span>
+            <span class="c1"># E.g. If it&#39;s a Ref(&quot;string&quot;), and Def(&quot;string&quot;) doesn&#39;t contain</span>
+            <span class="c1"># any references, don&#39;t increment the value</span>
+            <span class="k">if</span> <span class="n">ref_val</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_collect_refs</span><span class="p">(</span><span class="n">ref_rule_val</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">0</span>
+                
+            <span class="c1"># add one if the reference value is more than 0</span>
             <span class="k">return</span> <span class="n">ref_val</span> <span class="o">+</span> <span class="mi">1</span>
 
         <span class="k">return</span> <span class="kc">None</span>
@@ -427,6 +471,16 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_staged_defs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cat</span><span class="p">,</span> <span class="n">def_name</span><span class="p">,</span> <span class="n">def_val</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">def_name</span><span class="p">,</span> <span class="n">deque</span><span class="p">())</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">def_val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GramFuzzer.set_cat_group_top_level_cat"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.set_cat_group_top_level_cat">[docs]</a>    <span class="k">def</span> <span class="nf">set_cat_group_top_level_cat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat_group</span><span class="p">,</span> <span class="n">top_level_cat</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the default category when generating data from the grammars defined</span>
+<span class="sd">        in cat group. *Note* a cat group is usually just the basename of the grammar</span>
+<span class="sd">        file, minus the ``.py``.</span>
+
+<span class="sd">        :param str cat_group: The category group to set the default top-level cat for</span>
+<span class="sd">        :param str top_level_cat: The top-level (default) category of the cat group</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cat_group_defaults</span><span class="p">[</span><span class="n">cat_group</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_level_cat</span></div>
     
 <div class="viewcode-block" id="GramFuzzer.add_to_cat_group"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.add_to_cat_group">[docs]</a>    <span class="k">def</span> <span class="nf">add_to_cat_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">cat_group</span><span class="p">,</span> <span class="n">def_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Associate the provided rule definition name ``def_name`` with the</span>
@@ -460,13 +514,17 @@
         <span class="k">return</span> <span class="n">rand</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="n">refname</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="GramFuzzer.gen"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.gen">[docs]</a>    <span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">preferred</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preferred_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_recursion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">auto_process</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GramFuzzer.gen"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.gen">[docs]</a>    <span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat_group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preferred</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preferred_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_recursion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">auto_process</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate ``num`` rules from category ``cat``, optionally specifying</span>
 <span class="sd">        preferred category groups ``preferred`` that should be preferred at</span>
 <span class="sd">        probability ``preferred_ratio`` over other randomly-chosen rule definitions.</span>
 
-<span class="sd">        :param str cat: The name of the category to generate ``num`` rules from</span>
 <span class="sd">        :param int num: The number of rules to generate</span>
+<span class="sd">        :param str cat: The name of the category to generate ``num`` rules from</span>
+<span class="sd">        :param str cat_group: The category group (ie python file) to generate rules from. This</span>
+<span class="sd">            was added specifically to make it easier to generate data based on the name</span>
+<span class="sd">            of the file the grammar was defined in, and is intended to work with the</span>
+<span class="sd">            ``TOP_CAT`` values that may be defined in a loaded grammar file.</span>
 <span class="sd">        :param list preferred: A list of preferred category groups to generate rules from</span>
 <span class="sd">        :param float preferred_ratio: The percent probability that the preferred</span>
 <span class="sd">            groups will be chosen over randomly choosen rule definitions from category ``cat``.</span>
@@ -478,11 +536,25 @@
         <span class="kn">import</span> <span class="nn">gramfuzz.fields</span>
         <span class="n">gramfuzz</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">REF_LEVEL</span> <span class="o">=</span> <span class="mi">1</span>
 
+        <span class="k">if</span> <span class="n">cat</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cat_group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">gramfuzz</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span><span class="p">(</span><span class="s2">&quot;cat and cat_group are None, one must be set&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cat</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cat_group</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cat_group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cat_group_defaults</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">gramfuzz</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span><span class="p">(</span>
+                    <span class="s2">&quot;cat_group </span><span class="si">{!r}</span><span class="s2"> did not define a TOP_CAT variable&quot;</span>
+                <span class="p">)</span>
+            <span class="n">cat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cat_group_defaults</span><span class="p">[</span><span class="n">cat_group</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">gramfuzz</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span><span class="p">(</span>
+                    <span class="s2">&quot;cat_group </span><span class="si">{!r}</span><span class="s2">&#39;s TOP_CAT variable was not a string&quot;</span>
+                <span class="p">)</span>
+
         <span class="k">if</span> <span class="n">auto_process</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rules_processed</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">preprocess_rules</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">max_recursion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">gramfuzz</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">Ref</span><span class="o">.</span><span class="n">max_recursion</span> <span class="o">=</span> <span class="n">max_recursion</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_max_recursion</span><span class="p">(</span><span class="n">max_recursion</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">preferred</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">preferred</span> <span class="o">=</span> <span class="p">[]</span>
@@ -620,7 +692,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.0',
+            VERSION:'1.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gramfuzz &mdash; gramfuzz 1.1.0 documentation</title>
+  <title>gramfuzz &mdash; gramfuzz 1.2.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="gramfuzz 1.1.0 documentation" href="index.html"/>
+    <link rel="top" title="gramfuzz 1.2.0 documentation" href="index.html"/>
         <link rel="next" title="fields" href="fields.html"/>
         <link rel="prev" title="gramfuzz - A grammar-based fuzzing library" href="index.html"/> 
 
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                1.1.0
+                1.2.0
               </div>
             
           
@@ -385,7 +385,7 @@ from certain grammar files</p>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.gen">
-<code class="descname">gen</code><span class="sig-paren">(</span><em>cat</em>, <em>num</em>, <em>preferred=None</em>, <em>preferred_ratio=0.5</em>, <em>max_recursion=None</em>, <em>auto_process=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.gen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.gen" title="Permalink to this definition">¶</a></dt>
+<code class="descname">gen</code><span class="sig-paren">(</span><em>num</em>, <em>cat=None</em>, <em>cat_group=None</em>, <em>preferred=None</em>, <em>preferred_ratio=0.5</em>, <em>max_recursion=None</em>, <em>auto_process=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.gen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.gen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate <code class="docutils literal"><span class="pre">num</span></code> rules from category <code class="docutils literal"><span class="pre">cat</span></code>, optionally specifying
 preferred category groups <code class="docutils literal"><span class="pre">preferred</span></code> that should be preferred at
 probability <code class="docutils literal"><span class="pre">preferred_ratio</span></code> over other randomly-chosen rule definitions.</p>
@@ -394,8 +394,12 @@ probability <code class="docutils literal"><span class="pre">preferred_ratio</sp
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cat</strong> (<em>str</em>) &#8211; The name of the category to generate <code class="docutils literal"><span class="pre">num</span></code> rules from</li>
 <li><strong>num</strong> (<em>int</em>) &#8211; The number of rules to generate</li>
+<li><strong>cat</strong> (<em>str</em>) &#8211; The name of the category to generate <code class="docutils literal"><span class="pre">num</span></code> rules from</li>
+<li><strong>cat_group</strong> (<em>str</em>) &#8211; The category group (ie python file) to generate rules from. This
+was added specifically to make it easier to generate data based on the name
+of the file the grammar was defined in, and is intended to work with the
+<code class="docutils literal"><span class="pre">TOP_CAT</span></code> values that may be defined in a loaded grammar file.</li>
 <li><strong>preferred</strong> (<em>list</em>) &#8211; A list of preferred category groups to generate rules from</li>
 <li><strong>preferred_ratio</strong> (<em>float</em>) &#8211; The percent probability that the preferred
 groups will be chosen over randomly choosen rule definitions from category <code class="docutils literal"><span class="pre">cat</span></code>.</li>
@@ -490,6 +494,42 @@ and prune all unreachable rules.</p>
 staged rule definition changes)</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="gramfuzz.GramFuzzer.set_cat_group_top_level_cat">
+<code class="descname">set_cat_group_top_level_cat</code><span class="sig-paren">(</span><em>cat_group</em>, <em>top_level_cat</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.set_cat_group_top_level_cat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.set_cat_group_top_level_cat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default category when generating data from the grammars defined
+in cat group. <em>Note</em> a cat group is usually just the basename of the grammar
+file, minus the <code class="docutils literal"><span class="pre">.py</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat_group</strong> (<em>str</em>) &#8211; The category group to set the default top-level cat for</li>
+<li><strong>top_level_cat</strong> (<em>str</em>) &#8211; The top-level (default) category of the cat group</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gramfuzz.GramFuzzer.set_max_recursion">
+<code class="descname">set_max_recursion</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.set_max_recursion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.set_max_recursion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the maximum reference-recursion depth (not the Python system maximum stack
+recursion level). This controls how many levels deep of nested references are allowed
+before gramfuzz attempts to generate the shortest (reference-wise) rules possible.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<em>int</em>) &#8211; The new maximum reference level</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -536,7 +576,7 @@ staged rule definition changes)</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.1.0',
+            VERSION:'1.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gramfuzz - A grammar-based fuzzing library &mdash; gramfuzz 1.1.0 documentation</title>
+  <title>gramfuzz - A grammar-based fuzzing library &mdash; gramfuzz 1.2.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="gramfuzz 1.1.0 documentation" href="#"/>
+    <link rel="top" title="gramfuzz 1.2.0 documentation" href="#"/>
         <link rel="next" title="gramfuzz" href="gramfuzz.html"/> 
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                1.1.0
+                1.2.0
               </div>
             
           
@@ -178,6 +178,9 @@ and suffixes:</p>
 <span class="n">fuzzer</span> <span class="o">=</span> <span class="n">gramfuzz</span><span class="o">.</span><span class="n">GramFuzzer</span><span class="p">()</span>
 <span class="n">fuzzer</span><span class="o">.</span><span class="n">load_grammar</span><span class="p">(</span><span class="s2">&quot;names_grammar.py&quot;</span><span class="p">)</span>
 <span class="n">names</span> <span class="o">=</span> <span class="n">fuzzer</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">cat</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="c1"># or like this if GRAMFUZZ_TOP_LEVEL_CAT=&quot;name&quot; was defined in the</span>
+<span class="c1"># names_grammar.py file:</span>
+<span class="c1">#     names = fuzzer.gen(cat_group=&quot;names_grammar&quot;, num=10)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -273,7 +276,7 @@ Susy Tralb
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.1.0',
+            VERSION:'1.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
