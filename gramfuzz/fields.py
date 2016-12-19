@@ -704,7 +704,7 @@ class Ref(Field):
     """The default category where the referenced rule definition will be looked for
     """
 
-    max_recursion = 20
+    max_recursion = 10
 
     failsafe = None
 
