@@ -645,7 +645,10 @@ class Def(Field):
 
         self.fuzzer = GramFuzzer.instance()
 
-        module_name = os.path.basename(inspect.stack()[1][1]).replace(".pyc", "").replace(".py", "")
+        frame,mod_path,_,_,_,_ = inspect.stack()[1]
+        module_name = os.path.basename(mod_path).replace(".pyc", "").replace(".py", "")
+        if "TOP_CAT" in frame.f_locals:
+            self.fuzzer.cat_group_defaults[module_name] = frame.f_locals["TOP_CAT"]
         self.fuzzer.add_definition(self.cat, self.name, self, no_prune=self.no_prune, gram_file=module_name)
     
     def build(self, pre=None, shortest=False):

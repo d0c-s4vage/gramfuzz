@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+
 import os
+import shutil
 import sys
 import tempfile
 import unittest
@@ -32,7 +34,7 @@ class TestFuzzer(unittest.TestCase):
 import gramfuzz
 from gramfuzz.fields import *
 
-GRAMFUZZ_TOP_LEVEL_CAT = "other"
+TOP_CAT = "other"
 
 # should get pruned since b isn't defined
 Def("a", UInt, Ref("b", cat="other"), cat="other")
@@ -52,7 +54,7 @@ Def("c", UInt, cat="other")
 import gramfuzz
 from gramfuzz.fields import *
 
-GRAMFUZZ_TOP_LEVEL_CAT = "other"
+TOP_CAT = "other"
 
 # should get pruned since b isn't defined
 Def("a", "hello", cat="other")
@@ -139,6 +141,44 @@ Def("test_def_ref", "this.", String(min=1), "=", Q(Ref("test_def")))
         named_tmp.close()
 
         res = self.fuzzer.get_ref("default", "test_def_ref").build()
+
+    def test_relative_grammar_import(self):
+        tmpdir = tempfile.mkdtemp()
+
+        try:
+            file1 = os.path.join(tmpdir, "file1.py")
+            file2 = os.path.join(tmpdir, "file2.py")
+
+            with open(file1, "wb") as f:
+                f.write(r"""
+import gramfuzz
+from gramfuzz.fields import *
+
+import file2
+
+TOP_CAT = "file1"
+
+Def("file1def", Ref("file2def", cat=file2.TOP_CAT), cat="file1")
+                """)
+
+            with open(file2, "wb") as f:
+                f.write(r"""
+import gramfuzz
+from gramfuzz.fields import *
+
+TOP_CAT = "file2"
+
+Def("file2def", "hi from file2", cat="file2")
+                """)
+
+            self.fuzzer.load_grammar(file1)
+
+            res = self.fuzzer.gen(cat_group="file1", num=1)[0]
+            self.assertEqual(res, "hi from file2")
+            
+        # always clean up
+        finally:
+            shutil.rmtree(tmpdir)
 
     # see #4 - auto process during gen()
     def test_auto_process(self):

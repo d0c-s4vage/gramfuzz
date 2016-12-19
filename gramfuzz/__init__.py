@@ -101,17 +101,31 @@ class GramFuzzer(object):
         """
         if not os.path.exists(path):
             raise Exception("path does not exist: {!r}".format(path))
+        
+        # this will let grammars reference eachother with relative
+        # imports.
+        #
+        # E.g.:
+        #     grams/
+        #         gram1.py
+        #         gram2.py
+        #
+        # gram1.py can do "import gram2" to require rules in gram2.py to
+        # be loaded
+        grammar_path = os.path.dirname(path)
+        if grammar_path not in sys.path:
+            sys.path.append(grammar_path)
 
         with open(path, "r") as f:
             data = f.read()
-            code = compile(data, path, "exec")
+        code = compile(data, path, "exec")
 
         locals_ = {"GRAMFUZZER": self}
         exec code in locals_
 
-        if "GRAMFUZZ_TOP_LEVEL_CAT" in locals_:
+        if "TOP_CAT" in locals_:
             cat_group = os.path.basename(path).replace(".py", "")
-            self.set_cat_group_top_level_cat(cat_group, locals_["GRAMFUZZ_TOP_LEVEL_CAT"])
+            self.set_cat_group_top_level_cat(cat_group, locals_["TOP_CAT"])
 
     def set_max_recursion(self, level):
         """Set the maximum reference-recursion depth (not the Python system maximum stack
@@ -372,7 +386,7 @@ class GramFuzzer(object):
         :param str cat_group: The category group (ie python file) to generate rules from. This
             was added specifically to make it easier to generate data based on the name
             of the file the grammar was defined in, and is intended to work with the
-            ``GRAMFUZZ_TOP_LEVEL_CAT`` values that may be defined in a loaded grammar file.
+            ``TOP_CAT`` values that may be defined in a loaded grammar file.
         :param list preferred: A list of preferred category groups to generate rules from
         :param float preferred_ratio: The percent probability that the preferred
             groups will be chosen over randomly choosen rule definitions from category ``cat``.
@@ -390,12 +404,12 @@ class GramFuzzer(object):
         if cat is None and cat_group is not None:
             if cat_group not in self.cat_group_defaults:
                 raise gramfuzz.errors.GramFuzzError(
-                    "cat_group {!r} did not define a GRAMFUZZ_TOP_LEVEL_CAT variable"
+                    "cat_group {!r} did not define a TOP_CAT variable"
                 )
             cat = self.cat_group_defaults[cat_group]
             if not isinstance(cat, basestring):
                 raise gramfuzz.errors.GramFuzzError(
-                    "cat_group {!r}'s GRAMFUZZ_TOP_LEVEL_CAT variable was not a string"
+                    "cat_group {!r}'s TOP_CAT variable was not a string"
                 )
 
         if auto_process and self._rules_processed == False:
