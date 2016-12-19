@@ -20,6 +20,9 @@ import gramfuzz.rand as rand
 import gramfuzz.utils as utils
 
 
+__version__ = "1.2.0"
+
+
 class GramFuzzer(object):
     """
     ``GramFuzzer`` is a singleton class that is used to
