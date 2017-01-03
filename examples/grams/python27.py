@@ -70,11 +70,13 @@ PyDef("decorated",
 PyDef("funcdef", "def ", PyRef("name"), PyRef("parameters"), ":", PyRef("suite"))
 PyDef("parameters", "(", Opt(PyRef("varargslist")), ")")
 PyDef("varargslist",
-    STAR(PyRef("fpdef"), Opt("=", PyRef("test")), ", "),
     Or(
-        Or(
-            And("*", PyRef("name"), Opt(", ", "**", PyRef("name"))),
-            And("**", PyRef("name"))
+        And(
+            STAR(PyRef("fpdef"), Opt("=", PyRef("test")), ", "),
+            Or(
+                And("*", PyRef("name"), Opt(", ", "**", PyRef("name"))),
+                And("**", PyRef("name"))
+            ),
         ),
         And(PyRef("fpdef"), Opt("=", PyRef("test")), STAR(", ", PyRef("fpdef"), Opt("=", PyRef("test"))), Opt(", "))
     )
