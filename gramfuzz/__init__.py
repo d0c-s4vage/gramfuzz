@@ -123,7 +123,7 @@ class GramFuzzer(object):
             data = f.read()
         code = compile(data, path, "exec")
 
-        locals_ = {"GRAMFUZZER": self}
+        locals_ = {"GRAMFUZZER": self, "__file__": path}
         exec code in locals_
 
         if "TOP_CAT" in locals_:

@@ -125,7 +125,26 @@ Def("c", Ref("a"))
         self.assertNotIn("a", self.fuzzer.defs["default"])
         self.assertNotIn("b", self.fuzzer.defs["default"])
         self.assertNotIn("c", self.fuzzer.defs["default"])
-    
+
+    # see #16 - __file__ needs to be set for grammar files that are being
+    # loaded
+    def test_file_set_during_grammar_load(self):
+        """Ensure that __file__ is set when loading a new grammar file
+        """
+        named_tmp = tempfile.NamedTemporaryFile()
+        named_tmp.write(r"""
+from gramfuzz.fields import *
+
+Def("file_test", __file__, cat="default")
+        """)
+        named_tmp.flush()
+
+        # should not raise an exception
+        self.fuzzer.load_grammar(named_tmp.name)
+        output = self.fuzzer.gen(num=1, cat="default")
+        self.assertEqual(output[0], named_tmp.name)
+
+
     def test_load_grammar(self):
         named_tmp = tempfile.NamedTemporaryFile()
         named_tmp.write(r"""
