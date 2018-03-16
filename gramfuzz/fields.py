@@ -501,7 +501,7 @@ class Q(And):
         elif self.html_js_escape:
             return ("'" + res.encode("string_escape").replace("<", "\\x3c").replace(">", "\\x3e") + "'")
         else:
-            return "{q}{r}{q}".format(q=self.quote, r=res)
+            return "".join([self.quote, res, self.quote])
 
 
 class Or(Field):

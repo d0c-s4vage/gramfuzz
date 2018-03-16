@@ -73,10 +73,11 @@ class GramFuzzer(object):
         return cls.__instance__
 
 
-    def __init__(self):
+    def __init__(self, debug=False):
         """Create a new ``GramFuzzer`` instance
         """
         GramFuzzer.__instance__ = self
+        self.debug = debug
         self.defs = {}
         self.no_prunes = {}
         self.cat_groups = {}
@@ -162,8 +163,15 @@ class GramFuzzer(object):
                     refs = self._collect_refs(rule)
                     if len(refs) == 0:
                         leaf_rules.append(rule)
-                        rule_ref_lengths[cat + "-:-" + rule.name] = (0, [rule])
+
+                        if not hasattr(rule, "name"):
+                            rule_ref_lengths[cat + "-:-" + str(rule)] = (0, [rule])
+                        else:
+                            rule_ref_lengths[cat + "-:-" + rule.name] = (0, [rule])
                     else:
+                        if not hasattr(rule, "unprocessed_refs"):
+                            rule.unresolved_refs = deque()
+                        rule.unresolved_refs.extend(refs)
                         non_leaf_rules.append((cat, rule))
 
         # for every referenced rule, determine how many steps away
@@ -196,13 +204,31 @@ class GramFuzzer(object):
 
         self._assign_or_shortest_vals(post_process, rule_ref_lengths)
 
+        if self.debug:
+            for cat, rule in non_leaf_rules:
+                if hasattr(rule, "unresolved_refs"):
+                    for ref in rule.unresolved_refs:
+                        if rule_ref_lengths.get(cat + "-:-" + ref.refname, None) is not None:
+                            continue
+                        print("Pruning rule {!r} due to unresolvable reference: {!r}".format(
+                            rule.name,
+                            ref.refname,
+                        ))
+                else:
+                    print("Pruning rule {!r}".format(rule.name))
+
         # these should be pruned
         return non_leaf_rules
 
     def _prune_rules(self, non_leaf_rules):
         for cat,rule in non_leaf_rules:
             if cat in self.no_prunes and rule.name in self.no_prunes[cat]:
+                if self.debug:
+                    print("Should prune {!r}, but no_prune = True".format(
+                        rule.name,
+                    ))
                 continue
+
             rule_list = self.defs.get(cat, {}).get(rule.name, [])
             rule_list.remove(rule)
             if len(rule_list) == 0:
@@ -425,6 +451,7 @@ class GramFuzzer(object):
             preferred = []
 
         res = deque()
+            
         cat_defs = self.defs[cat]
 
         # optimizations

@@ -79,6 +79,7 @@ def main(argv):
         help     = "The output file to output the generated data to (default=stdout)",
         default  = sys.stdout,
         required = False,
+        type     = argparse.FileType("wb"),
     )
     args = parser.parse_args(argv)
 
