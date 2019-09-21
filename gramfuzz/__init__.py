@@ -20,7 +20,7 @@ import gramfuzz.rand as rand
 import gramfuzz.utils as utils
 
 
-__version__ = "1.2.1"
+__version__ = "{{VERSION}}"
 
 
 class GramFuzzer(object):
