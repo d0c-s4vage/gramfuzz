@@ -15,6 +15,7 @@ such as:
 
 
 import random as r
+import six
 
 
 RANDOM = r.Random()
@@ -86,4 +87,4 @@ def data(length, charset):
     :param str charset: The charset of characters to choose from
     :returns: str
     """
-    return "".join(_choice(charset) for x in xrange(length))
+    return "".join(_choice(charset) for x in six.moves.range(length))

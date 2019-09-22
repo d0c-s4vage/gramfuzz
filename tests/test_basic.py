@@ -5,6 +5,7 @@
 import functools
 import os
 import re
+import six
 import sys
 import unittest
 
@@ -24,7 +25,7 @@ PERCENT_ERROR = 0.1
 def loop(fn):
     @functools.wraps(fn)
     def looper(*args, **kwargs):
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             fn(*args, **kwargs)
 
     return looper
@@ -88,7 +89,7 @@ class TestFields(unittest.TestCase):
             (0.25, (20, 30)),
             (0.25, (30, 40))
         ])
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             res = i.build()
             odds_group = res // 10
             # should only be four groups
@@ -96,7 +97,7 @@ class TestFields(unittest.TestCase):
             odds_results.setdefault(odds_group, 0)
             odds_results[odds_group] += 1
 
-        for x in xrange(4):
+        for x in six.moves.range(4):
             group_percent = odds_results[x] / float(LOOP_NUM)
             percent_off = abs(group_percent - 0.25)
             self.assertLess(percent_off, PERCENT_ERROR, "{}/{} == {}% error, bad".format(
@@ -115,7 +116,7 @@ class TestFields(unittest.TestCase):
             (0.50, 15),
         ])
         LOOP_NUM = 10000
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             res = i.build()
             odds_group = res // 10
             # should only be four groups
@@ -123,7 +124,7 @@ class TestFields(unittest.TestCase):
             odds_results.setdefault(odds_group, 0)
             odds_results[odds_group] += 1
 
-        for x in xrange(2):
+        for x in six.moves.range(2):
             group_percent = odds_results[x] / float(LOOP_NUM)
             percent_off = abs(group_percent - 0.50)
             self.assertLess(percent_off, PERCENT_ERROR, "{}/{} == {}% error, bad".format(
@@ -167,7 +168,7 @@ class TestFields(unittest.TestCase):
             (0.25, (20, 30)),
             (0.25, (30, 40))
         ])
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             res = s.build()
             odds_group = len(res) // 10
             # should only be four groups
@@ -175,7 +176,7 @@ class TestFields(unittest.TestCase):
             odds_results.setdefault(odds_group, 0)
             odds_results[odds_group] += 1
 
-        for x in xrange(4):
+        for x in six.moves.range(4):
             group_percent = odds_results[x] / float(LOOP_NUM)
             percent_off = abs(group_percent - 0.25)
             self.assertLess(percent_off, PERCENT_ERROR, "{}/{} == {}% error, bad".format(
@@ -203,7 +204,7 @@ class TestFields(unittest.TestCase):
 
     def test_join_max(self):
         num_items = {}
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             # should generate 0-9 items, not 10
             j = Join(UInt, sep=",", max=10)
             res = j.build()
@@ -214,7 +215,7 @@ class TestFields(unittest.TestCase):
 
         self.assertEqual(len(num_items), 10)
 
-        for k,v in num_items.iteritems():
+        for k,v in six.iteritems(num_items):
             percent = v / float(LOOP_NUM)
             diff = abs(percent - 0.10)
             self.assertLess(diff, PERCENT_ERROR, "{}/{} == {}% error, bad".format(
@@ -261,7 +262,7 @@ class TestFields(unittest.TestCase):
         int_count = 0
         data = Or(UInt, "hello")
 
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             res = data.build()
             val = gutils.val(res)
             if val == "hello":
@@ -284,7 +285,7 @@ class TestFields(unittest.TestCase):
         hello_count = 0
         data = Join(UInt, Opt("hello"), sep="|")
 
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             res = data.build()
             if "hello" in res:
                 hello_count += 1

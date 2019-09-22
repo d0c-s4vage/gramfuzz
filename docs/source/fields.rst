@@ -71,7 +71,7 @@ different options:
 .. code-block:: python
 
    o = Or(Int, "Hello")
-   for x in xrange(10):
+   for x in range(10):
        print(o.build())
    # Hello
    # Hello
@@ -102,7 +102,7 @@ will be ignored):
        ")"
    )
    
-   for x in xrange(10):
+   for x in range(10):
        print(j.build())
    # some_function(-4294967294, "sEaKWSOGabHf", "ZkLXWYAUyEuW", 95, "FHnVYTvB")
    # some_function("koBklVcoJbDC", -60)

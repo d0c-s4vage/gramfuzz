@@ -7,6 +7,7 @@
 
 
 import os
+import six
 import sys
 import unittest
 
@@ -34,7 +35,7 @@ class TestShortestPath(unittest.TestCase):
 
         self.fuzzer._find_shortest_paths()
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = test1.build(shortest=True)
             self.assertEqual(res, "blah")
 
@@ -49,7 +50,7 @@ class TestShortestPath(unittest.TestCase):
 
         self.fuzzer._find_shortest_paths()
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = test1.build(shortest=True)
             self.assertEqual(res, "blah2")
 
@@ -65,7 +66,7 @@ class TestShortestPath(unittest.TestCase):
 
         self.fuzzer._find_shortest_paths()
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = test1.build(shortest=True)
             self.assertEqual(res, "blah3")
 
@@ -81,7 +82,7 @@ class TestShortestPath(unittest.TestCase):
 
         self.fuzzer._find_shortest_paths()
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = test1.build(shortest=True)
             self.assertEqual(res, "blah3")
 
@@ -100,11 +101,11 @@ class TestShortestPath(unittest.TestCase):
 
         self.fuzzer._find_shortest_paths()
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = fpdef.build(shortest=True)
             self.assertEqual(res, "THE NAME")
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = fplist.build(shortest=True)
             # it may have the comma at the end
             self.assertIn(res, ["THE NAME", "THE NAME,"])

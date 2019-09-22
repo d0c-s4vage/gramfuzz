@@ -25,6 +25,7 @@ from collections import deque
 import json
 import inspect
 import os
+import six
 
 
 from gramfuzz import GramFuzzer
@@ -91,12 +92,12 @@ class MetaField(type):
     def __repr__(self):
         return "<{}>".format(self.__name__)
 
-class Field(object):
+class Field(six.with_metaclass(MetaField)):
     """The core class that all field classes are based one. Contains
     utility methods to determine probabilities/choices/min-max/etc.
     """
 
-    __metaclass__ = MetaField
+    #__metaclass__ = MetaField
 
     shortest_is_nothing = False
     """This is used during :any:`gramfuzz.GramFuzzer.find_shortest_paths`. Sometimes
@@ -323,7 +324,7 @@ class String(UInt):
     """Alpha-numeric character set (upper- and lower-case alphabet + numbers)
     """
 
-    charset_all = "".join(chr(x) for x in xrange(0x100))
+    charset_all = "".join(chr(x) for x in six.moves.range(0x100))
     """All possible binary characters (``0x0-0xff``)
     """
 

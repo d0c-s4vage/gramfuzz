@@ -12,6 +12,7 @@ from collections import deque
 import copy
 import gc
 import os
+import six
 import sys
 
 
@@ -125,7 +126,7 @@ class GramFuzzer(object):
         code = compile(data, path, "exec")
 
         locals_ = {"GRAMFUZZER": self, "__file__": path}
-        exec code in locals_
+        exec(code, globals(), locals_)
 
         if "TOP_CAT" in locals_:
             cat_group = os.path.basename(path).replace(".py", "")
@@ -158,7 +159,7 @@ class GramFuzzer(object):
         # first find all rule definitions that *don't* have
         # any references - these are the leaf nodes
         for cat in self.defs.keys():
-            for rule_name, rules in self.defs.get(cat, {}).iteritems():
+            for rule_name, rules in six.iteritems(self.defs.get(cat, {})):
                 for rule in rules:
                     refs = self._collect_refs(rule)
                     if len(refs) == 0:
