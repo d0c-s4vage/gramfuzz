@@ -2,6 +2,7 @@
 
 - [v1.3.0](#v130)
 - [v1.2.2](#v122)
+- [v1.2.1](#v121)
 - [v1.2.0](#v120)
 - [v1.1.0](#v110)
 - [v1.0.0](#v100)
@@ -12,16 +13,21 @@ Python 3 Support!
 
 |    type | ticket                                                   | description               |
 |--------:|----------------------------------------------------------|---------------------------|
-| feature | [#23](https://github.comm/d0c-s4vage/gramfuzz/issues/23) | Python 3 is now supported |
+| feature | [#23](https://github.com/d0c-s4vage/gramfuzz/issues/23) | Python 3 is now supported |
 
 ## v1.2.2
 
-|    type | ticket                                                   | description                              |
-|--------:|----------------------------------------------------------|------------------------------------------|
-| feature | [#20](https://github.comm/d0c-s4vage/gramfuzz/issues/20) | Added badges to README.md                |
-| feature | [#21](https://github.comm/d0c-s4vage/gramfuzz/issues/21) | Autodeploy through Travis-CI             |
-| feature |                                                          | Added bizbs example grammar              |
-| feature | [#16](https://github.com/d0c-s4vage/gramfuzz/issues/16)  | Defines `__file__` attribute in grammars |
+|    type | ticket                                                  | description                  |
+|--------:|---------------------------------------------------------|------------------------------|
+| feature | [#20](https://github.com/d0c-s4vage/gramfuzz/issues/20) | Added badges to README.md    |
+| feature | [#21](https://github.com/d0c-s4vage/gramfuzz/issues/21) | Autodeploy through Travis-CI |
+
+## v1.2.1
+
+|    type | ticket                                                  | description                              |
+|--------:|---------------------------------------------------------|------------------------------------------|
+| feature |                                                         | Added bizbs example grammar              |
+| feature | [#16](https://github.com/d0c-s4vage/gramfuzz/issues/16) | Defines `__file__` attribute in grammars |
 
 ## v1.2.0
 
