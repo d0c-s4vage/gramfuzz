@@ -35,7 +35,7 @@ A few of the main features of gramfuzz are:
 
     classifiers      =  [
         'Programming Language :: Python :: 2',
-        #'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3',
     ],
     packages= ['gramfuzz'],
 )

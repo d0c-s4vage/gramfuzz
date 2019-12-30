@@ -7,6 +7,10 @@ Gramfuzz utility functions
 """
 
 
+import six
+import sys
+
+
 import gramfuzz
 
 
@@ -31,3 +35,23 @@ def val(val, pre=None, shortest=False):
         val = str(val.build(pre, shortest=shortest))
 
     return str(val)
+
+
+def binstr(val):
+    """Ensure that ``val`` is of type ``bytes``
+    """
+    if isinstance(val, six.binary_type):
+        return val
+    if sys.version_info < (3, 0):
+        return bytes(val)
+    else:
+        return bytes(val, 'utf8')
+
+
+def maybe_binstr(val):
+    """Maybe convert ``val`` to a binary string **IF** the value is a string
+    type
+    """
+    if not isinstance(val, six.string_types):
+        return val
+    return binstr(val)

@@ -398,7 +398,7 @@ class GramFuzzer(object):
             raise errors.GramFuzzError("referenced definition category ({!r}) not defined".format(cat))
         
         if refname == "*":
-            refname = rand.choice(self.defs[cat].keys())
+            refname = rand.choice(list(self.defs[cat].keys()))
             
         if refname not in self.defs[cat]:
             raise errors.GramFuzzError("referenced definition ({!r}) not defined".format(refname))
@@ -462,7 +462,7 @@ class GramFuzzer(object):
         _maybe = rand.maybe
         _val = utils.val
 
-        keys = self.defs[cat].keys()
+        keys = list(self.defs[cat].keys())
 
         self._last_pref_keys = self._get_pref_keys(cat, preferred)
         # be sure to set this *after* fetching the pref keys (above^)

@@ -28,7 +28,7 @@ class TestShortestPath(unittest.TestCase):
         test1 = Def("test1", Or(
             Ref("test2"),
             And(Ref("test2"), Ref("test1")),
-            "blah" # <-- this blah should be generated
+            b"blah" # <-- this blah should be generated
         ))
         test2 = Def("test2", "blah2", Ref("test3"))
         test3 = Def("test3", "blah3")
@@ -37,7 +37,7 @@ class TestShortestPath(unittest.TestCase):
 
         for x in six.moves.range(100):
             res = test1.build(shortest=True)
-            self.assertEqual(res, "blah")
+            self.assertEqual(res, b"blah")
 
     def test_complicated(self):
         test1 = Def("test1", Or(

@@ -131,8 +131,9 @@ specifying one of two string-escaping methods:
     # '\x3ch1\x3e\'hello\'\x3c/h1\x3e'
 
 * ``escape`` - use Python's repr to escape the string
-* ``html_js_escape`` - use Python's ``"string_escape"`` encoding, as well as replacing ``<``
-    and ``>`` with their escaped hex formats
+* ``html_js_escape`` - use Python's ``"string_escape"`` (or
+  ``"unicode_escape"`` in python3) encoding, as well as replacing ``<`` and
+  ``>`` with their escaped hex formats
 
 The ``Q`` class also accessts a ``quote`` keyword argument. This only applies if none
 of the escaping methods are specified, and is merely prepended and appended to the
