@@ -437,7 +437,7 @@ class GramFuzzer(object):
                     "cat_group {!r} did not define a TOP_CAT variable"
                 )
             cat = self.cat_group_defaults[cat_group]
-            if not isinstance(cat, basestring):
+            if not isinstance(cat, six.string_types):
                 raise gramfuzz.errors.GramFuzzError(
                     "cat_group {!r}'s TOP_CAT variable was not a string"
                 )

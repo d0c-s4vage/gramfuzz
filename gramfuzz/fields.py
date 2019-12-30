@@ -21,6 +21,7 @@ Each field has a ``build()`` method, which accepts one argument
 """
 
 
+import codecs
 from collections import deque
 import json
 import inspect
@@ -341,7 +342,7 @@ class String(UInt):
         """
         super(String, self).__init__(value, **kwargs)
 
-        self.charset = kwargs.setdefault("charset", self.charset)
+        self.charset = binstr(kwargs.setdefault("charset", self.charset))
 
     def build(self, pre=None, shortest=False):
         """Build the String instance
@@ -488,6 +489,17 @@ class Q(And):
         self.html_js_escape = kwargs.setdefault("html_js_escape", self.html_js_escape)
         self.quote = kwargs.setdefault("quote", self.quote)
 
+    def _repr_escape(self, val):
+        """Perform a repr escape on 'val', trimming the ``b`` off of the
+        resulting data, if it exists.
+        """
+        res = binstr(repr(val))
+        # this is safe - res after repr will always start with either a
+        # single quote or a double quote
+        if res.startswith(b"b"):
+            res = res[1:]
+        return res
+
     def build(self, pre=None, shortest=False):
         """Build the ``Quote`` instance
 
@@ -497,10 +509,10 @@ class Q(And):
         res = super(Q, self).build(pre, shortest=shortest)
 
         if self.escape:
-            return repr(res)
+            return self._repr_escape(res)
         elif self.html_js_escape:
-            encode_type = "unicode_escape" if six.PY3 else "string_escape"
-            return (b"'" + res.encode(encode_type).replace(b"<", b"\\x3c").replace(b">", b"\\x3e") + b"'")
+            res, _ = codecs.escape_encode(res)
+            return (b"'" + res.replace(b"<", b"\\x3c").replace(b">", b"\\x3e") + b"'")
         else:
             return b"".join([self.quote, res, self.quote])
 

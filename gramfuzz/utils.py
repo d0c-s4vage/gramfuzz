@@ -32,9 +32,14 @@ def val(val, pre=None, shortest=False):
         val = val()
 
     if isinstance(val, F):
-        val = str(val.build(pre, shortest=shortest))
+        val = val.build(pre, shortest=shortest)
 
-    return str(val)
+    # for ints, floats, etc
+    if not isinstance(val, six.string_types) \
+            and not isinstance(val, six.binary_type):
+        val = str(val)
+
+    return binstr(val)
 
 
 def binstr(val):

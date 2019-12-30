@@ -43,7 +43,7 @@ class TestExamples(unittest.TestCase):
             ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             stdout,_ = proc.communicate()
 
-            self.assertNotIn("ERROR", stdout)
+            self.assertNotIn(b"ERROR", stdout)
 
 
 if __name__ == "__main__":

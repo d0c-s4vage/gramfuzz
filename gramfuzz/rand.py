@@ -80,6 +80,13 @@ def maybe(prob=0.5):
     return _random() < prob
 
 
+def _binchoice(iterable):
+    """Like random.choice but it works on bytes
+    """
+    idx = randint(len(iterable))
+    return iterable[idx:idx+1]
+
+
 def data(length, charset):
     """Generate ``length`` random characters from charset ``charset``
 
@@ -87,4 +94,4 @@ def data(length, charset):
     :param str charset: The charset of characters to choose from
     :returns: str
     """
-    return "".join(_choice(charset) for x in six.moves.range(length))
+    return b"".join(_binchoice(charset) for x in six.moves.range(length))

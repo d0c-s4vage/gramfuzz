@@ -43,14 +43,14 @@ class TestFields(unittest.TestCase):
         i = Int
         res = i().build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^(-)?\d+$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^(-)?\d+$'))
     
     @loop
     def test_uint(self):
         i = UInt
         res = i().build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^\d+$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^\d+$'))
 
     @loop
     def test_int_min_max(self):
@@ -138,20 +138,20 @@ class TestFields(unittest.TestCase):
         f = Float
         res = f().build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^(-)?\d+(\.\d+)?$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^(-)?\d+(\.\d+)?$'))
     
     @loop
     def test_ufloat(self):
         f = UFloat
         res = f().build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^\d+(\.\d+)?$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^\d+(\.\d+)?$'))
     
     @loop
     def test_string_charset(self):
         s = String(charset="abc")
         res = s.build()
-        self.assertRegexpMatches(res, r'^[abc]*$')
+        self.assertRegexpMatches(res, gutils.binstr(r'^[abc]*$'))
     
     @loop
     def test_string_min_max(self):
@@ -188,19 +188,19 @@ class TestFields(unittest.TestCase):
     def test_join_native(self):
         j = Join("a", "b", sep=",")
         res = j.build()
-        self.assertEqual(res, "a,b")
+        self.assertEqual(res, b"a,b")
 
     @loop
     def test_join_fields(self):
         j = Join(UInt, "b", sep=",")
         res = j.build()
-        self.assertRegexpMatches(res, r'^\d+,b')
+        self.assertRegexpMatches(res, gutils.binstr(r'^\d+,b'))
 
     @loop
     def test_join_fields2(self):
         j = Join(UInt, "b", sep="X")
         res = j.build()
-        self.assertRegexpMatches(res, r'^\d+Xb')
+        self.assertRegexpMatches(res, gutils.binstr(r'^\d+Xb'))
 
     def test_join_max(self):
         num_items = {}
@@ -208,8 +208,8 @@ class TestFields(unittest.TestCase):
             # should generate 0-9 items, not 10
             j = Join(UInt, sep=",", max=10)
             res = j.build()
-            self.assertRegexpMatches(res, r'^\d+(,\d+)*')
-            sep_count = res.count(",")
+            self.assertRegexpMatches(res, gutils.binstr(r'^\d+(,\d+)*'))
+            sep_count = res.count(b",")
             num_items.setdefault(sep_count, 0)
             num_items[sep_count] += 1
 
@@ -229,28 +229,28 @@ class TestFields(unittest.TestCase):
         data = UInt & "," & UInt
         res = data.build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^\d+,\d+$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^\d+,\d+$'))
     
     @loop
     def test_and_explicit(self):
         data = And(UInt, ",", UInt)
         res = data.build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^\d+,\d+$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^\d+,\d+$'))
 
     @loop
     def test_or_operator(self):
         data = UInt | "hello"
         res = data.build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^(\d+|hello)')
+        self.assertRegexpMatches(val, gutils.binstr(r'^(\d+|hello)'))
 
     @loop
     def test_or_explicit(self):
         data = Or(UInt, "hello")
         res = data.build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^(\d+|hello)')
+        self.assertRegexpMatches(val, gutils.binstr(r'^(\d+|hello)'))
 
     def test_or_probabilities(self):
         """Make sure that Or does its probabilities correctly
@@ -265,9 +265,9 @@ class TestFields(unittest.TestCase):
         for x in six.moves.range(LOOP_NUM):
             res = data.build()
             val = gutils.val(res)
-            if val == "hello":
+            if val == b"hello":
                 hello_count += 1
-            elif re.match(r'^\d+$', val) is not None:
+            elif re.match(gutils.binstr(r'^\d+$'), val) is not None:
                 int_count += 1
             else:
                 self.assertTrue(False, "was neither an int or hello")
@@ -287,7 +287,7 @@ class TestFields(unittest.TestCase):
 
         for x in six.moves.range(LOOP_NUM):
             res = data.build()
-            if "hello" in res:
+            if b"hello" in res:
                 hello_count += 1
 
         hello_percent = hello_count / float(LOOP_NUM)
@@ -301,21 +301,21 @@ class TestFields(unittest.TestCase):
     def test_q_normal(self):
         data = Q("hello")
         res = data.build()
-        self.assertEqual('"hello"', res)
+        self.assertEqual(b'"hello"', res)
     
     def test_q_html_escape(self):
         data = Q("<script>hello\'\"", html_js_escape=True)
         res = data.build()
-        self.assertEqual('\'\\x3cscript\\x3ehello\\\'"\'', res)
+        self.assertEqual(b'\'\\x3cscript\\x3ehello\\\'"\'', res)
     
     def test_q_escape(self):
         data = Q("'hello'", escape=True)
         res = data.build()
-        self.assertEqual('"\'hello\'"', res)
+        self.assertEqual(b'"\'hello\'"', res)
 
         data = Q('"hello"', escape=True)
         res = data.build()
-        self.assertEqual('\'"hello"\'', res)
+        self.assertEqual(b'\'"hello"\'', res)
     
     def test_def(self):
         def1 = Def("test", Int & "-" & String, cat="test_def")
