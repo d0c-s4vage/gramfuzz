@@ -31,12 +31,11 @@ A few of the main features of gramfuzz are:
     platforms        = 'Cross Platform',
 	download_url     = "https://github.com/d0c-s4vage/gramfuzz/tarball/v{{VERSION}}",
 
-    # NO REQUIREMENTS!!
-	#install_requires =  open(os.path.join(os.path.dirname(__file__), "requirements.txt")).read().split("\n"),
+	install_requires =  open(os.path.join(os.path.dirname(__file__), "requirements.txt")).read().split("\n"),
 
     classifiers      =  [
         'Programming Language :: Python :: 2',
-        #'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3',
     ],
     packages= ['gramfuzz'],
 )

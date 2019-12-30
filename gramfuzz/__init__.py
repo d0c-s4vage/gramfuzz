@@ -12,6 +12,7 @@ from collections import deque
 import copy
 import gc
 import os
+import six
 import sys
 
 
@@ -125,7 +126,7 @@ class GramFuzzer(object):
         code = compile(data, path, "exec")
 
         locals_ = {"GRAMFUZZER": self, "__file__": path}
-        exec code in locals_
+        exec(code, globals(), locals_)
 
         if "TOP_CAT" in locals_:
             cat_group = os.path.basename(path).replace(".py", "")
@@ -158,7 +159,7 @@ class GramFuzzer(object):
         # first find all rule definitions that *don't* have
         # any references - these are the leaf nodes
         for cat in self.defs.keys():
-            for rule_name, rules in self.defs.get(cat, {}).iteritems():
+            for rule_name, rules in six.iteritems(self.defs.get(cat, {})):
                 for rule in rules:
                     refs = self._collect_refs(rule)
                     if len(refs) == 0:
@@ -397,7 +398,7 @@ class GramFuzzer(object):
             raise errors.GramFuzzError("referenced definition category ({!r}) not defined".format(cat))
         
         if refname == "*":
-            refname = rand.choice(self.defs[cat].keys())
+            refname = rand.choice(list(self.defs[cat].keys()))
             
         if refname not in self.defs[cat]:
             raise errors.GramFuzzError("referenced definition ({!r}) not defined".format(refname))
@@ -436,7 +437,7 @@ class GramFuzzer(object):
                     "cat_group {!r} did not define a TOP_CAT variable"
                 )
             cat = self.cat_group_defaults[cat_group]
-            if not isinstance(cat, basestring):
+            if not isinstance(cat, six.string_types):
                 raise gramfuzz.errors.GramFuzzError(
                     "cat_group {!r}'s TOP_CAT variable was not a string"
                 )
@@ -461,7 +462,7 @@ class GramFuzzer(object):
         _maybe = rand.maybe
         _val = utils.val
 
-        keys = self.defs[cat].keys()
+        keys = list(self.defs[cat].keys())
 
         self._last_pref_keys = self._get_pref_keys(cat, preferred)
         # be sure to set this *after* fetching the pref keys (above^)

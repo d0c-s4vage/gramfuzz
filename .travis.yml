@@ -1,6 +1,10 @@
 language: python
 python:
   - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7"
 install:
     - export VERSION=$(sed 's/^v//' <<<"${TRAVIS_TAG:-0.0.0+$(sed 's^[/_-]^.^g' <<<$TRAVIS_BRANCH)}")
     - find . -type f -exec sed -i "s/{{VERSION}}/${VERSION}/g" {} \;

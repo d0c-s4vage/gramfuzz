@@ -21,16 +21,19 @@ Each field has a ``build()`` method, which accepts one argument
 """
 
 
+import codecs
 from collections import deque
 import json
 import inspect
 import os
+import six
 
 
 from gramfuzz import GramFuzzer
 import gramfuzz.errors as errors
 import gramfuzz.rand as rand
 import gramfuzz.utils as utils
+from gramfuzz.utils import binstr, maybe_binstr
 
 
 class MetaField(type):
@@ -91,12 +94,10 @@ class MetaField(type):
     def __repr__(self):
         return "<{}>".format(self.__name__)
 
-class Field(object):
+class Field(six.with_metaclass(MetaField)):
     """The core class that all field classes are based one. Contains
     utility methods to determine probabilities/choices/min-max/etc.
     """
-
-    __metaclass__ = MetaField
 
     shortest_is_nothing = False
     """This is used during :any:`gramfuzz.GramFuzzer.find_shortest_paths`. Sometimes
@@ -299,11 +300,11 @@ class String(UInt):
     list.
     """
 
-    charset_alpha_lower = "abcdefghijklmnopqrstuvwxyz"
+    charset_alpha_lower = b"abcdefghijklmnopqrstuvwxyz"
     """A lower-case alphabet character set
     """
 
-    charset_alpha_upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    charset_alpha_upper = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     """An upper-case alphabet character set
     """
 
@@ -311,11 +312,11 @@ class String(UInt):
     """Upper- and lower-case alphabet
     """
 
-    charset_spaces = "\n\r\t "
+    charset_spaces = b"\n\r\t "
     """Whitespace character set
     """
 
-    charset_num = "1234567890"
+    charset_num = b"1234567890"
     """Numeric character set
     """
 
@@ -323,7 +324,7 @@ class String(UInt):
     """Alpha-numeric character set (upper- and lower-case alphabet + numbers)
     """
 
-    charset_all = "".join(chr(x) for x in xrange(0x100))
+    charset_all = b"".join(binstr(chr(x)) for x in six.moves.range(0x100))
     """All possible binary characters (``0x0-0xff``)
     """
 
@@ -341,7 +342,7 @@ class String(UInt):
         """
         super(String, self).__init__(value, **kwargs)
 
-        self.charset = kwargs.setdefault("charset", self.charset)
+        self.charset = binstr(kwargs.setdefault("charset", self.charset))
 
     def build(self, pre=None, shortest=False):
         """Build the String instance
@@ -364,7 +365,7 @@ class Join(Field):
     This class works nicely with ``Opt`` values.
     """
     
-    sep = ","
+    sep = b","
 
     def __init__(self, *values, **kwargs):
         """Create a new instance of the ``Join`` class.
@@ -378,8 +379,8 @@ class Join(Field):
             
                 Join(Int, max=5, sep=",")
         """
-        self.values = list(values)
-        self.sep = kwargs.setdefault("sep", self.sep)
+        self.values = list(map(maybe_binstr, values))
+        self.sep = binstr(kwargs.setdefault("sep", self.sep))
         self.max = kwargs.setdefault("max", None)
     
     def build(self, pre=None, shortest=False):
@@ -416,15 +417,15 @@ class And(Field):
     This class works nicely with ``Opt`` values.
     """
 
-    sep = ""
+    sep = b""
 
     def __init__(self, *values, **kwargs):
         """Create a new ``And`` field instance.
         
         :param list values: The list of values to be concatenated
         """
-        self.sep = kwargs.setdefault("sep", self.sep)
-        self.values = list(values)
+        self.sep = binstr(kwargs.setdefault("sep", self.sep))
+        self.values = list(map(maybe_binstr, values))
         # to be used internally, is not intended to be set directly by a user
         self.rolling = kwargs.setdefault("rolling", False)
         self.fuzzer = GramFuzzer.instance()
@@ -472,7 +473,7 @@ class Q(And):
     """Whether or not the quoted data should be html-javascript escaped (default=``False``)
     """
 
-    quote = '"'
+    quote = b'"'
     """Which quote character to use if ``escape`` and ``html_js_escape`` are False (default=``'"'``)
     """
 
@@ -488,6 +489,17 @@ class Q(And):
         self.html_js_escape = kwargs.setdefault("html_js_escape", self.html_js_escape)
         self.quote = kwargs.setdefault("quote", self.quote)
 
+    def _repr_escape(self, val):
+        """Perform a repr escape on 'val', trimming the ``b`` off of the
+        resulting data, if it exists.
+        """
+        res = binstr(repr(val))
+        # this is safe - res after repr will always start with either a
+        # single quote or a double quote
+        if res.startswith(b"b"):
+            res = res[1:]
+        return res
+
     def build(self, pre=None, shortest=False):
         """Build the ``Quote`` instance
 
@@ -497,11 +509,12 @@ class Q(And):
         res = super(Q, self).build(pre, shortest=shortest)
 
         if self.escape:
-            return repr(res)
+            return self._repr_escape(res)
         elif self.html_js_escape:
-            return ("'" + res.encode("string_escape").replace("<", "\\x3c").replace(">", "\\x3e") + "'")
+            res, _ = codecs.escape_encode(res)
+            return (b"'" + res.replace(b"<", b"\\x3c").replace(b">", b"\\x3e") + b"'")
         else:
-            return "".join([self.quote, res, self.quote])
+            return b"".join([self.quote, res, self.quote])
 
 
 class Or(Field):
@@ -518,9 +531,9 @@ class Or(Field):
         # be chosen instead of self.values
         self.shortest_vals = None
 
-        self.values = list(values)
+        self.values = list(map(maybe_binstr, values))
         if "options" in kwargs and len(values) == 0:
-            self.values = kwargs["options"]
+            self.values = list(map(maybe_binstr, kwargs["options"]))
         self.rolling = kwargs.setdefault("rolling", False)
     
     def build(self, pre=None, shortest=False):
@@ -611,7 +624,7 @@ class Def(Field):
     rules.
     """
 
-    sep = ""
+    sep = b""
     """The separator of values for this rule definition (default=``""``)
     """
 
@@ -637,9 +650,9 @@ class Def(Field):
         """
         self.name = name
         self.options = options
-        self.values = list(values)
+        self.values = list(map(maybe_binstr, values))
 
-        self.sep = self.options.setdefault("sep", self.sep)
+        self.sep = binstr(self.options.setdefault("sep", self.sep))
         self.cat = self.options.setdefault("cat", self.cat)
         self.no_prune = self.options.setdefault("no_prune", self.no_prune)
 
@@ -766,7 +779,7 @@ class PLUS(Join):
     The values are Anded together one or more times, up to ``max``
     times.
     """
-    sep = ""
+    sep = b""
 
     def __init__(self, *values, **kwargs):
         kwargs.setdefault("max", 10)
