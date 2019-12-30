@@ -1,5 +1,13 @@
+# editor
+.*.sw[mnop]
+tags
+
+# docs
+docs/build
+
+# python
+dist
 *.pyc
-.*.swn
-.*.swo
-.*.swp
-.*.swq
+__pycache__
+venv*
+*.egg-info

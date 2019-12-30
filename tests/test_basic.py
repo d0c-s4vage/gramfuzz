@@ -5,6 +5,7 @@
 import functools
 import os
 import re
+import six
 import sys
 import unittest
 
@@ -24,7 +25,7 @@ PERCENT_ERROR = 0.1
 def loop(fn):
     @functools.wraps(fn)
     def looper(*args, **kwargs):
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             fn(*args, **kwargs)
 
     return looper
@@ -42,14 +43,14 @@ class TestFields(unittest.TestCase):
         i = Int
         res = i().build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^(-)?\d+$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^(-)?\d+$'))
     
     @loop
     def test_uint(self):
         i = UInt
         res = i().build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^\d+$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^\d+$'))
 
     @loop
     def test_int_min_max(self):
@@ -88,7 +89,7 @@ class TestFields(unittest.TestCase):
             (0.25, (20, 30)),
             (0.25, (30, 40))
         ])
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             res = i.build()
             odds_group = res // 10
             # should only be four groups
@@ -96,7 +97,7 @@ class TestFields(unittest.TestCase):
             odds_results.setdefault(odds_group, 0)
             odds_results[odds_group] += 1
 
-        for x in xrange(4):
+        for x in six.moves.range(4):
             group_percent = odds_results[x] / float(LOOP_NUM)
             percent_off = abs(group_percent - 0.25)
             self.assertLess(percent_off, PERCENT_ERROR, "{}/{} == {}% error, bad".format(
@@ -115,7 +116,7 @@ class TestFields(unittest.TestCase):
             (0.50, 15),
         ])
         LOOP_NUM = 10000
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             res = i.build()
             odds_group = res // 10
             # should only be four groups
@@ -123,7 +124,7 @@ class TestFields(unittest.TestCase):
             odds_results.setdefault(odds_group, 0)
             odds_results[odds_group] += 1
 
-        for x in xrange(2):
+        for x in six.moves.range(2):
             group_percent = odds_results[x] / float(LOOP_NUM)
             percent_off = abs(group_percent - 0.50)
             self.assertLess(percent_off, PERCENT_ERROR, "{}/{} == {}% error, bad".format(
@@ -137,20 +138,20 @@ class TestFields(unittest.TestCase):
         f = Float
         res = f().build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^(-)?\d+(\.\d+)?$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^(-)?\d+(\.\d+)?$'))
     
     @loop
     def test_ufloat(self):
         f = UFloat
         res = f().build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^\d+(\.\d+)?$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^\d+(\.\d+)?$'))
     
     @loop
     def test_string_charset(self):
         s = String(charset="abc")
         res = s.build()
-        self.assertRegexpMatches(res, r'^[abc]*$')
+        self.assertRegexpMatches(res, gutils.binstr(r'^[abc]*$'))
     
     @loop
     def test_string_min_max(self):
@@ -167,7 +168,7 @@ class TestFields(unittest.TestCase):
             (0.25, (20, 30)),
             (0.25, (30, 40))
         ])
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             res = s.build()
             odds_group = len(res) // 10
             # should only be four groups
@@ -175,7 +176,7 @@ class TestFields(unittest.TestCase):
             odds_results.setdefault(odds_group, 0)
             odds_results[odds_group] += 1
 
-        for x in xrange(4):
+        for x in six.moves.range(4):
             group_percent = odds_results[x] / float(LOOP_NUM)
             percent_off = abs(group_percent - 0.25)
             self.assertLess(percent_off, PERCENT_ERROR, "{}/{} == {}% error, bad".format(
@@ -187,34 +188,34 @@ class TestFields(unittest.TestCase):
     def test_join_native(self):
         j = Join("a", "b", sep=",")
         res = j.build()
-        self.assertEqual(res, "a,b")
+        self.assertEqual(res, b"a,b")
 
     @loop
     def test_join_fields(self):
         j = Join(UInt, "b", sep=",")
         res = j.build()
-        self.assertRegexpMatches(res, r'^\d+,b')
+        self.assertRegexpMatches(res, gutils.binstr(r'^\d+,b'))
 
     @loop
     def test_join_fields2(self):
         j = Join(UInt, "b", sep="X")
         res = j.build()
-        self.assertRegexpMatches(res, r'^\d+Xb')
+        self.assertRegexpMatches(res, gutils.binstr(r'^\d+Xb'))
 
     def test_join_max(self):
         num_items = {}
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             # should generate 0-9 items, not 10
             j = Join(UInt, sep=",", max=10)
             res = j.build()
-            self.assertRegexpMatches(res, r'^\d+(,\d+)*')
-            sep_count = res.count(",")
+            self.assertRegexpMatches(res, gutils.binstr(r'^\d+(,\d+)*'))
+            sep_count = res.count(b",")
             num_items.setdefault(sep_count, 0)
             num_items[sep_count] += 1
 
         self.assertEqual(len(num_items), 10)
 
-        for k,v in num_items.iteritems():
+        for k,v in six.iteritems(num_items):
             percent = v / float(LOOP_NUM)
             diff = abs(percent - 0.10)
             self.assertLess(diff, PERCENT_ERROR, "{}/{} == {}% error, bad".format(
@@ -228,28 +229,28 @@ class TestFields(unittest.TestCase):
         data = UInt & "," & UInt
         res = data.build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^\d+,\d+$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^\d+,\d+$'))
     
     @loop
     def test_and_explicit(self):
         data = And(UInt, ",", UInt)
         res = data.build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^\d+,\d+$')
+        self.assertRegexpMatches(val, gutils.binstr(r'^\d+,\d+$'))
 
     @loop
     def test_or_operator(self):
         data = UInt | "hello"
         res = data.build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^(\d+|hello)')
+        self.assertRegexpMatches(val, gutils.binstr(r'^(\d+|hello)'))
 
     @loop
     def test_or_explicit(self):
         data = Or(UInt, "hello")
         res = data.build()
         val = gutils.val(res)
-        self.assertRegexpMatches(val, r'^(\d+|hello)')
+        self.assertRegexpMatches(val, gutils.binstr(r'^(\d+|hello)'))
 
     def test_or_probabilities(self):
         """Make sure that Or does its probabilities correctly
@@ -261,12 +262,12 @@ class TestFields(unittest.TestCase):
         int_count = 0
         data = Or(UInt, "hello")
 
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             res = data.build()
             val = gutils.val(res)
-            if val == "hello":
+            if val == b"hello":
                 hello_count += 1
-            elif re.match(r'^\d+$', val) is not None:
+            elif re.match(gutils.binstr(r'^\d+$'), val) is not None:
                 int_count += 1
             else:
                 self.assertTrue(False, "was neither an int or hello")
@@ -284,9 +285,9 @@ class TestFields(unittest.TestCase):
         hello_count = 0
         data = Join(UInt, Opt("hello"), sep="|")
 
-        for x in xrange(LOOP_NUM):
+        for x in six.moves.range(LOOP_NUM):
             res = data.build()
-            if "hello" in res:
+            if b"hello" in res:
                 hello_count += 1
 
         hello_percent = hello_count / float(LOOP_NUM)
@@ -300,21 +301,21 @@ class TestFields(unittest.TestCase):
     def test_q_normal(self):
         data = Q("hello")
         res = data.build()
-        self.assertEqual('"hello"', res)
+        self.assertEqual(b'"hello"', res)
     
     def test_q_html_escape(self):
         data = Q("<script>hello\'\"", html_js_escape=True)
         res = data.build()
-        self.assertEqual('\'\\x3cscript\\x3ehello\\\'"\'', res)
+        self.assertEqual(b'\'\\x3cscript\\x3ehello\\\'"\'', res)
     
     def test_q_escape(self):
         data = Q("'hello'", escape=True)
         res = data.build()
-        self.assertEqual('"\'hello\'"', res)
+        self.assertEqual(b'"\'hello\'"', res)
 
         data = Q('"hello"', escape=True)
         res = data.build()
-        self.assertEqual('\'"hello"\'', res)
+        self.assertEqual(b'\'"hello"\'', res)
     
     def test_def(self):
         def1 = Def("test", Int & "-" & String, cat="test_def")

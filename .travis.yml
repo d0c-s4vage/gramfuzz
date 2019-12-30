@@ -1,7 +1,22 @@
 language: python
 python:
-  - "2.6"
   - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7"
 install:
+    - export VERSION=$(sed 's/^v//' <<<"${TRAVIS_TAG:-0.0.0+$(sed 's^[/_-]^.^g' <<<$TRAVIS_BRANCH)}")
+    - find . -type f -exec sed -i "s/{{VERSION}}/${VERSION}/g" {} \;
     - pip install .
 script: bin/run_tests.sh
+
+deploy:
+  provider: pypi
+  password:
+    secure: "Hr1z7+8Viu5dm7bVQ8vn8hpHOlPRgNyGd54AQJRlPAgyfbovXW2JgsU/fihyAbwV6tSSRk3mLX75uPGWDBCFuYMVVXyCzs0hp29I0HLwnv6kV4parBUiefpDfAXNghTl27g8rlDY+N1I1yS+RpYT4EIVBZ3Qc/vi+rdCGVN1deQ3BuCyEvgS5JCKL2L5bOBgafxp9AYbDVdoPrwg8AMNXHc/gWaEqh+PJsF4uq+c2knxkGXXsy9Q6yjP1Y4amtYvPDL+OV0m5RjtHf8P5CdisMJWBH9FC/xBVtLNX/L1yoBJAixh2rgpBjFKKaO7VVeIcf7/yFeYnFh6L74QXk2ZWIQ6TPYb2atsgZdEgE+I6jmITQ57325oaUNP8q4141QJjJkeziwkmtGRpgryg/N5DdLAShtMTe039Af5ZrKAEdd+/pV0qHico2mj+neErTTi/n2FAfW12wUbcoFISOkSeP7kwkBwKiKJBzlijq5xnHNoJcZppml0sXFfPUatZawV9B3VQ8WPn3HY8jgejF8vGTZ4dtVE3atjtfysHoEb2b+jnnSeg7tVf8ohxOA2lfjeQsEtZpLV80tT36yPfMXMrfJm5BejFgnJMXhN5w49fjcCmGjlVcgNRiQjE5y1nv7ylMgMzigGibuE0JxUkqSP9RhLI4dS2WvXKDK6WSWLdUY="
+  skip_cleanup: true
+  skip_existing: true
+  user: d0c.s4vage
+  on:
+    tags: true

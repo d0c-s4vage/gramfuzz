@@ -12,12 +12,16 @@ from collections import deque
 import copy
 import gc
 import os
+import six
 import sys
 
 
 import gramfuzz.errors as errors
 import gramfuzz.rand as rand
 import gramfuzz.utils as utils
+
+
+__version__ = "{{VERSION}}"
 
 
 class GramFuzzer(object):
@@ -70,10 +74,11 @@ class GramFuzzer(object):
         return cls.__instance__
 
 
-    def __init__(self):
+    def __init__(self, debug=False):
         """Create a new ``GramFuzzer`` instance
         """
         GramFuzzer.__instance__ = self
+        self.debug = debug
         self.defs = {}
         self.no_prunes = {}
         self.cat_groups = {}
@@ -101,17 +106,31 @@ class GramFuzzer(object):
         """
         if not os.path.exists(path):
             raise Exception("path does not exist: {!r}".format(path))
+        
+        # this will let grammars reference eachother with relative
+        # imports.
+        #
+        # E.g.:
+        #     grams/
+        #         gram1.py
+        #         gram2.py
+        #
+        # gram1.py can do "import gram2" to require rules in gram2.py to
+        # be loaded
+        grammar_path = os.path.dirname(path)
+        if grammar_path not in sys.path:
+            sys.path.append(grammar_path)
 
         with open(path, "r") as f:
             data = f.read()
-            code = compile(data, path, "exec")
+        code = compile(data, path, "exec")
 
-        locals_ = {"GRAMFUZZER": self}
-        exec code in locals_
+        locals_ = {"GRAMFUZZER": self, "__file__": path}
+        exec(code, globals(), locals_)
 
-        if "GRAMFUZZ_TOP_LEVEL_CAT" in locals_:
+        if "TOP_CAT" in locals_:
             cat_group = os.path.basename(path).replace(".py", "")
-            self.set_cat_group_top_level_cat(cat_group, locals_["GRAMFUZZ_TOP_LEVEL_CAT"])
+            self.set_cat_group_top_level_cat(cat_group, locals_["TOP_CAT"])
 
     def set_max_recursion(self, level):
         """Set the maximum reference-recursion depth (not the Python system maximum stack
@@ -140,13 +159,20 @@ class GramFuzzer(object):
         # first find all rule definitions that *don't* have
         # any references - these are the leaf nodes
         for cat in self.defs.keys():
-            for rule_name, rules in self.defs.get(cat, {}).iteritems():
+            for rule_name, rules in six.iteritems(self.defs.get(cat, {})):
                 for rule in rules:
                     refs = self._collect_refs(rule)
                     if len(refs) == 0:
                         leaf_rules.append(rule)
-                        rule_ref_lengths[cat + "-:-" + rule.name] = (0, [rule])
+
+                        if not hasattr(rule, "name"):
+                            rule_ref_lengths[cat + "-:-" + str(rule)] = (0, [rule])
+                        else:
+                            rule_ref_lengths[cat + "-:-" + rule.name] = (0, [rule])
                     else:
+                        if not hasattr(rule, "unprocessed_refs"):
+                            rule.unresolved_refs = deque()
+                        rule.unresolved_refs.extend(refs)
                         non_leaf_rules.append((cat, rule))
 
         # for every referenced rule, determine how many steps away
@@ -179,13 +205,31 @@ class GramFuzzer(object):
 
         self._assign_or_shortest_vals(post_process, rule_ref_lengths)
 
+        if self.debug:
+            for cat, rule in non_leaf_rules:
+                if hasattr(rule, "unresolved_refs"):
+                    for ref in rule.unresolved_refs:
+                        if rule_ref_lengths.get(cat + "-:-" + ref.refname, None) is not None:
+                            continue
+                        print("Pruning rule {!r} due to unresolvable reference: {!r}".format(
+                            rule.name,
+                            ref.refname,
+                        ))
+                else:
+                    print("Pruning rule {!r}".format(rule.name))
+
         # these should be pruned
         return non_leaf_rules
 
     def _prune_rules(self, non_leaf_rules):
         for cat,rule in non_leaf_rules:
             if cat in self.no_prunes and rule.name in self.no_prunes[cat]:
+                if self.debug:
+                    print("Should prune {!r}, but no_prune = True".format(
+                        rule.name,
+                    ))
                 continue
+
             rule_list = self.defs.get(cat, {}).get(rule.name, [])
             rule_list.remove(rule)
             if len(rule_list) == 0:
@@ -354,7 +398,7 @@ class GramFuzzer(object):
             raise errors.GramFuzzError("referenced definition category ({!r}) not defined".format(cat))
         
         if refname == "*":
-            refname = rand.choice(self.defs[cat].keys())
+            refname = rand.choice(list(self.defs[cat].keys()))
             
         if refname not in self.defs[cat]:
             raise errors.GramFuzzError("referenced definition ({!r}) not defined".format(refname))
@@ -372,7 +416,7 @@ class GramFuzzer(object):
         :param str cat_group: The category group (ie python file) to generate rules from. This
             was added specifically to make it easier to generate data based on the name
             of the file the grammar was defined in, and is intended to work with the
-            ``GRAMFUZZ_TOP_LEVEL_CAT`` values that may be defined in a loaded grammar file.
+            ``TOP_CAT`` values that may be defined in a loaded grammar file.
         :param list preferred: A list of preferred category groups to generate rules from
         :param float preferred_ratio: The percent probability that the preferred
             groups will be chosen over randomly choosen rule definitions from category ``cat``.
@@ -390,12 +434,12 @@ class GramFuzzer(object):
         if cat is None and cat_group is not None:
             if cat_group not in self.cat_group_defaults:
                 raise gramfuzz.errors.GramFuzzError(
-                    "cat_group {!r} did not define a GRAMFUZZ_TOP_LEVEL_CAT variable"
+                    "cat_group {!r} did not define a TOP_CAT variable"
                 )
             cat = self.cat_group_defaults[cat_group]
-            if not isinstance(cat, basestring):
+            if not isinstance(cat, six.string_types):
                 raise gramfuzz.errors.GramFuzzError(
-                    "cat_group {!r}'s GRAMFUZZ_TOP_LEVEL_CAT variable was not a string"
+                    "cat_group {!r}'s TOP_CAT variable was not a string"
                 )
 
         if auto_process and self._rules_processed == False:
@@ -408,6 +452,7 @@ class GramFuzzer(object):
             preferred = []
 
         res = deque()
+            
         cat_defs = self.defs[cat]
 
         # optimizations
@@ -417,7 +462,7 @@ class GramFuzzer(object):
         _maybe = rand.maybe
         _val = utils.val
 
-        keys = self.defs[cat].keys()
+        keys = list(self.defs[cat].keys())
 
         self._last_pref_keys = self._get_pref_keys(cat, preferred)
         # be sure to set this *after* fetching the pref keys (above^)

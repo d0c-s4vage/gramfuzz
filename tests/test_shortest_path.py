@@ -7,6 +7,7 @@
 
 
 import os
+import six
 import sys
 import unittest
 
@@ -27,16 +28,16 @@ class TestShortestPath(unittest.TestCase):
         test1 = Def("test1", Or(
             Ref("test2"),
             And(Ref("test2"), Ref("test1")),
-            "blah" # <-- this blah should be generated
+            b"blah" # <-- this blah should be generated
         ))
         test2 = Def("test2", "blah2", Ref("test3"))
         test3 = Def("test3", "blah3")
 
         self.fuzzer._find_shortest_paths()
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = test1.build(shortest=True)
-            self.assertEqual(res, "blah")
+            self.assertEqual(res, b"blah")
 
     def test_complicated(self):
         test1 = Def("test1", Or(
@@ -49,9 +50,9 @@ class TestShortestPath(unittest.TestCase):
 
         self.fuzzer._find_shortest_paths()
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = test1.build(shortest=True)
-            self.assertEqual(res, "blah2")
+            self.assertEqual(res, b"blah2")
 
     def test_complicated2(self):
         test1 = Def("test1", Or(
@@ -65,9 +66,9 @@ class TestShortestPath(unittest.TestCase):
 
         self.fuzzer._find_shortest_paths()
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = test1.build(shortest=True)
-            self.assertEqual(res, "blah3")
+            self.assertEqual(res, b"blah3")
 
     def test_cross_category(self):
         test1 = Def("test1", Or(
@@ -81,9 +82,9 @@ class TestShortestPath(unittest.TestCase):
 
         self.fuzzer._find_shortest_paths()
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = test1.build(shortest=True)
-            self.assertEqual(res, "blah3")
+            self.assertEqual(res, b"blah3")
 
     def test_grammar_optional_list(self):
         # taken from python 2.7 grammar
@@ -100,14 +101,14 @@ class TestShortestPath(unittest.TestCase):
 
         self.fuzzer._find_shortest_paths()
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = fpdef.build(shortest=True)
-            self.assertEqual(res, "THE NAME")
+            self.assertEqual(res, b"THE NAME")
 
-        for x in xrange(100):
+        for x in six.moves.range(100):
             res = fplist.build(shortest=True)
             # it may have the comma at the end
-            self.assertIn(res, ["THE NAME", "THE NAME,"])
+            self.assertIn(res, [b"THE NAME", b"THE NAME,"])
 
 
 if __name__ == "__main__":

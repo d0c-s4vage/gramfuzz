@@ -120,7 +120,7 @@ For example the code below:
     ODef("rule5", "rule5")
 
     max_recursion = int(sys.argv[1])
-    for x in xrange(10000):
+    for x in range(10000):
         print(fuzzer.gen("default", num=1, max_recursion=max_recursion)[0])
 
 yields the output:
