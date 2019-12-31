@@ -126,7 +126,7 @@ class GramFuzzer(object):
         code = compile(data, path, "exec")
 
         locals_ = {"GRAMFUZZER": self, "__file__": path}
-        exec(code, globals(), locals_)
+        exec(code, locals_, locals_)
 
         if "TOP_CAT" in locals_:
             cat_group = os.path.basename(path).replace(".py", "")
