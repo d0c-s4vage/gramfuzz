@@ -7,7 +7,7 @@ assignees: 'd0c-s4vage'
 ---
 
 After creating the issue, checkboxes will appear where `[] label` exist in the
-markdown. You can check/uncheck them to 
+markdown. You can check/uncheck them to fill out the environment section.
 
 ## Checklist
 
@@ -16,9 +16,14 @@ markdown. You can check/uncheck them to
 
 ## Environment
 
+**Platform** 
+
 - [ ] Windows
 - [ ] Mac
 - [ ] Linux
+- [ ] Other (please specify)
+
+**Python Version**
 
 - [ ] Python 2.7
 - [ ] Python 3.4
