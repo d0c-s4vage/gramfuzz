@@ -9,6 +9,7 @@ import argparse
 import glob
 import os
 import sys
+import six
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -74,10 +75,14 @@ def main(argv):
         type    = int,
         default = 10,
     )
+    if six.PY3:
+        default_output = sys.stdout.buffer
+    else:
+        default_output = sys.stdout
     parser.add_argument("-o", "--output",
         metavar  = "OUTPUT",
         help     = "The output file to output the generated data to (default=stdout)",
-        default  = sys.stdout,
+        default  = default_output,
         required = False,
         type     = argparse.FileType("wb"),
     )
