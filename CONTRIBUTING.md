@@ -116,8 +116,12 @@ should usually be taken in triaging this bug:
 * Comment on the user-created issue, thanking the user for reporting the bug and
   detailing what needs to happen to fix the problem they experienced.
 
+An example of this can be seen with [#26](https://github.com/d0c-s4vage/gramfuzz/issues/26)
+
 ## Fixing bugs
 
 Once all concrete bugs are completed associated with a user-reported issue,
 close the user-reported issue, commenting on it to notify the user that their
 issue has been resolved.
+
+An example of this can be seen with [#26](https://github.com/d0c-s4vage/gramfuzz/issues/26)
