@@ -4,6 +4,15 @@ This project aims to make contributing as straightforward as possible. This
 document outlines what you should expect, how to go about contributing, and 
 a few tips.
 
+- [Expectations](#expectations)
+- [Code Style](#code-style)
+- [Testing](#testing)
+- [Versioning](#versioning)
+  * [Mechanics of Releasing New Versions](#mechanics-of-releasing-new-versions)
+- [Branching](#branching)
+- [Triaging Reported Bugs](#triaging-reported-bugs)
+- [Fixing bugs](#fixing-bugs)
+
 ## Expectations
 
 Contributors should feel free to ping the maintainers for feedback on proposed changes,
