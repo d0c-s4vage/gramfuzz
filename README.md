@@ -7,10 +7,15 @@
 `gramfuzz` is a grammar-based fuzzer that lets one define
 complex grammars to model text and binary data formats.
 
+- [Contributing](#contributing)
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [TLDR Example](#tldr-example)
 - [More Examples](#more-examples)
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details. PRs welcome!
 
 ## Installation
 
