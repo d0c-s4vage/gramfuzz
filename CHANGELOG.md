@@ -1,11 +1,21 @@
 # Changelog
 
+- [v1.3.1](#v131)
 - [v1.3.0](#v130)
 - [v1.2.2](#v122)
 - [v1.2.1](#v121)
 - [v1.2.0](#v120)
 - [v1.1.0](#v110)
 - [v1.0.0](#v100)
+
+## v1.3.1
+
+|         type | ticket                                                  | description                                        |
+|-------------:|---------------------------------------------------------|----------------------------------------------------|
+|         meta |                                                         | Add issue templates                                |
+| reported bug | [#26](https://github.com/d0c-s4vage/gramfuzz/issues/26) | `NEWLINE` is not defined in python27 example grammar |
+|        ↳ bug | [#29](https://github.com/d0c-s4vage/gramfuzz/issues/29) | Fixed error loading grammars                       |
+|        ↳ bug | [#27](https://github.com/d0c-s4vage/gramfuzz/issues/27) | Fixed error writing to stdout                      |
 
 ## v1.3.0
 
