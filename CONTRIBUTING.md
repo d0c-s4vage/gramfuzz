@@ -13,6 +13,21 @@ a few tips.
 - [Triaging Reported Bugs](#triaging-reported-bugs)
 - [Fixing bugs](#fixing-bugs)
 
+## Quick Start
+
+First, finish reading this document.
+
+For relatively simple ways to contribute, take a look at issues labeled:
+
+* [good first issue](https://github.com/d0c-s4vage/gramfuzz/labels/good%20first%20issue)
+* [needs-triage](https://github.com/d0c-s4vage/gramfuzz/labels/needs-triage)
+* [documentation](https://github.com/d0c-s4vage/gramfuzz/labels/documentation)
+
+For those who want or feel able to immediately start contributing code,
+take a look at issues labeled:
+
+* [concrete-issue](https://github.com/d0c-s4vage/gramfuzz/labels/concrete-issue)
+
 ## Expectations
 
 Contributors should feel free to ping the maintainers for feedback on proposed changes,
