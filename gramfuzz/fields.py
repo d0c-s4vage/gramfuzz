@@ -208,15 +208,19 @@ class Int(Field):
 
     min = 0
     max = 0x10000003
-    neg = True
 
     odds = [
-        (0.75,    [0,100]),
+        (0.75,    [-100,100]),
         (0.05,    0),
+        (0.05,    [-0x80-2,-0x80+2]),
         (0.05,    [0x80-2,0x80+2]),
+        (0.05,    [-0x100-2,-0x100+2]),
         (0.05,    [0x100-2,0x100+2]),
+        (0.05,    [-0x10000-2, -0x10000+2]),
         (0.05,    [0x10000-2, 0x10000+2]),
         (0.03,    0x80000000),
+        (0.03,    -0x80000000),
+        (0.02,    [-0x100000000-2, -0x100000000+2]),
         (0.02,    [0x100000000-2, 0x100000000+2])
     ]
 
@@ -253,10 +257,7 @@ class Int(Field):
         if self.min == self.max:
             return self.min
 
-        res = self._odds_val()
-        if self.neg and rand.maybe():
-            res = -res
-        return res
+        return self._odds_val()
 
 
 class UInt(Int):
@@ -264,9 +265,31 @@ class UInt(Int):
     """
     neg = False
 
+    odds = [
+        (0.75,    [0,100]),
+        (0.05,    0),
+        (0.05,    [0x80-2,0x80+2]),
+        (0.05,    [0x100-2,0x100+2]),
+        (0.05,    [0x10000-2, 0x10000+2]),
+        (0.03,    0x80000000),
+        (0.02,    [0x100000000-2, 0x100000000+2])
+    ]
+
 class Float(Int):
     """Defines a float ``Field`` with odds that define float
     values
+    """
+    odds = [
+        (0.75,    [-100.0,100.0]),
+        (0.05,    0),
+        (0.10,    [100.0, 1000.0]),
+        (0.10,    [-1000.0, 100.0]),
+        (0.10,    [1000.0, 100000.0]),
+        (0.10,    [-100000.0, -1000.0]),
+    ]
+
+class UFloat(Float):
+    """Defines an unsigned float field.
     """
     odds = [
         (0.75,    [0.0,100.0]),
@@ -274,12 +297,6 @@ class Float(Int):
         (0.10,    [100.0, 1000.0]),
         (0.10,    [1000.0, 100000.0]),
     ]
-    neg = True
-
-class UFloat(Float):
-    """Defines an unsigned float field.
-    """
-    neg = False
 
 class String(UInt):
     """Defines a string field
