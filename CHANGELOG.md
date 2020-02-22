@@ -1,5 +1,6 @@
 # Changelog
 
+- [v1.3.1](#v132)
 - [v1.3.1](#v131)
 - [v1.3.0](#v130)
 - [v1.2.2](#v122)
@@ -7,6 +8,12 @@
 - [v1.2.0](#v120)
 - [v1.1.0](#v110)
 - [v1.0.0](#v100)
+
+## v1.3.2
+
+| type | ticket                                                  | description                                                              |
+|-----:|---------------------------------------------------------|--------------------------------------------------------------------------|
+|  bug | [#33](https://github.com/d0c-s4vage/gramfuzz/issues/33) | Fixed negative values being generated when non-negative min/max are used |
 
 ## v1.3.1
 
