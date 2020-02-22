@@ -230,6 +230,11 @@ class Int(Field):
         """
         self.value = value
 
+        if "min" in kwargs or "max" in kwargs or "odds" in kwargs:
+            self.custom_odds = True
+        else:
+            self.custom_odds = False
+
         if "min" in kwargs or "max" in kwargs:
             self.odds = []
 
@@ -254,7 +259,7 @@ class Int(Field):
             return self.min
 
         res = self._odds_val()
-        if self.neg and rand.maybe():
+        if not self.custom_odds and self.neg and rand.maybe():
             res = -res
         return res
 

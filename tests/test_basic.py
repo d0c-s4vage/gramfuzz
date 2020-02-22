@@ -54,6 +54,20 @@ class TestFields(unittest.TestCase):
 
     @loop
     def test_int_min_max(self):
+        min_ = 0
+        max_ = 65535
+
+        i = Int(min=min_, max=max_)
+        res = i.build()
+
+        self.assertTrue(min_ <= res < max_, "{} <= {} < {} was not True".format(
+            min_,
+            res,
+            max_
+        ))
+
+    @loop
+    def test_uint_min_max(self):
         min_ = 100
         max_ = 110
 
@@ -67,7 +81,7 @@ class TestFields(unittest.TestCase):
         ))
 
     @loop
-    def test_int_min_max2(self):
+    def test_uint_min_max2(self):
         default_min = 0
         max_ = 110
 
