@@ -35,7 +35,7 @@ def generate(grammar=None, num=1, output=sys.stdout, max_recursion=10, seed=None
 
     results = fuzzer.gen(cat_group=cat_group, num=num, max_recursion=max_recursion)
     for res in results:
-        output.write(res)
+        output.write(res + b"\n")
 
 
 def main(argv):
