@@ -17,7 +17,7 @@ TOP_CAT = "bizbs"
 
 def load_words(filename):
     data_dir = os.path.join(os.path.dirname(__file__), "bizbs_data")
-    with open(os.path.join(data_dir, filename), "rb") as f:
+    with open(os.path.join(data_dir, filename), "r") as f:
         data = f.read()
 
     res = []
