@@ -88,6 +88,7 @@ A :any:`gramfuzz.fields.WeightedOr` class (aliased to :any:`gramfuzz.fields.WOr`
 also exists to allow weighted probabilities in `Or` choices:
 
 .. code-block:: python
+
    WeightedOr([
       ("hello", 0.1), # 10% chance
       (UInt,    0.7), # 70% chance
