@@ -89,19 +89,19 @@ also exists to allow weighted probabilities in `Or` choices:
 
 .. code-block:: python
 
-   WeightedOr([
+   WeightedOr(
       ("hello", 0.1), # 10% chance
       (UInt,    0.7), # 70% chance
       (3.14,    0.3), # 30% chance
-   ])
+   )
 
    # or
 
-   WOr([
+   WOr(
       ("hello", 0.1), # 10% chance
       (UInt,    0.7), # 70% chance
       (3.14,    0.3), # 30% chance
-   ])
+   )
 
 Join
 ----
