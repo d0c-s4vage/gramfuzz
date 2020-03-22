@@ -580,7 +580,26 @@ class Or(Field):
 class WeightedOr(Field):
     """A ``Field`` subclass that chooses one of the provided values at
     random as the result of a call to the ``build()`` method. Takes an
-    odds array rather than just direct values."""
+    odds array rather than just direct values. Also aliased to ``WOr``.
+
+    E.g.
+
+    .. code-block:: python
+
+        WeightedOr([
+            ("hello", 0.1), # 10% chance
+            (UInt,    0.7), # 70% chance
+            (3.14,    0.3), # 30% chance
+        ])
+
+        # or
+
+        WOr([
+            ("hello", 0.1), # 10% chance
+            (UInt,    0.7), # 70% chance
+            (3.14,    0.3), # 30% chance
+        ])
+    """
 
     def __init__(self, *values, **kwargs):
         """Create a new ``WeightedOr`` instance with the provided values.
@@ -628,6 +647,7 @@ class WeightedOr(Field):
 
         val = rand.weighted_choice(chosen_vals, chosen_weights)
         return utils.val(val, pre, shortest=shortest)
+WOr = WeightedOr
 
 
 class Opt(And):

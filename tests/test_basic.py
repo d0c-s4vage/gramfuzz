@@ -307,15 +307,15 @@ class TestFields(unittest.TestCase):
             },
             "hello": {
                 "prob": 0.6,
-                "val": "hello",
+                "val": b"hello",
                 "count": 0,
-                "match": lambda x: x == "hello"
+                "match": lambda x: x == b"hello"
             },
             "a": {
                 "prob": 0.3,
-                "val": "a",
+                "val": b"a",
                 "count": 0,
-                "match": lambda x: x == "a"
+                "match": lambda x: x == b"a"
             },
         }
         values = [(v["val"], v["prob"]) for k, v in counts.items()]
