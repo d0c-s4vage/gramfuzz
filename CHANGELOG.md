@@ -1,5 +1,7 @@
 # Changelog
 
+- [v1.4.0](#v140)
+- [v1.3.2](#v132)
 - [v1.3.1](#v131)
 - [v1.3.0](#v130)
 - [v1.2.2](#v122)
@@ -7,6 +9,18 @@
 - [v1.2.0](#v120)
 - [v1.1.0](#v110)
 - [v1.0.0](#v100)
+
+## v1.4.0
+
+|    type | ticket                                                  | description                     |
+|--------:|---------------------------------------------------------|---------------------------------|
+| feature | [#37](https://github.com/d0c-s4vage/gramfuzz/issues/37) | Adds `WeightedOr` (`WOr`) class |
+
+## v1.3.2
+
+| type | ticket                                                  | description                                   |
+|-----:|---------------------------------------------------------|-----------------------------------------------|
+|  bug | [#33](https://github.com/d0c-s4vage/gramfuzz/issues/33) | Fixes `Int` field and `min`/`max` constraints |
 
 ## v1.3.1
 
