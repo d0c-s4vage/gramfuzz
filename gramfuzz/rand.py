@@ -32,6 +32,31 @@ def seed(val):
     RANDOM.seed(val)
 
 
+def weighted_choice(items, probabilities):
+    """Returns a randomly-chosen item from ``items`` using the ``probabilities``
+    tuple/list to determine probabilities.
+
+    Assumes all weights add up to 1.0
+
+    E.g.
+
+    .. code-block:: python
+
+        # 10% chance of 1
+        # 30% chance of 2
+        # 60% chance of 3
+        weighted_choice([1, 2, 3], [0.1, 0.3, 0.6])
+    """
+    rand_val = RANDOM.random()
+
+    total_probability = 0.0
+    for item, prob in zip(items, probabilities):
+        if total_probability <= rand_val < total_probability+prob:
+            return item
+        total_probability += prob
+    raise Exception("Probabilities did not add up to 1.0")
+
+
 def randint(a, b=None):
     """Return a random integer
 
