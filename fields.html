@@ -8,48 +8,45 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>fields &mdash; gramfuzz 1.2.0 documentation</title>
+  <title>fields &mdash; gramfuzz 1.4.0 documentation</title>
   
 
   
   
+  
+  
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="gramfuzz 1.2.0 documentation" href="index.html"/>
-        <link rel="next" title="utils" href="utils.html"/>
-        <link rel="prev" title="gramfuzz" href="gramfuzz.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="utils" href="utils.html" />
+    <link rel="prev" title="gramfuzz" href="gramfuzz.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -63,7 +60,7 @@
             
             
               <div class="version">
-                1.2.0
+                v1.4.0
               </div>
             
           
@@ -84,7 +81,10 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="gramfuzz.html">gramfuzz</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">fields</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#classes">Classes</a><ul>
@@ -122,34 +122,54 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">gramfuzz</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">gramfuzz</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>fields</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>fields</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="_sources/fields.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -165,54 +185,54 @@ grammar-driven data generation.</p>
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="int-uint-float-ufloat">
 <h3>Int/UInt/Float/UFloat<a class="headerlink" href="#int-uint-float-ufloat" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="#gramfuzz.fields.Int" title="gramfuzz.fields.Int"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Int</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.UInt" title="gramfuzz.fields.UInt"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.UInt</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.Float" title="gramfuzz.fields.Float"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Float</span></code></a>,
-and <a class="reference internal" href="#gramfuzz.fields.UFloat" title="gramfuzz.fields.UFloat"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.UFloat</span></code></a> classes are the only numeric classes defined in gramfuzz.</p>
-<p>Most things can be accomplished using these classes, their <code class="docutils literal"><span class="pre">min</span></code>/<code class="docutils literal"><span class="pre">max</span></code> settings,
-and their <code class="docutils literal"><span class="pre">odds</span></code> settings.</p>
+<p>The <a class="reference internal" href="#gramfuzz.fields.Int" title="gramfuzz.fields.Int"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Int</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.UInt" title="gramfuzz.fields.UInt"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.UInt</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.Float" title="gramfuzz.fields.Float"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Float</span></code></a>,
+and <a class="reference internal" href="#gramfuzz.fields.UFloat" title="gramfuzz.fields.UFloat"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.UFloat</span></code></a> classes are the only numeric classes defined in gramfuzz.</p>
+<p>Most things can be accomplished using these classes, their <code class="docutils literal notranslate"><span class="pre">min</span></code>/<code class="docutils literal notranslate"><span class="pre">max</span></code> settings,
+and their <code class="docutils literal notranslate"><span class="pre">odds</span></code> settings.</p>
 </div>
 <div class="section" id="string">
 <h3>String<a class="headerlink" href="#string" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="#gramfuzz.fields.String" title="gramfuzz.fields.String"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.String</span></code></a> class can be used to generate arbitrary-length strings. All of the
-settings from the <code class="docutils literal"><span class="pre">Int</span></code> class still apply to the <code class="docutils literal"><span class="pre">String</span></code> class (<code class="docutils literal"><span class="pre">min</span></code>, <code class="docutils literal"><span class="pre">max</span></code>,
-<code class="docutils literal"><span class="pre">odds</span></code>), except that they influence the length of the string, not the characters
+<p>The <a class="reference internal" href="#gramfuzz.fields.String" title="gramfuzz.fields.String"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.String</span></code></a> class can be used to generate arbitrary-length strings. All of the
+settings from the <code class="docutils literal notranslate"><span class="pre">Int</span></code> class still apply to the <code class="docutils literal notranslate"><span class="pre">String</span></code> class (<code class="docutils literal notranslate"><span class="pre">min</span></code>, <code class="docutils literal notranslate"><span class="pre">max</span></code>,
+<code class="docutils literal notranslate"><span class="pre">odds</span></code>), except that they influence the length of the string, not the characters
 it contains.</p>
-<p>The <code class="docutils literal"><span class="pre">String</span></code> class has another paramter: <code class="docutils literal"><span class="pre">charset</span></code>. This is used to specify
+<p>The <code class="docutils literal notranslate"><span class="pre">String</span></code> class has another paramter: <code class="docutils literal notranslate"><span class="pre">charset</span></code>. This is used to specify
 which characters should make up the random strings. Several pre-defined charsets
-exist within the <code class="docutils literal"><span class="pre">String</span></code> class:</p>
+exist within the <code class="docutils literal notranslate"><span class="pre">String</span></code> class:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">charset_alpha_lower</span></code></li>
-<li><code class="docutils literal"><span class="pre">charset_alpha_upper</span></code></li>
-<li><code class="docutils literal"><span class="pre">charset_alpha</span></code></li>
-<li><code class="docutils literal"><span class="pre">charset_spaces</span></code></li>
-<li><code class="docutils literal"><span class="pre">charset_num</span></code></li>
-<li><code class="docutils literal"><span class="pre">charset_alphanum</span></code></li>
-<li><code class="docutils literal"><span class="pre">charset_all</span></code></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">charset_alpha_lower</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">charset_alpha_upper</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">charset_alpha</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">charset_spaces</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">charset_num</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">charset_alphanum</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">charset_all</span></code></p></li>
 </ul>
 <p>For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">String</span><span class="p">(</span><span class="n">charset</span><span class="o">=</span><span class="s2">&quot;abcdefg&quot;</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">String</span><span class="p">(</span><span class="n">charset</span><span class="o">=</span><span class="s2">&quot;abcdefg&quot;</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
 <span class="c1"># &#39;aca&#39;</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="and">
 <h3>And<a class="headerlink" href="#and" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="#gramfuzz.fields.And" title="gramfuzz.fields.And"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.And</span></code></a> class can be used to concatenate different values
+<p>The <a class="reference internal" href="#gramfuzz.fields.And" title="gramfuzz.fields.And"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.And</span></code></a> class can be used to concatenate different values
 together:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="s2">&quot;hello&quot;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
 <span class="c1"># &#39;98hello&#39;</span>
 </pre></div>
 </div>
-<p><code class="docutils literal"><span class="pre">And</span></code> does not take any special parameters.</p>
+<p><code class="docutils literal notranslate"><span class="pre">And</span></code> does not take any special parameters.</p>
 </div>
 <div class="section" id="or">
 <h3>Or<a class="headerlink" href="#or" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="#gramfuzz.fields.Or" title="gramfuzz.fields.Or"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Or</span></code></a> class can be used to choose randomly between several
+<p>The <a class="reference internal" href="#gramfuzz.fields.Or" title="gramfuzz.fields.Or"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Or</span></code></a> class can be used to choose randomly between several
 different options:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">o</span> <span class="o">=</span> <span class="n">Or</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="s2">&quot;Hello&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">o</span> <span class="o">=</span> <span class="n">Or</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="s2">&quot;Hello&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
 <span class="c1"># Hello</span>
 <span class="c1"># Hello</span>
 <span class="c1"># -91</span>
@@ -225,14 +245,31 @@ different options:</p>
 <span class="c1"># Hello</span>
 </pre></div>
 </div>
+<p>A <a class="reference internal" href="#gramfuzz.fields.WeightedOr" title="gramfuzz.fields.WeightedOr"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.WeightedOr</span></code></a> class (aliased to <a class="reference internal" href="#gramfuzz.fields.WOr" title="gramfuzz.fields.WOr"><code class="xref any py py-attr docutils literal notranslate"><span class="pre">gramfuzz.fields.WOr</span></code></a>)
+also exists to allow weighted probabilities in <cite>Or</cite> choices:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">WeightedOr</span><span class="p">([</span>
+   <span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="c1"># 10% chance</span>
+   <span class="p">(</span><span class="n">UInt</span><span class="p">,</span>    <span class="mf">0.7</span><span class="p">),</span> <span class="c1"># 70% chance</span>
+   <span class="p">(</span><span class="mf">3.14</span><span class="p">,</span>    <span class="mf">0.3</span><span class="p">),</span> <span class="c1"># 30% chance</span>
+<span class="p">])</span>
+
+<span class="c1"># or</span>
+
+<span class="n">WOr</span><span class="p">([</span>
+   <span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="c1"># 10% chance</span>
+   <span class="p">(</span><span class="n">UInt</span><span class="p">,</span>    <span class="mf">0.7</span><span class="p">),</span> <span class="c1"># 70% chance</span>
+   <span class="p">(</span><span class="mf">3.14</span><span class="p">,</span>    <span class="mf">0.3</span><span class="p">),</span> <span class="c1"># 30% chance</span>
+<span class="p">])</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="join">
 <h3>Join<a class="headerlink" href="#join" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="#gramfuzz.fields.Join" title="gramfuzz.fields.Join"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Join</span></code></a> class can be used to join values together using a
-separator. It also has a <code class="docutils literal"><span class="pre">max</span></code> value that can be used to indicate how many
+<p>The <a class="reference internal" href="#gramfuzz.fields.Join" title="gramfuzz.fields.Join"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Join</span></code></a> class can be used to join values together using a
+separator. It also has a <code class="docutils literal notranslate"><span class="pre">max</span></code> value that can be used to indicate how many
 times the first value should be repeated (any values other than the first one
 will be ignored):</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">j</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">j</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span>
     <span class="s2">&quot;some_function(&quot;</span><span class="p">,</span>
     <span class="n">Join</span><span class="p">(</span>
         <span class="n">Or</span><span class="p">(</span><span class="n">Int</span><span class="o">|</span><span class="n">Q</span><span class="p">(</span><span class="n">String</span><span class="p">)),</span>
@@ -240,8 +277,8 @@ will be ignored):</p>
     <span class="s2">&quot;)&quot;</span>
 <span class="p">)</span>
 
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
 <span class="c1"># some_function(-4294967294, &quot;sEaKWSOGabHf&quot;, &quot;ZkLXWYAUyEuW&quot;, 95, &quot;FHnVYTvB&quot;)</span>
 <span class="c1"># some_function(&quot;koBklVcoJbDC&quot;, -60)</span>
 <span class="c1"># some_function(-65537)</span>
@@ -257,34 +294,32 @@ will be ignored):</p>
 </div>
 <div class="section" id="q">
 <h3>Q<a class="headerlink" href="#q" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="#gramfuzz.fields.Q" title="gramfuzz.fields.Q"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Q</span></code></a> class can be used to surround values in quotes, optionally
+<p>The <a class="reference internal" href="#gramfuzz.fields.Q" title="gramfuzz.fields.Q"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Q</span></code></a> class can be used to surround values in quotes, optionally
 specifying one of two string-escaping methods:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">String</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">String</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
 <span class="c1"># &quot;znFHLTkwgniAXtNhI&quot;</span>
-<span class="k">print</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="s2">&quot;&#39;he</span><span class="se">\&quot;</span><span class="s2">llo&#39;&quot;</span><span class="p">,</span> <span class="n">escape</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="s2">&quot;&#39;he</span><span class="se">\&quot;</span><span class="s2">llo&#39;&quot;</span><span class="p">,</span> <span class="n">escape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
 <span class="c1"># &#39;\&#39;he&quot;llo\&#39;&#39;&quot;</span>
-<span class="k">print</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="s2">&quot;&lt;h1&gt;&#39;hello&#39;&lt;/h1&gt;&quot;</span><span class="p">,</span> <span class="n">html_js_escape</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="s2">&quot;&lt;h1&gt;&#39;hello&#39;&lt;/h1&gt;&quot;</span><span class="p">,</span> <span class="n">html_js_escape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
 <span class="c1"># &#39;\x3ch1\x3e\&#39;hello\&#39;\x3c/h1\x3e&#39;</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">escape</span></code> - use Python&#8217;s repr to escape the string</li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">html_js_escape</span></code> - use Python&#8217;s <code class="docutils literal"><span class="pre">&quot;string_escape&quot;</span></code> encoding, as well as replacing <code class="docutils literal"><span class="pre">&lt;</span></code></dt>
-<dd>and <code class="docutils literal"><span class="pre">&gt;</span></code> with their escaped hex formats</dd>
-</dl>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">escape</span></code> - use Python’s repr to escape the string</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">html_js_escape</span></code> - use Python’s <code class="docutils literal notranslate"><span class="pre">&quot;string_escape&quot;</span></code> (or
+<code class="docutils literal notranslate"><span class="pre">&quot;unicode_escape&quot;</span></code> in python3) encoding, as well as replacing <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&gt;</span></code> with their escaped hex formats</p></li>
 </ul>
-<p>The <code class="docutils literal"><span class="pre">Q</span></code> class also accessts a <code class="docutils literal"><span class="pre">quote</span></code> keyword argument. This only applies if none
+<p>The <code class="docutils literal notranslate"><span class="pre">Q</span></code> class also accessts a <code class="docutils literal notranslate"><span class="pre">quote</span></code> keyword argument. This only applies if none
 of the escaping methods are specified, and is merely prepended and appended to the
 string.</p>
 </div>
 <div class="section" id="opt">
 <h3>Opt<a class="headerlink" href="#opt" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="#gramfuzz.fields.Opt" title="gramfuzz.fields.Opt"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Opt</span></code></a> inherits from the <code class="docutils literal"><span class="pre">And</span></code> class can be used to
-wrap values, optionally raising an <code class="docutils literal"><span class="pre">OptGram</span></code> exception when built.</p>
-<p>If an <code class="docutils literal"><span class="pre">OptGram</span></code> exception is raised, the current value being built will be ignored.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">j</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span>
+<p>The <a class="reference internal" href="#gramfuzz.fields.Opt" title="gramfuzz.fields.Opt"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Opt</span></code></a> inherits from the <code class="docutils literal notranslate"><span class="pre">And</span></code> class can be used to
+wrap values, optionally raising an <code class="docutils literal notranslate"><span class="pre">OptGram</span></code> exception when built.</p>
+<p>If an <code class="docutils literal notranslate"><span class="pre">OptGram</span></code> exception is raised, the current value being built will be ignored.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">j</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span>
     <span class="s2">&quot;some_function(&quot;</span><span class="p">,</span>
     <span class="n">Join</span><span class="p">(</span>
         <span class="n">Int</span><span class="p">,</span>
@@ -301,22 +336,22 @@ wrap values, optionally raising an <code class="docutils literal"><span class="p
 <h2>Details<a class="headerlink" href="#details" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="field-base-class">
 <h3>Field Base Class<a class="headerlink" href="#field-base-class" title="Permalink to this headline">¶</a></h3>
-<p>All fields inherit from the <a class="reference internal" href="#gramfuzz.fields.Field" title="gramfuzz.fields.Field"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Field</span></code></a> class.</p>
-<p><code class="docutils literal"><span class="pre">Field</span></code> classes may be used in grammar rule definitions, as well as instances
-of <code class="docutils literal"><span class="pre">Field</span></code> classes (thanks to the <a class="reference internal" href="#gramfuzz.fields.MetaField" title="gramfuzz.fields.MetaField"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.MetaField</span></code></a> class and the
-<a class="reference internal" href="utils.html#gramfuzz.utils.val" title="gramfuzz.utils.val"><code class="xref any py py-func docutils literal"><span class="pre">gramfuzz.utils.val</span></code></a> function).</p>
-<p>For example, defining a rule that uses the <code class="docutils literal"><span class="pre">Int</span></code> field with the default settings
+<p>All fields inherit from the <a class="reference internal" href="#gramfuzz.fields.Field" title="gramfuzz.fields.Field"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Field</span></code></a> class.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Field</span></code> classes may be used in grammar rule definitions, as well as instances
+of <code class="docutils literal notranslate"><span class="pre">Field</span></code> classes (thanks to the <a class="reference internal" href="#gramfuzz.fields.MetaField" title="gramfuzz.fields.MetaField"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.MetaField</span></code></a> class and the
+<a class="reference internal" href="utils.html#gramfuzz.utils.val" title="gramfuzz.utils.val"><code class="xref any py py-func docutils literal notranslate"><span class="pre">gramfuzz.utils.val</span></code></a> function).</p>
+<p>For example, defining a rule that uses the <code class="docutils literal notranslate"><span class="pre">Int</span></code> field with the default settings
 may look something like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;integer_rule&quot;</span><span class="p">,</span> <span class="n">Int</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;integer_rule&quot;</span><span class="p">,</span> <span class="n">Int</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>However, if more specific settings for the <code class="docutils literal"><span class="pre">Int</span></code> class were desired, it may
+<p>However, if more specific settings for the <code class="docutils literal notranslate"><span class="pre">Int</span></code> class were desired, it may
 look something like this instead:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;integer_rule&quot;</span><span class="p">,</span> <span class="n">Int</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">20</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;integer_rule&quot;</span><span class="p">,</span> <span class="n">Int</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">20</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Note that this can also be abstracted to something like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">SPECIAL_INT</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SPECIAL_INT</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
 <span class="n">Def</span><span class="p">(</span><span class="s2">&quot;integer_rule&quot;</span><span class="p">,</span> <span class="n">SPECIAL_INT</span><span class="p">)</span>
 <span class="n">Def</span><span class="p">(</span><span class="s2">&quot;integer_rule2&quot;</span><span class="p">,</span> <span class="n">SPECIAL_INT</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">SPECIAL_INT</span><span class="p">)</span>
@@ -328,30 +363,30 @@ hard-coding specific settings throughout a grammar.</p>
 <div class="section" id="operator-overloading">
 <h3>Operator Overloading<a class="headerlink" href="#operator-overloading" title="Permalink to this headline">¶</a></h3>
 <p>gramfuzz defines two main classes for concatenating or randomly
-choosing between values: <a class="reference internal" href="#gramfuzz.fields.And" title="gramfuzz.fields.And"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.And</span></code></a> and <a class="reference internal" href="#gramfuzz.fields.Or" title="gramfuzz.fields.Or"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Or</span></code></a>.</p>
-<p>The <code class="docutils literal"><span class="pre">And</span></code> and <code class="docutils literal"><span class="pre">Or</span></code> classes can be explicitly used:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="n">Int</span><span class="p">)</span>
+choosing between values: <a class="reference internal" href="#gramfuzz.fields.And" title="gramfuzz.fields.And"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.And</span></code></a> and <a class="reference internal" href="#gramfuzz.fields.Or" title="gramfuzz.fields.Or"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Or</span></code></a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">And</span></code> and <code class="docutils literal notranslate"><span class="pre">Or</span></code> classes can be explicitly used:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="n">Int</span><span class="p">)</span>
 <span class="n">Or</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="n">Float</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Or they can be used using the overloaded and and or operators:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Int</span> <span class="o">&amp;</span> <span class="s2">&quot;, &quot;</span> <span class="o">&amp;</span> <span class="n">Int</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Int</span> <span class="o">&amp;</span> <span class="s2">&quot;, &quot;</span> <span class="o">&amp;</span> <span class="n">Int</span><span class="p">)</span>
 <span class="p">(</span><span class="n">Int</span> <span class="o">|</span> <span class="n">Float</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>There are a few drawbacks however, mostly having to do with the fact
 that gramfuzz cannot tell where the parenthesis are in more complex
 scenarios, like the one below:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Int</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Int</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Int</span> <span class="o">&amp;</span> <span class="n">Int</span><span class="p">)))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Int</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Int</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Int</span> <span class="o">&amp;</span> <span class="n">Int</span><span class="p">)))</span>
 </pre></div>
 </div>
 <p>Ideally, the statement above would generate something like the statement
-below, which uses explicit <code class="docutils literal"><span class="pre">And</span></code> s:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="n">Int</span><span class="p">)))</span>
+below, which uses explicit <code class="docutils literal notranslate"><span class="pre">And</span></code> s:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="n">Int</span><span class="p">)))</span>
 </pre></div>
 </div>
 <p>When in reality, gramfuzz ends up doing this instead:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Int</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Int</span><span class="p">)</span>
 <span class="c1"># from the python console:</span>
 <span class="c1"># &gt;&gt;&gt; a = (Int &amp; (Int &amp; (Int &amp; Int)))</span>
 <span class="c1"># &gt;&gt;&gt; a</span>
@@ -359,33 +394,33 @@ below, which uses explicit <code class="docutils literal"><span class="pre">And<
 </pre></div>
 </div>
 <p>For this reason, I tend to use the overloaded operators only in simple situations.
-Complex logic/scenarious I tend to only use explicit <code class="docutils literal"><span class="pre">And</span></code> and <code class="docutils literal"><span class="pre">Or</span></code>.</p>
+Complex logic/scenarious I tend to only use explicit <code class="docutils literal notranslate"><span class="pre">And</span></code> and <code class="docutils literal notranslate"><span class="pre">Or</span></code>.</p>
 <div class="section" id="gotcha">
 <h4>Gotcha<a class="headerlink" href="#gotcha" title="Permalink to this headline">¶</a></h4>
 <p>One important gotcha is shown below:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="mi">5</span> <span class="o">|</span> <span class="n">Int</span> <span class="o">|</span> <span class="n">Float</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="mi">5</span> <span class="o">|</span> <span class="n">Int</span> <span class="o">|</span> <span class="n">Float</span>
 </pre></div>
 </div>
-<p>The above example does not work because <code class="docutils literal"><span class="pre">5</span></code> is the first operand
+<p>The above example does not work because <code class="docutils literal notranslate"><span class="pre">5</span></code> is the first operand
 in the or sequence. This is due to the way Python handles
 operator overloading.</p>
 <p>However, this <em>will</em> work:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Int</span> <span class="o">|</span> <span class="n">Float</span> <span class="o">|</span> <span class="mi">5</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Int</span> <span class="o">|</span> <span class="n">Float</span> <span class="o">|</span> <span class="mi">5</span>
 </pre></div>
 </div>
-<p>Native types can only be used with the <code class="docutils literal"><span class="pre">Field</span></code> overloaded operators
+<p>Native types can only be used with the <code class="docutils literal notranslate"><span class="pre">Field</span></code> overloaded operators
 if they are not the first operand.</p>
 </div>
 </div>
 <div class="section" id="odds">
 <h3>Odds<a class="headerlink" href="#odds" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="#gramfuzz.fields.Int" title="gramfuzz.fields.Int"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Int</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.UInt" title="gramfuzz.fields.UInt"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.UInt</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.Float" title="gramfuzz.fields.Float"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Float</span></code></a>,
-<a class="reference internal" href="#gramfuzz.fields.UFloat" title="gramfuzz.fields.UFloat"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.UFloat</span></code></a>, and <a class="reference internal" href="#gramfuzz.fields.String" title="gramfuzz.fields.String"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.String</span></code></a> classes each make use of
-the <a class="reference internal" href="#gramfuzz.fields.Field.odds" title="gramfuzz.fields.Field.odds"><code class="xref any py py-attr docutils literal"><span class="pre">gramfuzz.fields.Field.odds</span></code></a> member when generating data, as well as (optionally)
-<code class="docutils literal"><span class="pre">min</span></code> and <code class="docutils literal"><span class="pre">max</span></code> members.</p>
-<p>An example of using the <code class="docutils literal"><span class="pre">odds</span></code> member can be seen in the default values
-for the <code class="docutils literal"><span class="pre">Int</span></code>, <code class="docutils literal"><span class="pre">Float</span></code>, and <code class="docutils literal"><span class="pre">String</span></code> classes:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Float</span><span class="p">(</span><span class="n">Int</span><span class="p">):</span>
+<p>The <a class="reference internal" href="#gramfuzz.fields.Int" title="gramfuzz.fields.Int"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Int</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.UInt" title="gramfuzz.fields.UInt"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.UInt</span></code></a>, <a class="reference internal" href="#gramfuzz.fields.Float" title="gramfuzz.fields.Float"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Float</span></code></a>,
+<a class="reference internal" href="#gramfuzz.fields.UFloat" title="gramfuzz.fields.UFloat"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.UFloat</span></code></a>, and <a class="reference internal" href="#gramfuzz.fields.String" title="gramfuzz.fields.String"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.String</span></code></a> classes each make use of
+the <a class="reference internal" href="#gramfuzz.fields.Field.odds" title="gramfuzz.fields.Field.odds"><code class="xref any py py-attr docutils literal notranslate"><span class="pre">gramfuzz.fields.Field.odds</span></code></a> member when generating data, as well as (optionally)
+<code class="docutils literal notranslate"><span class="pre">min</span></code> and <code class="docutils literal notranslate"><span class="pre">max</span></code> members.</p>
+<p>An example of using the <code class="docutils literal notranslate"><span class="pre">odds</span></code> member can be seen in the default values
+for the <code class="docutils literal notranslate"><span class="pre">Int</span></code>, <code class="docutils literal notranslate"><span class="pre">Float</span></code>, and <code class="docutils literal notranslate"><span class="pre">String</span></code> classes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Float</span><span class="p">(</span><span class="n">Int</span><span class="p">):</span>
     <span class="c1"># ...</span>
     <span class="n">odds</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="mf">0.75</span><span class="p">,</span>    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">100.0</span><span class="p">]),</span>        <span class="c1"># 75% chance of being in the range [0.0, 100.0)</span>
@@ -397,11 +432,11 @@ for the <code class="docutils literal"><span class="pre">Int</span></code>, <cod
 </pre></div>
 </div>
 <p>It should be noted that the probability percents in each entry in
-the <code class="docutils literal"><span class="pre">odds</span></code> list should add up to <code class="docutils literal"><span class="pre">1.0</span></code>.</p>
+the <code class="docutils literal notranslate"><span class="pre">odds</span></code> list should add up to <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
 <p>See the documentation below for more details:</p>
 <ul class="simple">
-<li><a class="reference internal" href="#gramfuzz.fields.Field.odds" title="gramfuzz.fields.Field.odds"><code class="xref any py py-attr docutils literal"><span class="pre">gramfuzz.fields.Field.odds</span></code></a></li>
-<li><a class="reference internal" href="#gramfuzz.fields.Int.__init__" title="gramfuzz.fields.Int.__init__"><code class="xref any py py-meth docutils literal"><span class="pre">gramfuzz.fields.Int.__init__</span></code></a> (for min/max)</li>
+<li><p><a class="reference internal" href="#gramfuzz.fields.Field.odds" title="gramfuzz.fields.Field.odds"><code class="xref any py py-attr docutils literal notranslate"><span class="pre">gramfuzz.fields.Field.odds</span></code></a></p></li>
+<li><p><a class="reference internal" href="#gramfuzz.fields.Int.__init__" title="gramfuzz.fields.Int.__init__"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">gramfuzz.fields.Int.__init__</span></code></a> (for min/max)</p></li>
 </ul>
 </div>
 </div>
@@ -409,67 +444,60 @@ the <code class="docutils literal"><span class="pre">odds</span></code> list sho
 <h2>gramfuzz.fields Reference Documentation<a class="headerlink" href="#gramfuzz-fields-reference-documentation" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-gramfuzz.fields"></span><p>This module defines all of the core gramfuzz fields:</p>
 <ul class="simple">
-<li>Float</li>
-<li>UFloat</li>
-<li>Int</li>
-<li>UInt</li>
-<li>Join</li>
-<li>Opt</li>
-<li>Or</li>
-<li>Q</li>
-<li>Ref</li>
-<li>String</li>
+<li><p>Float</p></li>
+<li><p>UFloat</p></li>
+<li><p>Int</p></li>
+<li><p>UInt</p></li>
+<li><p>Join</p></li>
+<li><p>Opt</p></li>
+<li><p>Or</p></li>
+<li><p>Q</p></li>
+<li><p>Ref</p></li>
+<li><p>String</p></li>
 </ul>
-<p>Each field has a <code class="docutils literal"><span class="pre">build()</span></code> method, which accepts one argument
-(<code class="docutils literal"><span class="pre">pre</span></code>) that can be used to assign prerequisites of the build result.</p>
+<p>Each field has a <code class="docutils literal notranslate"><span class="pre">build()</span></code> method, which accepts one argument
+(<code class="docutils literal notranslate"><span class="pre">pre</span></code>) that can be used to assign prerequisites of the build result.</p>
 <dl class="class">
 <dt id="gramfuzz.fields.And">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">And</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#And"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.And" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <code class="docutils literal"><span class="pre">Field</span></code> subclass that concatenates two values together.
-This class works nicely with <code class="docutils literal"><span class="pre">Opt</span></code> values.</p>
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">And</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#And"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.And" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">Field</span></code> subclass that concatenates two values together.
+This class works nicely with <code class="docutils literal notranslate"><span class="pre">Opt</span></code> values.</p>
 <dl class="method">
 <dt id="gramfuzz.fields.And.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#And.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.And.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new <code class="docutils literal"><span class="pre">And</span></code> field instance.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>values</strong> (<em>list</em>) &#8211; The list of values to be concatenated</td>
-</tr>
-</tbody>
-</table>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#And.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.And.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new <code class="docutils literal notranslate"><span class="pre">And</span></code> field instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>list</em>) – The list of values to be concatenated</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.fields.And.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#And.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.And.build" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build the <code class="docutils literal"><span class="pre">And</span></code> instance</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
-<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param">pre=None</em>, <em class="sig-param">shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#And.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.And.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the <code class="docutils literal notranslate"><span class="pre">And</span></code> instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>list</em>) – The prerequisites list</p></li>
+<li><p><strong>shortest</strong> (<em>bool</em>) – Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="gramfuzz.fields.Def">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">Def</code><span class="sig-paren">(</span><em>name</em>, <em>*values</em>, <em>**options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Def"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Def" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <code class="docutils literal"><span class="pre">Def</span></code> class is used to define grammar <em>rules</em>. A defined rule
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">Def</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">*values</em>, <em class="sig-param">**options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Def"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Def" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">Def</span></code> class is used to define grammar <em>rules</em>. A defined rule
 has three parts:</p>
 <p># Name - A rule name can be declared multiple times. When a rule name with multiple
 definitions is generated, one of the rule definitions will be chosen at random.</p>
 <p># Values - The values of the rule. These will be concatenated (acts the same
-as an <code class="docutils literal"><span class="pre">And</span></code>).</p>
+as an <code class="docutils literal notranslate"><span class="pre">And</span></code>).</p>
 <p># Category - Which category to define the rule in. This is an important step and
 guides the fuzzer into choosing the correct rule definitions when randomly choosing
 rules to generate.</p>
@@ -478,105 +506,97 @@ We could have a grammar for US addresses, UK addresses, and Australian addresses
 When we want the fuzzer to generate a random address, we would want it to choose
 one from our US, UK, or Australian address rule and not choose to generate only
 a zipcode rule.</p>
-<p>I often have a main <code class="docutils literal"><span class="pre">X</span></code> category, as well as an <code class="docutils literal"><span class="pre">X_def</span></code> category. The <code class="docutils literal"><span class="pre">X</span></code>
+<p>I often have a main <code class="docutils literal notranslate"><span class="pre">X</span></code> category, as well as an <code class="docutils literal notranslate"><span class="pre">X_def</span></code> category. The <code class="docutils literal notranslate"><span class="pre">X</span></code>
 category is what I tell to the fuzzer to choose from when randomly generating
-top-level rules. The <code class="docutils literal"><span class="pre">X_def</span></code> category is only used to help build the top-level
+top-level rules. The <code class="docutils literal notranslate"><span class="pre">X_def</span></code> category is only used to help build the top-level
 rules.</p>
 <dl class="method">
 <dt id="gramfuzz.fields.Def.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>name</em>, <em>*values</em>, <em>**options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Def.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Def.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">*values</em>, <em class="sig-param">**options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Def.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Def.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new rule definition. Simply instantiating a new rule definition
-will add it to the current <code class="docutils literal"><span class="pre">GramFuzzer</span></code> instance.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the rule being defined</li>
-<li><strong>values</strong> (<em>list</em>) &#8211; The list of values that define the value of the rule
-(will be concatenated when built)</li>
-<li><strong>cat</strong> (<em>str</em>) &#8211; The category to create the rule in (default=``&#8221;default&#8221;<a href="#id1"><span class="problematic" id="id2">``</span></a>).</li>
-<li><strong>no_prune</strong> (<em>bool</em>) &#8211; If this rule should not be pruned <em>EVEN IF</em> it is found to be
-unreachable (default=``False``)</li>
+will add it to the current <code class="docutils literal notranslate"><span class="pre">GramFuzzer</span></code> instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the rule being defined</p></li>
+<li><p><strong>values</strong> (<em>list</em>) – The list of values that define the value of the rule
+(will be concatenated when built)</p></li>
+<li><p><strong>cat</strong> (<em>str</em>) – The category to create the rule in (default=``”default”<a href="#id1"><span class="problematic" id="id2">``</span></a>).</p></li>
+<li><p><strong>no_prune</strong> (<em>bool</em>) – If this rule should not be pruned <em>EVEN IF</em> it is found to be
+unreachable (default=``False``)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.fields.Def.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Def.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Def.build" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param">pre=None</em>, <em class="sig-param">shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Def.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Def.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build this rule definition</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
-<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>list</em>) – The prerequisites list</p></li>
+<li><p><strong>shortest</strong> (<em>bool</em>) – Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.Def.cat">
-<code class="descname">cat</code><em class="property"> = 'default'</em><a class="headerlink" href="#gramfuzz.fields.Def.cat" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default category of this <code class="docutils literal"><span class="pre">Def</span></code> class (default=``&#8221;default&#8221;<a href="#id3"><span class="problematic" id="id4">``</span></a>)</p>
+<code class="sig-name descname">cat</code><em class="property"> = 'default'</em><a class="headerlink" href="#gramfuzz.fields.Def.cat" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default category of this <code class="docutils literal notranslate"><span class="pre">Def</span></code> class (default=``”default”<a href="#id3"><span class="problematic" id="id4">``</span></a>)</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.Def.no_prune">
-<code class="descname">no_prune</code><em class="property"> = False</em><a class="headerlink" href="#gramfuzz.fields.Def.no_prune" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">no_prune</code><em class="property"> = False</em><a class="headerlink" href="#gramfuzz.fields.Def.no_prune" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether or not this rule should be pruned if the fuzzer cannot find
 a way to reach this rule. (default=``False``)</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.Def.sep">
-<code class="descname">sep</code><em class="property"> = ''</em><a class="headerlink" href="#gramfuzz.fields.Def.sep" title="Permalink to this definition">¶</a></dt>
-<dd><p>The separator of values for this rule definition (default=``&#8221;&#8220;<a href="#id5"><span class="problematic" id="id6">``</span></a>)</p>
+<code class="sig-name descname">sep</code><em class="property"> = b''</em><a class="headerlink" href="#gramfuzz.fields.Def.sep" title="Permalink to this definition">¶</a></dt>
+<dd><p>The separator of values for this rule definition (default=``””<a href="#id5"><span class="problematic" id="id6">``</span></a>)</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="gramfuzz.fields.Field">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">Field</code><a class="reference internal" href="_modules/gramfuzz/fields.html#Field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Field" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">Field</code><a class="reference internal" href="_modules/gramfuzz/fields.html#Field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Field" title="Permalink to this definition">¶</a></dt>
 <dd><p>The core class that all field classes are based one. Contains
 utility methods to determine probabilities/choices/min-max/etc.</p>
 <dl class="attribute">
 <dt id="gramfuzz.fields.Field.odds">
-<code class="descname">odds</code><em class="property"> = []</em><a class="headerlink" href="#gramfuzz.fields.Field.odds" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">odds</span></code> is a list of tuples that define probability values.</p>
+<code class="sig-name descname">odds</code><em class="property"> = []</em><a class="headerlink" href="#gramfuzz.fields.Field.odds" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">odds</span></code> is a list of tuples that define probability values.</p>
 <p>Each item in the list must be a tuple of the form:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Where <code class="docutils literal"><span class="pre">X</span></code> is the probability percent, and where <code class="docutils literal"><span class="pre">Y</span></code> is one of
+<p>Where <code class="docutils literal notranslate"><span class="pre">X</span></code> is the probability percent, and where <code class="docutils literal notranslate"><span class="pre">Y</span></code> is one of
 the following:</p>
 <ul class="simple">
-<li>A single value</li>
-<li>A list/tuple containing two values, the min and max of a range of numbers.</li>
+<li><p>A single value</p></li>
+<li><p>A list/tuple containing two values, the min and max of a range of numbers.</p></li>
 </ul>
 <p>Note that the sum of each probability percent in the list must equal 1.0.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.Field.shortest_is_nothing">
-<code class="descname">shortest_is_nothing</code><em class="property"> = False</em><a class="headerlink" href="#gramfuzz.fields.Field.shortest_is_nothing" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is used during <code class="xref any docutils literal"><span class="pre">gramfuzz.GramFuzzer.find_shortest_paths</span></code>. Sometimes
-the fuzzer cannot know based on the values in a field what that field&#8217;s
+<code class="sig-name descname">shortest_is_nothing</code><em class="property"> = False</em><a class="headerlink" href="#gramfuzz.fields.Field.shortest_is_nothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is used during <code class="xref any docutils literal notranslate"><span class="pre">gramfuzz.GramFuzzer.find_shortest_paths</span></code>. Sometimes
+the fuzzer cannot know based on the values in a field what that field’s
 minimal behavior will be.</p>
-<p>Setting this to <code class="docutils literal"><span class="pre">True</span></code> will explicitly let the <code class="docutils literal"><span class="pre">GramFuzzer</span></code> instance
+<p>Setting this to <code class="docutils literal notranslate"><span class="pre">True</span></code> will explicitly let the <code class="docutils literal notranslate"><span class="pre">GramFuzzer</span></code> instance
 know what the minimal outcome will be.</p>
-<p><em>NOTE</em> when implementing a custom Field subclass and setting <code class="docutils literal"><span class="pre">shortest_is_nothing</span></code>
-to <code class="docutils literal"><span class="pre">True</span></code>, be sure to handle the case when <code class="docutils literal"><span class="pre">build(shortest=True)</span></code>
-is called so that a <code class="docutils literal"><span class="pre">gramfuzz.errors.OptGram</span></code> error is raised (which
+<p><em>NOTE</em> when implementing a custom Field subclass and setting <code class="docutils literal notranslate"><span class="pre">shortest_is_nothing</span></code>
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>, be sure to handle the case when <code class="docutils literal notranslate"><span class="pre">build(shortest=True)</span></code>
+is called so that a <code class="docutils literal notranslate"><span class="pre">gramfuzz.errors.OptGram</span></code> error is raised (which
 skips the current field from being generated).</p>
 </dd></dl>
 
@@ -584,116 +604,100 @@ skips the current field from being generated).</p>
 
 <dl class="class">
 <dt id="gramfuzz.fields.Float">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">Float</code><span class="sig-paren">(</span><em>value=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Float" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a float <code class="docutils literal"><span class="pre">Field</span></code> with odds that define float
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">Float</code><span class="sig-paren">(</span><em class="sig-param">value=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a float <code class="docutils literal notranslate"><span class="pre">Field</span></code> with odds that define float
 values</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="gramfuzz.fields.Int">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">Int</code><span class="sig-paren">(</span><em>value=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Int" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">Int</code><span class="sig-paren">(</span><em class="sig-param">value=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Int" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents all Integers, with predefined odds that target
 boundary conditions.</p>
 <dl class="method">
 <dt id="gramfuzz.fields.Int.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>value=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Int.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Int.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">value=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Int.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Int.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new Int object, optionally specifying a hard-coded value</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>value</strong> (<em>int</em>) &#8211; The value of the new int object</li>
-<li><strong>min</strong> (<em>int</em>) &#8211; The minimum value (if value is not specified)</li>
-<li><strong>max</strong> (<em>int</em>) &#8211; The maximum value (if value is not specified)</li>
-<li><strong>odds</strong> (<em>list</em>) &#8211; The probability list. See <code class="docutils literal"><span class="pre">Field.odds</span></code> for more information.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>int</em>) – The value of the new int object</p></li>
+<li><p><strong>min</strong> (<em>int</em>) – The minimum value (if value is not specified)</p></li>
+<li><p><strong>max</strong> (<em>int</em>) – The maximum value (if value is not specified)</p></li>
+<li><p><strong>odds</strong> (<em>list</em>) – The probability list. See <code class="docutils literal notranslate"><span class="pre">Field.odds</span></code> for more information.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.fields.Int.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Int.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Int.build" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build the integer, optionally providing a <code class="docutils literal"><span class="pre">pre</span></code> list
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param">pre=None</em>, <em class="sig-param">shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Int.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Int.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the integer, optionally providing a <code class="docutils literal notranslate"><span class="pre">pre</span></code> list
 that <em>may</em> be used to define prerequisites for a Field being built.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pre</strong> (<em>list</em>) &#8211; A list of prerequisites to be collected during the building of a Field.</li>
-<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>list</em>) – A list of prerequisites to be collected during the building of a Field.</p></li>
+<li><p><strong>shortest</strong> (<em>bool</em>) – Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="gramfuzz.fields.Join">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">Join</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Join" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <code class="docutils literal"><span class="pre">Field</span></code> subclass that joins other values with a separator.
-This class works nicely with <code class="docutils literal"><span class="pre">Opt</span></code> values.</p>
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">Join</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Join" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">Field</span></code> subclass that joins other values with a separator.
+This class works nicely with <code class="docutils literal notranslate"><span class="pre">Opt</span></code> values.</p>
 <dl class="method">
 <dt id="gramfuzz.fields.Join.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Join.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Join.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new instance of the <code class="docutils literal"><span class="pre">Join</span></code> class.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>values</strong> (<em>list</em>) &#8211; The values to join</li>
-<li><strong>sep</strong> (<em>str</em>) &#8211; The string with which to separate each of the values (default=``&#8221;,&#8221;<a href="#id7"><span class="problematic" id="id8">``</span></a>)</li>
-<li><strong>max</strong> (<em>int</em>) &#8211; <p>The maximum number of times (inclusive) to build the first item in <code class="docutils literal"><span class="pre">values</span></code>.
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Join.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Join.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new instance of the <code class="docutils literal notranslate"><span class="pre">Join</span></code> class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>list</em>) – The values to join</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – The string with which to separate each of the values (default=``”,”<a href="#id7"><span class="problematic" id="id8">``</span></a>)</p></li>
+<li><p><strong>max</strong> (<em>int</em>) – <p>The maximum number of times (inclusive) to build the first item in <code class="docutils literal notranslate"><span class="pre">values</span></code>.
 This can be useful when a variable number of items in a list is needed. E.g.:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Join</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Join</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</li>
+</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.fields.Join.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Join.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Join.build" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build the <code class="docutils literal"><span class="pre">Join</span></code> field instance.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
-<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param">pre=None</em>, <em class="sig-param">shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Join.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Join.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the <code class="docutils literal notranslate"><span class="pre">Join</span></code> field instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>list</em>) – The prerequisites list</p></li>
+<li><p><strong>shortest</strong> (<em>bool</em>) – Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="gramfuzz.fields.MetaField">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">MetaField</code><a class="reference internal" href="_modules/gramfuzz/fields.html#MetaField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.MetaField" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used as the metaclass of the core <a class="reference internal" href="#gramfuzz.fields.Field" title="gramfuzz.fields.Field"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Field</span></code></a> class. <code class="docutils literal"><span class="pre">MetaField</span></code>
-defines <code class="docutils literal"><span class="pre">__and__</span></code> and <code class="docutils literal"><span class="pre">__or__</span></code> and <code class="docutils literal"><span class="pre">__repr__</span></code> methods.
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">MetaField</code><a class="reference internal" href="_modules/gramfuzz/fields.html#MetaField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.MetaField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used as the metaclass of the core <a class="reference internal" href="#gramfuzz.fields.Field" title="gramfuzz.fields.Field"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Field</span></code></a> class. <code class="docutils literal notranslate"><span class="pre">MetaField</span></code>
+defines <code class="docutils literal notranslate"><span class="pre">__and__</span></code> and <code class="docutils literal notranslate"><span class="pre">__or__</span></code> and <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> methods.
 The overridden and and or operatories allow classes themselves
-to be wrapped in an <a class="reference internal" href="#gramfuzz.fields.And" title="gramfuzz.fields.And"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.And</span></code></a> or <a class="reference internal" href="#gramfuzz.fields.Or" title="gramfuzz.fields.Or"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Or</span></code></a>
+to be wrapped in an <a class="reference internal" href="#gramfuzz.fields.And" title="gramfuzz.fields.And"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.And</span></code></a> or <a class="reference internal" href="#gramfuzz.fields.Or" title="gramfuzz.fields.Or"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Or</span></code></a>
 without having to instantiate them first.</p>
 <p>E.g. the two lines below are equivalent:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">(),</span> <span class="n">Float</span><span class="p">())</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">And</span><span class="p">(</span><span class="n">Int</span><span class="p">(),</span> <span class="n">Float</span><span class="p">())</span>
 <span class="p">(</span><span class="n">Int</span> <span class="o">&amp;</span> <span class="n">Float</span><span class="p">)</span>
 
 <span class="n">Or</span><span class="p">(</span><span class="n">Int</span><span class="p">(),</span> <span class="n">Float</span><span class="p">())</span>
@@ -703,14 +707,14 @@ without having to instantiate them first.</p>
 <p>Do note however that this can only be done if the first (farthest
 to the left) operand is a Field class or instance.</p>
 <p>E.g. the first line below will work, but the second line will not will not:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Or</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">Int</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Or</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">Int</span><span class="p">)</span>
 <span class="mi">5</span> <span class="o">|</span> <span class="n">Int</span>
 </pre></div>
 </div>
-<p>It is also recommended that using the overloaded <code class="docutils literal"><span class="pre">&amp;</span></code> and <code class="docutils literal"><span class="pre">|</span></code> operators should
+<p>It is also recommended that using the overloaded <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> and <code class="docutils literal notranslate"><span class="pre">|</span></code> operators should
 only be done in very simple cases, since it is impossible for the code
 to know the difference between the two statements below:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Int</span> <span class="o">|</span> <span class="n">Float</span><span class="p">)</span> <span class="o">|</span> <span class="n">Uint</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Int</span> <span class="o">|</span> <span class="n">Float</span><span class="p">)</span> <span class="o">|</span> <span class="n">Uint</span>
 <span class="n">Int</span> <span class="o">|</span> <span class="n">Float</span> <span class="o">|</span> <span class="n">UInt</span>
 </pre></div>
 </div>
@@ -718,53 +722,45 @@ to know the difference between the two statements below:</p>
 
 <dl class="class">
 <dt id="gramfuzz.fields.Opt">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">Opt</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Opt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Opt" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <code class="docutils literal"><span class="pre">Field</span></code> subclass that randomly chooses to either build the
-provided values (acts as an <code class="docutils literal"><span class="pre">And</span></code> in that case), or raise an
-<code class="docutils literal"><span class="pre">errors.OptGram</span></code> exception.</p>
-<p>When an <code class="docutils literal"><span class="pre">errors.OptGram</span></code> exception is raised, the current value being built
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">Opt</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Opt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Opt" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">Field</span></code> subclass that randomly chooses to either build the
+provided values (acts as an <code class="docutils literal notranslate"><span class="pre">And</span></code> in that case), or raise an
+<code class="docutils literal notranslate"><span class="pre">errors.OptGram</span></code> exception.</p>
+<p>When an <code class="docutils literal notranslate"><span class="pre">errors.OptGram</span></code> exception is raised, the current value being built
 is then skipped</p>
 <dl class="method">
 <dt id="gramfuzz.fields.Opt.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Opt.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Opt.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new <code class="docutils literal"><span class="pre">Opt</span></code> instance</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>values</strong> (<em>list</em>) &#8211; The list of values to build (or not)</li>
-<li><strong>prob</strong> (<em>float</em>) &#8211; A float value between 0 and 1 that defines the probability</li>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Opt.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Opt.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new <code class="docutils literal notranslate"><span class="pre">Opt</span></code> instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>list</em>) – The list of values to build (or not)</p></li>
+<li><p><strong>prob</strong> (<em>float</em>) – A float value between 0 and 1 that defines the probability</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>of cancelling the current build.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.fields.Opt.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Opt.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Opt.build" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build the current <code class="docutils literal"><span class="pre">Opt</span></code> instance</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
-<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param">pre=None</em>, <em class="sig-param">shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Opt.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Opt.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the current <code class="docutils literal notranslate"><span class="pre">Opt</span></code> instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>list</em>) – The prerequisites list</p></li>
+<li><p><strong>shortest</strong> (<em>bool</em>) – Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.Opt.prob">
-<code class="descname">prob</code><em class="property"> = 0.5</em><a class="headerlink" href="#gramfuzz.fields.Opt.prob" title="Permalink to this definition">¶</a></dt>
-<dd><p>The probability of an <code class="docutils literal"><span class="pre">Opt</span></code> instance raising an <code class="docutils literal"><span class="pre">errors.OptGram</span></code>
+<code class="sig-name descname">prob</code><em class="property"> = 0.5</em><a class="headerlink" href="#gramfuzz.fields.Opt.prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>The probability of an <code class="docutils literal notranslate"><span class="pre">Opt</span></code> instance raising an <code class="docutils literal notranslate"><span class="pre">errors.OptGram</span></code>
 exception</p>
 </dd></dl>
 
@@ -772,171 +768,164 @@ exception</p>
 
 <dl class="class">
 <dt id="gramfuzz.fields.Or">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">Or</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Or"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Or" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <code class="docutils literal"><span class="pre">Field</span></code> subclass that chooses one of the provided values
-at random as the result of a call to the <code class="docutils literal"><span class="pre">build()</span></code> method.</p>
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">Or</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Or"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Or" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">Field</span></code> subclass that chooses one of the provided values
+at random as the result of a call to the <code class="docutils literal notranslate"><span class="pre">build()</span></code> method.</p>
 <dl class="method">
 <dt id="gramfuzz.fields.Or.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Or.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Or.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new <code class="docutils literal"><span class="pre">Or</span></code> instance with the provide values</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>values</strong> (<em>list</em>) &#8211; The list of values to choose randomly from</td>
-</tr>
-</tbody>
-</table>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Or.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Or.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new <code class="docutils literal notranslate"><span class="pre">Or</span></code> instance with the provide values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>list</em>) – The list of values to choose randomly from</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.fields.Or.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Or.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Or.build" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build the <code class="docutils literal"><span class="pre">Or</span></code> instance</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
-<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param">pre=None</em>, <em class="sig-param">shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Or.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Or.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the <code class="docutils literal notranslate"><span class="pre">Or</span></code> instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>list</em>) – The prerequisites list</p></li>
+<li><p><strong>shortest</strong> (<em>bool</em>) – Whether or not the shortest reference-chain (most minimal)
+version of the field should be generated.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="gramfuzz.fields.PLUS">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">PLUS</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#PLUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.PLUS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">PLUS</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#PLUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.PLUS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Acts like the + in a regex - one or more of the values.
-The values are Anded together one or more times, up to <code class="docutils literal"><span class="pre">max</span></code>
+The values are Anded together one or more times, up to <code class="docutils literal notranslate"><span class="pre">max</span></code>
 times.</p>
 <dl class="method">
 <dt id="gramfuzz.fields.PLUS.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#PLUS.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.PLUS.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#PLUS.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.PLUS.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new instance of the <code class="docutils literal notranslate"><span class="pre">Join</span></code> class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>list</em>) – The values to join</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – The string with which to separate each of the values (default=``”,”<a href="#id9"><span class="problematic" id="id10">``</span></a>)</p></li>
+<li><p><strong>max</strong> (<em>int</em>) – <p>The maximum number of times (inclusive) to build the first item in <code class="docutils literal notranslate"><span class="pre">values</span></code>.
+This can be useful when a variable number of items in a list is needed. E.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Join</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="gramfuzz.fields.Q">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">Q</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Q"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Q" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <code class="docutils literal"><span class="pre">Field</span></code> subclass that quotes whatever value is provided.</p>
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">Q</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Q"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Q" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">Field</span></code> subclass that quotes whatever value is provided.</p>
 <dl class="method">
 <dt id="gramfuzz.fields.Q.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Q.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Q.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the new <code class="docutils literal"><span class="pre">Quote</span></code> instance</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>escape</strong> (<em>bool</em>) &#8211; Whether or not quoted data should be escaped (default=``False``)</li>
-<li><strong>html_js_escape</strong> (<em>bool</em>) &#8211; Whether or not quoted data should be html-javascript escaped (default=``False``)</li>
-<li><strong>quote</strong> (<em>str</em>) &#8211; The quote character to be used if <code class="docutils literal"><span class="pre">escape</span></code> and <code class="docutils literal"><span class="pre">html_js_escape</span></code> are <code class="docutils literal"><span class="pre">False</span></code></li>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Q.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Q.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the new <code class="docutils literal notranslate"><span class="pre">Quote</span></code> instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>escape</strong> (<em>bool</em>) – Whether or not quoted data should be escaped (default=``False``)</p></li>
+<li><p><strong>html_js_escape</strong> (<em>bool</em>) – Whether or not quoted data should be html-javascript escaped (default=``False``)</p></li>
+<li><p><strong>quote</strong> (<em>str</em>) – The quote character to be used if <code class="docutils literal notranslate"><span class="pre">escape</span></code> and <code class="docutils literal notranslate"><span class="pre">html_js_escape</span></code> are <code class="docutils literal notranslate"><span class="pre">False</span></code></p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.fields.Q.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Q.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Q.build" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build the <code class="docutils literal"><span class="pre">Quote</span></code> instance</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
-<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param">pre=None</em>, <em class="sig-param">shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Q.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Q.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the <code class="docutils literal notranslate"><span class="pre">Quote</span></code> instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>list</em>) – The prerequisites list</p></li>
+<li><p><strong>shortest</strong> (<em>bool</em>) – Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.Q.escape">
-<code class="descname">escape</code><em class="property"> = False</em><a class="headerlink" href="#gramfuzz.fields.Q.escape" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether or not the quoted data should be escaped (default=``False``). Uses <code class="docutils literal"><span class="pre">repr(X)</span></code></p>
+<code class="sig-name descname">escape</code><em class="property"> = False</em><a class="headerlink" href="#gramfuzz.fields.Q.escape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether or not the quoted data should be escaped (default=``False``). Uses <code class="docutils literal notranslate"><span class="pre">repr(X)</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.Q.html_js_escape">
-<code class="descname">html_js_escape</code><em class="property"> = False</em><a class="headerlink" href="#gramfuzz.fields.Q.html_js_escape" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">html_js_escape</code><em class="property"> = False</em><a class="headerlink" href="#gramfuzz.fields.Q.html_js_escape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether or not the quoted data should be html-javascript escaped (default=``False``)</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.Q.quote">
-<code class="descname">quote</code><em class="property"> = '&quot;'</em><a class="headerlink" href="#gramfuzz.fields.Q.quote" title="Permalink to this definition">¶</a></dt>
-<dd><p>Which quote character to use if <code class="docutils literal"><span class="pre">escape</span></code> and <code class="docutils literal"><span class="pre">html_js_escape</span></code> are False (default=``&#8217;&#8221;&#8217;<a href="#id9"><span class="problematic" id="id10">``</span></a>)</p>
+<code class="sig-name descname">quote</code><em class="property"> = b'&quot;'</em><a class="headerlink" href="#gramfuzz.fields.Q.quote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Which quote character to use if <code class="docutils literal notranslate"><span class="pre">escape</span></code> and <code class="docutils literal notranslate"><span class="pre">html_js_escape</span></code> are False (default=``’”’<a href="#id11"><span class="problematic" id="id12">``</span></a>)</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="gramfuzz.fields.Ref">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">Ref</code><span class="sig-paren">(</span><em>refname</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Ref" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <code class="docutils literal"><span class="pre">Ref</span></code> class is used to reference defined rules by their name. If a
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">Ref</code><span class="sig-paren">(</span><em class="sig-param">refname</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">Ref</span></code> class is used to reference defined rules by their name. If a
 rule name is defined multiple times, one will be chosen at random.</p>
 <p>For example, suppose we have a rule that returns an integer:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="n">UInt</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="n">UInt</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We could define another rule that creates a <code class="docutils literal"><span class="pre">Float</span></code> by referencing the
+<p>We could define another rule that creates a <code class="docutils literal notranslate"><span class="pre">Float</span></code> by referencing the
 integer rule twice, and placing a period between them:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="n">Ref</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">),</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">Ref</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="n">Ref</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">),</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">Ref</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <dl class="method">
 <dt id="gramfuzz.fields.Ref.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>refname</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Ref.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Ref.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new <code class="docutils literal"><span class="pre">Ref</span></code> instance</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>refname</strong> (<em>str</em>) &#8211; The name of the rule to reference</li>
-<li><strong>cat</strong> (<em>str</em>) &#8211; The name of the category the rule is defined in</li>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">refname</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Ref.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Ref.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new <code class="docutils literal notranslate"><span class="pre">Ref</span></code> instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>refname</strong> (<em>str</em>) – The name of the rule to reference</p></li>
+<li><p><strong>cat</strong> (<em>str</em>) – The name of the category the rule is defined in</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.fields.Ref.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Ref.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Ref.build" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build the <code class="docutils literal"><span class="pre">Ref</span></code> instance by fetching the rule from
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param">pre=None</em>, <em class="sig-param">shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#Ref.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.Ref.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the <code class="docutils literal notranslate"><span class="pre">Ref</span></code> instance by fetching the rule from
 the GramFuzzer instance and building it</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
-<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>list</em>) – The prerequisites list</p></li>
+<li><p><strong>shortest</strong> (<em>bool</em>) – Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.Ref.cat">
-<code class="descname">cat</code><em class="property"> = 'default'</em><a class="headerlink" href="#gramfuzz.fields.Ref.cat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cat</code><em class="property"> = 'default'</em><a class="headerlink" href="#gramfuzz.fields.Ref.cat" title="Permalink to this definition">¶</a></dt>
 <dd><p>The default category where the referenced rule definition will be looked for</p>
 </dd></dl>
 
@@ -944,126 +933,114 @@ the GramFuzzer instance and building it</p>
 
 <dl class="class">
 <dt id="gramfuzz.fields.STAR">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">STAR</code><span class="sig-paren">(</span><em>*values</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#STAR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.STAR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Acts like the <code class="docutils literal"><span class="pre">*</span></code> in a regex - zero or more of the values.
-The values are Anded together zero or more times, up to <code class="docutils literal"><span class="pre">max</span></code>
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">STAR</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#STAR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.STAR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acts like the <code class="docutils literal notranslate"><span class="pre">*</span></code> in a regex - zero or more of the values.
+The values are Anded together zero or more times, up to <code class="docutils literal notranslate"><span class="pre">max</span></code>
 times.</p>
 <dl class="method">
 <dt id="gramfuzz.fields.STAR.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#STAR.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.STAR.build" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param">pre=None</em>, <em class="sig-param">shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#STAR.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.STAR.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the STAR field.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list</li>
-<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>list</em>) – The prerequisites list</p></li>
+<li><p><strong>shortest</strong> (<em>bool</em>) – Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="gramfuzz.fields.String">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">String</code><span class="sig-paren">(</span><em>value=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.String" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">String</code><span class="sig-paren">(</span><em class="sig-param">value=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.String" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a string field</p>
 <dl class="method">
 <dt id="gramfuzz.fields.String.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>value=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#String.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.String.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new instance of the <code class="docutils literal"><span class="pre">String</span></code> field.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>value</strong> &#8211; The hard-coded value of the String field</li>
-<li><strong>min</strong> (<em>int</em>) &#8211; The minimum size of the String when built</li>
-<li><strong>max</strong> (<em>int</em>) &#8211; The maximum size of the String when built</li>
-<li><strong>charset</strong> (<em>str</em>) &#8211; The character-set to be used when building the string</li>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">value=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#String.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.String.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new instance of the <code class="docutils literal notranslate"><span class="pre">String</span></code> field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – The hard-coded value of the String field</p></li>
+<li><p><strong>min</strong> (<em>int</em>) – The minimum size of the String when built</p></li>
+<li><p><strong>max</strong> (<em>int</em>) – The maximum size of the String when built</p></li>
+<li><p><strong>charset</strong> (<em>str</em>) – The character-set to be used when building the string</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.fields.String.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>pre=None</em>, <em>shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#String.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.String.build" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param">pre=None</em>, <em class="sig-param">shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#String.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.String.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the String instance</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pre</strong> (<em>list</em>) &#8211; The prerequisites list (optional, default=None)</li>
-<li><strong>shortest</strong> (<em>bool</em>) &#8211; Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>list</em>) – The prerequisites list (optional, default=None)</p></li>
+<li><p><strong>shortest</strong> (<em>bool</em>) – Whether or not the shortest reference-chain (most minimal) version of the field should be generated.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.String.charset">
-<code class="descname">charset</code><em class="property"> = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</em><a class="headerlink" href="#gramfuzz.fields.String.charset" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default character set of the <code class="docutils literal"><span class="pre">String</span></code> field class (default=charset_alpha)</p>
+<code class="sig-name descname">charset</code><em class="property"> = b'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</em><a class="headerlink" href="#gramfuzz.fields.String.charset" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default character set of the <code class="docutils literal notranslate"><span class="pre">String</span></code> field class (default=charset_alpha)</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.String.charset_all">
-<code class="descname">charset_all</code><em class="property"> = '\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !&quot;#$%&amp;\'()*+,-./0123456789:;&lt;=&gt;?&#64;ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x7f\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_all" title="Permalink to this definition">¶</a></dt>
-<dd><p>All possible binary characters (<code class="docutils literal"><span class="pre">0x0-0xff</span></code>)</p>
+<code class="sig-name descname">charset_all</code><em class="property"> = b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !&quot;#$%&amp;\'()*+,-./0123456789:;&lt;=&gt;?&#64;ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x7f\xc2\x80\xc2\x81\xc2\x82\xc2\x83\xc2\x84\xc2\x85\xc2\x86\xc2\x87\xc2\x88\xc2\x89\xc2\x8a\xc2\x8b\xc2\x8c\xc2\x8d\xc2\x8e\xc2\x8f\xc2\x90\xc2\x91\xc2\x92\xc2\x93\xc2\x94\xc2\x95\xc2\x96\xc2\x97\xc2\x98\xc2\x99\xc2\x9a\xc2\x9b\xc2\x9c\xc2\x9d\xc2\x9e\xc2\x9f\xc2\xa0\xc2\xa1\xc2\xa2\xc2\xa3\xc2\xa4\xc2\xa5\xc2\xa6\xc2\xa7\xc2\xa8\xc2\xa9\xc2\xaa\xc2\xab\xc2\xac\xc2\xad\xc2\xae\xc2\xaf\xc2\xb0\xc2\xb1\xc2\xb2\xc2\xb3\xc2\xb4\xc2\xb5\xc2\xb6\xc2\xb7\xc2\xb8\xc2\xb9\xc2\xba\xc2\xbb\xc2\xbc\xc2\xbd\xc2\xbe\xc2\xbf\xc3\x80\xc3\x81\xc3\x82\xc3\x83\xc3\x84\xc3\x85\xc3\x86\xc3\x87\xc3\x88\xc3\x89\xc3\x8a\xc3\x8b\xc3\x8c\xc3\x8d\xc3\x8e\xc3\x8f\xc3\x90\xc3\x91\xc3\x92\xc3\x93\xc3\x94\xc3\x95\xc3\x96\xc3\x97\xc3\x98\xc3\x99\xc3\x9a\xc3\x9b\xc3\x9c\xc3\x9d\xc3\x9e\xc3\x9f\xc3\xa0\xc3\xa1\xc3\xa2\xc3\xa3\xc3\xa4\xc3\xa5\xc3\xa6\xc3\xa7\xc3\xa8\xc3\xa9\xc3\xaa\xc3\xab\xc3\xac\xc3\xad\xc3\xae\xc3\xaf\xc3\xb0\xc3\xb1\xc3\xb2\xc3\xb3\xc3\xb4\xc3\xb5\xc3\xb6\xc3\xb7\xc3\xb8\xc3\xb9\xc3\xba\xc3\xbb\xc3\xbc\xc3\xbd\xc3\xbe\xc3\xbf'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>All possible binary characters (<code class="docutils literal notranslate"><span class="pre">0x0-0xff</span></code>)</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.String.charset_alpha">
-<code class="descname">charset_alpha</code><em class="property"> = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_alpha" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">charset_alpha</code><em class="property"> = b'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_alpha" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upper- and lower-case alphabet</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.String.charset_alpha_lower">
-<code class="descname">charset_alpha_lower</code><em class="property"> = 'abcdefghijklmnopqrstuvwxyz'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_alpha_lower" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">charset_alpha_lower</code><em class="property"> = b'abcdefghijklmnopqrstuvwxyz'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_alpha_lower" title="Permalink to this definition">¶</a></dt>
 <dd><p>A lower-case alphabet character set</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.String.charset_alpha_upper">
-<code class="descname">charset_alpha_upper</code><em class="property"> = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_alpha_upper" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">charset_alpha_upper</code><em class="property"> = b'ABCDEFGHIJKLMNOPQRSTUVWXYZ'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_alpha_upper" title="Permalink to this definition">¶</a></dt>
 <dd><p>An upper-case alphabet character set</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.String.charset_alphanum">
-<code class="descname">charset_alphanum</code><em class="property"> = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_alphanum" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">charset_alphanum</code><em class="property"> = b'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_alphanum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alpha-numeric character set (upper- and lower-case alphabet + numbers)</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.String.charset_num">
-<code class="descname">charset_num</code><em class="property"> = '1234567890'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_num" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">charset_num</code><em class="property"> = b'1234567890'</em><a class="headerlink" href="#gramfuzz.fields.String.charset_num" title="Permalink to this definition">¶</a></dt>
 <dd><p>Numeric character set</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.String.charset_spaces">
-<code class="descname">charset_spaces</code><em class="property"> = '\n\r\t '</em><a class="headerlink" href="#gramfuzz.fields.String.charset_spaces" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">charset_spaces</code><em class="property"> = b'\n\r\t '</em><a class="headerlink" href="#gramfuzz.fields.String.charset_spaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whitespace character set</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.fields.String.odds">
-<code class="descname">odds</code><em class="property"> = [(0.85, [0, 20]), (0.1, 1), (0.025, 0), (0.025, [20, 100])]</em><a class="headerlink" href="#gramfuzz.fields.String.odds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unlike numeric <code class="docutils literal"><span class="pre">Field</span></code> types, the odds value for the <code class="docutils literal"><span class="pre">String</span></code> field
+<code class="sig-name descname">odds</code><em class="property"> = [(0.85, [0, 20]), (0.1, 1), (0.025, 0), (0.025, [20, 100])]</em><a class="headerlink" href="#gramfuzz.fields.String.odds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unlike numeric <code class="docutils literal notranslate"><span class="pre">Field</span></code> types, the odds value for the <code class="docutils literal notranslate"><span class="pre">String</span></code> field
 defines the <em>length</em> of the field, not characters used in the string.</p>
-<p>See the <a class="reference internal" href="#gramfuzz.fields.Field.odds" title="gramfuzz.fields.Field.odds"><code class="xref any py py-attr docutils literal"><span class="pre">gramfuzz.fields.Field.odds</span></code></a> member for details on the format of the <code class="docutils literal"><span class="pre">odds</span></code> probability
+<p>See the <a class="reference internal" href="#gramfuzz.fields.Field.odds" title="gramfuzz.fields.Field.odds"><code class="xref any py py-attr docutils literal notranslate"><span class="pre">gramfuzz.fields.Field.odds</span></code></a> member for details on the format of the <code class="docutils literal notranslate"><span class="pre">odds</span></code> probability
 list.</p>
 </dd></dl>
 
@@ -1071,14 +1048,70 @@ list.</p>
 
 <dl class="class">
 <dt id="gramfuzz.fields.UFloat">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">UFloat</code><span class="sig-paren">(</span><em>value=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#UFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.UFloat" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">UFloat</code><span class="sig-paren">(</span><em class="sig-param">value=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#UFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.UFloat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines an unsigned float field.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="gramfuzz.fields.UInt">
-<em class="property">class </em><code class="descclassname">gramfuzz.fields.</code><code class="descname">UInt</code><span class="sig-paren">(</span><em>value=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#UInt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.UInt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines an unsigned integer <code class="docutils literal"><span class="pre">Field</span></code>.</p>
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">UInt</code><span class="sig-paren">(</span><em class="sig-param">value=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#UInt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.UInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines an unsigned integer <code class="docutils literal notranslate"><span class="pre">Field</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gramfuzz.fields.WOr">
+<code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">WOr</code><a class="headerlink" href="#gramfuzz.fields.WOr" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#gramfuzz.fields.WeightedOr" title="gramfuzz.fields.WeightedOr"><code class="xref py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.WeightedOr</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="gramfuzz.fields.WeightedOr">
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.fields.</code><code class="sig-name descname">WeightedOr</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#WeightedOr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.WeightedOr" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">Field</span></code> subclass that chooses one of the provided values at
+random as the result of a call to the <code class="docutils literal notranslate"><span class="pre">build()</span></code> method. Takes an
+odds array rather than just direct values. Also aliased to <code class="docutils literal notranslate"><span class="pre">WOr</span></code>.</p>
+<p>E.g.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">WeightedOr</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="c1"># 10% chance</span>
+    <span class="p">(</span><span class="n">UInt</span><span class="p">,</span>    <span class="mf">0.7</span><span class="p">),</span> <span class="c1"># 70% chance</span>
+    <span class="p">(</span><span class="mf">3.14</span><span class="p">,</span>    <span class="mf">0.3</span><span class="p">),</span> <span class="c1"># 30% chance</span>
+<span class="p">])</span>
+
+<span class="c1"># or</span>
+
+<span class="n">WOr</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="c1"># 10% chance</span>
+    <span class="p">(</span><span class="n">UInt</span><span class="p">,</span>    <span class="mf">0.7</span><span class="p">),</span> <span class="c1"># 70% chance</span>
+    <span class="p">(</span><span class="mf">3.14</span><span class="p">,</span>    <span class="mf">0.3</span><span class="p">),</span> <span class="c1"># 30% chance</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="gramfuzz.fields.WeightedOr.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*values</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#WeightedOr.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.WeightedOr.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new <code class="docutils literal notranslate"><span class="pre">WeightedOr</span></code> instance with the provided values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>list</em>) – A list of tuples of the form
+<code class="docutils literal notranslate"><span class="pre">[(value,</span> <span class="pre">probability),</span> <span class="pre">...]</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gramfuzz.fields.WeightedOr.build">
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param">pre=None</em>, <em class="sig-param">shortest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz/fields.html#WeightedOr.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.fields.WeightedOr.build" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pre</strong> (<em>list</em>) – The prerequisites list</p></li>
+<li><p><strong>shortest</strong> (<em>bool</em>) – Whether or not the shortest reference-chain (most minimal) 
+version of the field should be generated.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -1086,15 +1119,16 @@ list.</p>
 
 
            </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="utils.html" class="btn btn-neutral float-right" title="utils" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="gramfuzz.html" class="btn btn-neutral" title="gramfuzz" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="gramfuzz.html" class="btn btn-neutral float-left" title="gramfuzz" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1103,11 +1137,11 @@ list.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, James &#39;d0c_s4vage&#39; Johnson.
+        &copy; Copyright 2016, James &#39;d0c_s4vage&#39; Johnson
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1120,35 +1154,15 @@ list.</p>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.2.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

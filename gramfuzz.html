@@ -8,48 +8,45 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gramfuzz &mdash; gramfuzz 1.2.0 documentation</title>
+  <title>gramfuzz &mdash; gramfuzz 1.4.0 documentation</title>
   
 
   
   
+  
+  
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="gramfuzz 1.2.0 documentation" href="index.html"/>
-        <link rel="next" title="fields" href="fields.html"/>
-        <link rel="prev" title="gramfuzz - A grammar-based fuzzing library" href="index.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="fields" href="fields.html" />
+    <link rel="prev" title="gramfuzz - A grammar-based fuzzing library" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -63,7 +60,7 @@
             
             
               <div class="version">
-                1.2.0
+                v1.4.0
               </div>
             
           
@@ -84,7 +81,10 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">gramfuzz</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example-revisited">Example Revisited</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#preferred-category-groups">Preferred Category Groups</a></li>
@@ -107,34 +107,54 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">gramfuzz</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">gramfuzz</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>gramfuzz</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>gramfuzz</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="_sources/gramfuzz.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -144,32 +164,32 @@
 <h1>gramfuzz<a class="headerlink" href="#gramfuzz" title="Permalink to this headline">¶</a></h1>
 <p>Using gramfuzz consists of three steps:</p>
 <ol class="arabic simple">
-<li>defining the grammar(s)</li>
-<li>create a <a class="reference internal" href="#gramfuzz.GramFuzzer" title="gramfuzz.GramFuzzer"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.GramFuzzer</span></code></a> instance</li>
-<li>loading the grammar</li>
-<li>generating <code class="docutils literal"><span class="pre">num</span></code> random rules from the loaded grammars from a specifc category</li>
+<li><p>defining the grammar(s)</p></li>
+<li><p>create a <a class="reference internal" href="#gramfuzz.GramFuzzer" title="gramfuzz.GramFuzzer"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.GramFuzzer</span></code></a> instance</p></li>
+<li><p>loading the grammar</p></li>
+<li><p>generating <code class="docutils literal notranslate"><span class="pre">num</span></code> random rules from the loaded grammars from a specifc category</p></li>
 </ol>
 <div class="section" id="example-revisited">
 <h2>Example Revisited<a class="headerlink" href="#example-revisited" title="Permalink to this headline">¶</a></h2>
 <p>In the example on the main page for this documentation (<a class="reference internal" href="index.html#tldr-example"><span class="std std-ref">TLDR Example</span></a>),
-we defined a grammar, and made two new classes: <code class="docutils literal"><span class="pre">NRef</span></code> and <code class="docutils literal"><span class="pre">NDef</span></code>.</p>
+we defined a grammar, and made two new classes: <code class="docutils literal notranslate"><span class="pre">NRef</span></code> and <code class="docutils literal notranslate"><span class="pre">NDef</span></code>.</p>
 <p>We did this so that we could force any definitions created with
-<code class="docutils literal"><span class="pre">NDef</span></code> to use the <code class="docutils literal"><span class="pre">&quot;name_def&quot;</span></code> category. The same goes for
-the <code class="docutils literal"><span class="pre">NRef</span></code> class we made - it forces gramfuzz to lookup referenced
-definitions in the <code class="docutils literal"><span class="pre">&quot;name_def&quot;</span></code> category instead of the default
+<code class="docutils literal notranslate"><span class="pre">NDef</span></code> to use the <code class="docutils literal notranslate"><span class="pre">&quot;name_def&quot;</span></code> category. The same goes for
+the <code class="docutils literal notranslate"><span class="pre">NRef</span></code> class we made - it forces gramfuzz to lookup referenced
+definitions in the <code class="docutils literal notranslate"><span class="pre">&quot;name_def&quot;</span></code> category instead of the default
 category.</p>
 <p>The importance of this functionality becomes clear when we look at the
 line that actually generates the names:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">names</span> <span class="o">=</span> <span class="n">fuzzer</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">cat</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">names</span> <span class="o">=</span> <span class="n">fuzzer</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">cat</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Notice how we explicitly say that we want the fuzzer to generate <code class="docutils literal"><span class="pre">10</span></code> random
-rules from the <code class="docutils literal"><span class="pre">&quot;name&quot;</span></code> category (<em>NOT</em> the <code class="docutils literal"><span class="pre">&quot;name_def&quot;</span></code> category). This
+<p>Notice how we explicitly say that we want the fuzzer to generate <code class="docutils literal notranslate"><span class="pre">10</span></code> random
+rules from the <code class="docutils literal notranslate"><span class="pre">&quot;name&quot;</span></code> category (<em>NOT</em> the <code class="docutils literal notranslate"><span class="pre">&quot;name_def&quot;</span></code> category). This
 is an intentional way of differentiating between top-level rules that
 should be chosen randomly to generate, and rules that only exist to
 help create the top-level rules.</p>
-<p>In our simple names example, the sole rule definition in the <code class="docutils literal"><span class="pre">&quot;name&quot;</span></code> category:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
+<p>In our simple names example, the sole rule definition in the <code class="docutils literal notranslate"><span class="pre">&quot;name&quot;</span></code> category:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
     <span class="n">Join</span><span class="p">(</span>
         <span class="n">Opt</span><span class="p">(</span><span class="n">NRef</span><span class="p">(</span><span class="s2">&quot;name_prefix&quot;</span><span class="p">)),</span>
         <span class="n">NRef</span><span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">),</span>
@@ -181,17 +201,17 @@ help create the top-level rules.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>uses the other definitions in the <code class="docutils literal"><span class="pre">&quot;name_def&quot;</span></code> category to complete itself.</p>
+<p>uses the other definitions in the <code class="docutils literal notranslate"><span class="pre">&quot;name_def&quot;</span></code> category to complete itself.</p>
 </div>
 <div class="section" id="preferred-category-groups">
 <h2>Preferred Category Groups<a class="headerlink" href="#preferred-category-groups" title="Permalink to this headline">¶</a></h2>
-<p>gramfuzz has a concept of a &#8220;category group&#8221;. In the default usage of this concept,
-a grammar-rule&#8217;s category group is the name of the python file the rule was defined
+<p>gramfuzz has a concept of a “category group”. In the default usage of this concept,
+a grammar-rule’s category group is the name of the python file the rule was defined
 in.</p>
-<p>If, say, we had loaded ten separate grammar files into a <code class="docutils literal"><span class="pre">GramFuzzer</span></code> instance,
-and one of the grammar files was named <code class="docutils literal"><span class="pre">important_grammar.py</span></code>, we could tell
+<p>If, say, we had loaded ten separate grammar files into a <code class="docutils literal notranslate"><span class="pre">GramFuzzer</span></code> instance,
+and one of the grammar files was named <code class="docutils literal notranslate"><span class="pre">important_grammar.py</span></code>, we could tell
 the fuzzer to focus on all the rules in that grammar 60% of the time:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># assuming we&#39;ve already loaded all of the grammars</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># assuming we&#39;ve already loaded all of the grammars</span>
 <span class="n">outputs</span> <span class="o">=</span> <span class="n">fuzzer</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span>
     <span class="n">cat</span>             <span class="o">=</span> <span class="s2">&quot;the_category&quot;</span><span class="p">,</span>
     <span class="n">num</span>             <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
@@ -205,25 +225,25 @@ a base for more specific/targeted grammar fuzzing.</p>
 </div>
 <div class="section" id="rule-preprocessing">
 <h2>Rule Preprocessing<a class="headerlink" href="#rule-preprocessing" title="Permalink to this headline">¶</a></h2>
-<p>Another argument to the <a class="reference internal" href="#gramfuzz.GramFuzzer.gen" title="gramfuzz.GramFuzzer.gen"><code class="xref any py py-meth docutils literal"><span class="pre">gramfuzz.GramFuzzer.gen</span></code></a> function is the
-<code class="docutils literal"><span class="pre">auto_process</span></code> parameter, which defaults to <code class="docutils literal"><span class="pre">True</span></code>.</p>
-<p>When true, the <code class="docutils literal"><span class="pre">GramFuzzer</span></code> instance will calculate the reference paths lengths
-of each rule, as well as which option in each <code class="docutils literal"><span class="pre">Or</span></code>
+<p>Another argument to the <a class="reference internal" href="#gramfuzz.GramFuzzer.gen" title="gramfuzz.GramFuzzer.gen"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">gramfuzz.GramFuzzer.gen</span></code></a> function is the
+<code class="docutils literal notranslate"><span class="pre">auto_process</span></code> parameter, which defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<p>When true, the <code class="docutils literal notranslate"><span class="pre">GramFuzzer</span></code> instance will calculate the reference paths lengths
+of each rule, as well as which option in each <code class="docutils literal notranslate"><span class="pre">Or</span></code>
 field is the shortest/most direct to generate.</p>
-<p>Once this is complete, <code class="docutils literal"><span class="pre">GramFuzzer</span></code> will prune all rules that it could
+<p>Once this is complete, <code class="docutils literal notranslate"><span class="pre">GramFuzzer</span></code> will prune all rules that it could
 not determine a reference length for. This would indiciate that the rule
 could never terminate in a leaf node/rule, and thus should be removed.</p>
-<p>If any new grammar rules are added to the <code class="docutils literal"><span class="pre">GramFuzzer</span></code> instance, it
-will rerun the <a class="reference internal" href="#gramfuzz.GramFuzzer.preprocess_rules" title="gramfuzz.GramFuzzer.preprocess_rules"><code class="xref any py py-meth docutils literal"><span class="pre">gramfuzz.GramFuzzer.preprocess_rules</span></code></a> method
-the next time <code class="docutils literal"><span class="pre">gen</span></code> is called.</p>
+<p>If any new grammar rules are added to the <code class="docutils literal notranslate"><span class="pre">GramFuzzer</span></code> instance, it
+will rerun the <a class="reference internal" href="#gramfuzz.GramFuzzer.preprocess_rules" title="gramfuzz.GramFuzzer.preprocess_rules"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">gramfuzz.GramFuzzer.preprocess_rules</span></code></a> method
+the next time <code class="docutils literal notranslate"><span class="pre">gen</span></code> is called.</p>
 </div>
 <div class="section" id="maximum-recursion">
 <h2>Maximum Recursion<a class="headerlink" href="#maximum-recursion" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="#gramfuzz.GramFuzzer.gen" title="gramfuzz.GramFuzzer.gen"><code class="xref any py py-meth docutils literal"><span class="pre">gramfuzz.GramFuzzer.gen</span></code></a> method has an argument <code class="docutils literal"><span class="pre">max_recursion</span></code>.
-This argument is used to limit the number of times a <a class="reference internal" href="fields.html#gramfuzz.fields.Ref" title="gramfuzz.fields.Ref"><code class="xref any py py-class docutils literal"><span class="pre">gramfuzz.fields.Ref</span></code></a>
+<p>The <a class="reference internal" href="#gramfuzz.GramFuzzer.gen" title="gramfuzz.GramFuzzer.gen"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">gramfuzz.GramFuzzer.gen</span></code></a> method has an argument <code class="docutils literal notranslate"><span class="pre">max_recursion</span></code>.
+This argument is used to limit the number of times a <a class="reference internal" href="fields.html#gramfuzz.fields.Ref" title="gramfuzz.fields.Ref"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.Ref</span></code></a>
 instance may resolve nested references.</p>
 <p>For example the code below:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gramfuzz</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gramfuzz</span>
 <span class="kn">from</span> <span class="nn">gramfuzz.fields</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
@@ -239,12 +259,12 @@ instance may resolve nested references.</p>
 <span class="n">ODef</span><span class="p">(</span><span class="s2">&quot;rule5&quot;</span><span class="p">,</span> <span class="s2">&quot;rule5&quot;</span><span class="p">)</span>
 
 <span class="n">max_recursion</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">fuzzer</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_recursion</span><span class="o">=</span><span class="n">max_recursion</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fuzzer</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_recursion</span><span class="o">=</span><span class="n">max_recursion</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>yields the output:</p>
-<div class="highlight-text"><div class="highlight"><pre><span></span>!python test.py 5 | sort | uniq -c
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>!python test.py 5 | sort | uniq -c
    4951 rule1
    2473 rule2
    1287 rule3
@@ -252,28 +272,28 @@ instance may resolve nested references.</p>
     640 rule5
 </pre></div>
 </div>
-<p>Now if we limit <code class="docutils literal"><span class="pre">max_recursion</span></code> to <code class="docutils literal"><span class="pre">2</span></code>, you&#8217;ll see that it only
-generates <code class="docutils literal"><span class="pre">rule1</span></code> and <code class="docutils literal"><span class="pre">rule2</span></code>:</p>
-<div class="highlight-text"><div class="highlight"><pre><span></span>!python test.py 2 | sort | uniq -c
+<p>Now if we limit <code class="docutils literal notranslate"><span class="pre">max_recursion</span></code> to <code class="docutils literal notranslate"><span class="pre">2</span></code>, you’ll see that it only
+generates <code class="docutils literal notranslate"><span class="pre">rule1</span></code> and <code class="docutils literal notranslate"><span class="pre">rule2</span></code>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>!python test.py 2 | sort | uniq -c
    4935 rule1
    5065 rule2
 </pre></div>
 </div>
-<p>Once it reaches <code class="docutils literal"><span class="pre">rule2</span></code>, the reference level count will have reached
-a value of <code class="docutils literal"><span class="pre">2</span></code>, at which point instead of randomly choosing to generate either
-the value <code class="docutils literal"><span class="pre">rule2</span></code> or <code class="docutils literal"><span class="pre">ORef(&quot;rule3&quot;)</span></code>, it will choose the field with
+<p>Once it reaches <code class="docutils literal notranslate"><span class="pre">rule2</span></code>, the reference level count will have reached
+a value of <code class="docutils literal notranslate"><span class="pre">2</span></code>, at which point instead of randomly choosing to generate either
+the value <code class="docutils literal notranslate"><span class="pre">rule2</span></code> or <code class="docutils literal notranslate"><span class="pre">ORef(&quot;rule3&quot;)</span></code>, it will choose the field with
 the shortest number of dereferences back to a leaf value. In this case,
-it will choose to generate <code class="docutils literal"><span class="pre">rule3</span></code> since it <em>is</em> a leaf value and does
+it will choose to generate <code class="docutils literal notranslate"><span class="pre">rule3</span></code> since it <em>is</em> a leaf value and does
 not require any dereferencing.</p>
 <p>In a more real-world example, grammars often define lists of items
 in a recursive manner, like below (taken from the Python 2.7 syntax
 grammar):</p>
-<div class="highlight-text"><div class="highlight"><pre><span></span>fpdef: NAME | &#39;(&#39; fplist &#39;)&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fpdef: NAME | &#39;(&#39; fplist &#39;)&#39;
 fplist: fpdef (&#39;,&#39; fpdef)* [&#39;,&#39;]
 </pre></div>
 </div>
 <p>If this were implemented in gramfuzz, it would look like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;fpdef&quot;</span><span class="p">,</span> <span class="n">Or</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Def</span><span class="p">(</span><span class="s2">&quot;fpdef&quot;</span><span class="p">,</span> <span class="n">Or</span><span class="p">(</span>
     <span class="n">Ref</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
     <span class="n">And</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="n">Ref</span><span class="p">(</span><span class="s2">&quot;fplist&quot;</span><span class="p">),</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
 <span class="p">))</span>
@@ -284,76 +304,68 @@ fplist: fpdef (&#39;,&#39; fpdef)* [&#39;,&#39;]
 </div>
 <p>Without the max_recursion limits, this could easily result in a
 maximum recursion depth runtime error in Python (and often does).
-The <code class="docutils literal"><span class="pre">max_recursion</span></code> limit was specifically added to handle these
+The <code class="docutils literal notranslate"><span class="pre">max_recursion</span></code> limit was specifically added to handle these
 types of situations.</p>
 </div>
 <div class="section" id="module-gramfuzz">
 <span id="gramfuzz-reference-documentation"></span><h2>gramfuzz Reference Documentation<a class="headerlink" href="#module-gramfuzz" title="Permalink to this headline">¶</a></h2>
-<p>This module defines the main <code class="docutils literal"><span class="pre">GramFuzzer</span></code> class through
+<p>This module defines the main <code class="docutils literal notranslate"><span class="pre">GramFuzzer</span></code> class through
 which rules are defined and rules are randomly generated.</p>
 <dl class="class">
 <dt id="gramfuzz.GramFuzzer">
-<em class="property">class </em><code class="descclassname">gramfuzz.</code><code class="descname">GramFuzzer</code><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">GramFuzzer</span></code> is a singleton class that is used to
+<em class="property">class </em><code class="sig-prename descclassname">gramfuzz.</code><code class="sig-name descname">GramFuzzer</code><span class="sig-paren">(</span><em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GramFuzzer</span></code> is a singleton class that is used to
 hold rule definitions and to generate grammar rules from a specific
 category at random.</p>
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new <code class="docutils literal"><span class="pre">GramFuzzer</span></code> instance</p>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new <code class="docutils literal notranslate"><span class="pre">GramFuzzer</span></code> instance</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.add_definition">
-<code class="descname">add_definition</code><span class="sig-paren">(</span><em>cat</em>, <em>def_name</em>, <em>def_val</em>, <em>no_prune=False</em>, <em>gram_file='default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.add_definition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.add_definition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a new rule definition named <code class="docutils literal"><span class="pre">def_name</span></code> having value <code class="docutils literal"><span class="pre">def_value</span></code> to
-the category <code class="docutils literal"><span class="pre">cat</span></code>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cat</strong> (<em>str</em>) &#8211; The category to add the rule to</li>
-<li><strong>def_name</strong> (<em>str</em>) &#8211; The name of the rule definition</li>
-<li><strong>def_val</strong> &#8211; The value of the rule definition</li>
-<li><strong>no_prune</strong> (<em>bool</em>) &#8211; If the rule should explicitly <em>NOT</em>
-be pruned even if it has been determined to be unreachable (default=``False``)</li>
-<li><strong>gram_file</strong> (<em>str</em>) &#8211; The file the rule was defined in (default=``&#8221;default&#8221;<a href="#id1"><span class="problematic" id="id2">``</span></a>).</li>
+<code class="sig-name descname">add_definition</code><span class="sig-paren">(</span><em class="sig-param">cat</em>, <em class="sig-param">def_name</em>, <em class="sig-param">def_val</em>, <em class="sig-param">no_prune=False</em>, <em class="sig-param">gram_file='default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.add_definition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.add_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new rule definition named <code class="docutils literal notranslate"><span class="pre">def_name</span></code> having value <code class="docutils literal notranslate"><span class="pre">def_value</span></code> to
+the category <code class="docutils literal notranslate"><span class="pre">cat</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat</strong> (<em>str</em>) – The category to add the rule to</p></li>
+<li><p><strong>def_name</strong> (<em>str</em>) – The name of the rule definition</p></li>
+<li><p><strong>def_val</strong> – The value of the rule definition</p></li>
+<li><p><strong>no_prune</strong> (<em>bool</em>) – If the rule should explicitly <em>NOT</em>
+be pruned even if it has been determined to be unreachable (default=``False``)</p></li>
+<li><p><strong>gram_file</strong> (<em>str</em>) – The file the rule was defined in (default=``”default”<a href="#id1"><span class="problematic" id="id2">``</span></a>).</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.add_to_cat_group">
-<code class="descname">add_to_cat_group</code><span class="sig-paren">(</span><em>cat</em>, <em>cat_group</em>, <em>def_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.add_to_cat_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.add_to_cat_group" title="Permalink to this definition">¶</a></dt>
-<dd><p>Associate the provided rule definition name <code class="docutils literal"><span class="pre">def_name</span></code> with the
-category group <code class="docutils literal"><span class="pre">cat_group</span></code> in the category <code class="docutils literal"><span class="pre">cat</span></code>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cat</strong> (<em>str</em>) &#8211; The category the rule definition was declared in</li>
-<li><strong>cat_group</strong> (<em>str</em>) &#8211; The group within the category the rule belongs to</li>
-<li><strong>def_name</strong> (<em>str</em>) &#8211; The name of the rule definition</li>
+<code class="sig-name descname">add_to_cat_group</code><span class="sig-paren">(</span><em class="sig-param">cat</em>, <em class="sig-param">cat_group</em>, <em class="sig-param">def_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.add_to_cat_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.add_to_cat_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Associate the provided rule definition name <code class="docutils literal notranslate"><span class="pre">def_name</span></code> with the
+category group <code class="docutils literal notranslate"><span class="pre">cat_group</span></code> in the category <code class="docutils literal notranslate"><span class="pre">cat</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat</strong> (<em>str</em>) – The category the rule definition was declared in</p></li>
+<li><p><strong>cat_group</strong> (<em>str</em>) – The group within the category the rule belongs to</p></li>
+<li><p><strong>def_name</strong> (<em>str</em>) – The name of the rule definition</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.GramFuzzer.cat_groups">
-<code class="descname">cat_groups</code><em class="property"> = {}</em><a class="headerlink" href="#gramfuzz.GramFuzzer.cat_groups" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cat_groups</code><em class="property"> = {}</em><a class="headerlink" href="#gramfuzz.GramFuzzer.cat_groups" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to store where rules were defined in. E.g. if a rule
-<code class="docutils literal"><span class="pre">A</span></code> was defined using the category <code class="docutils literal"><span class="pre">alphabet_rules</span></code> in a file
-called <code class="docutils literal"><span class="pre">test_rules.py</span></code>, it would show up
-in <code class="docutils literal"><span class="pre">cat_groups</span></code> as:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+<code class="docutils literal notranslate"><span class="pre">A</span></code> was defined using the category <code class="docutils literal notranslate"><span class="pre">alphabet_rules</span></code> in a file
+called <code class="docutils literal notranslate"><span class="pre">test_rules.py</span></code>, it would show up
+in <code class="docutils literal notranslate"><span class="pre">cat_groups</span></code> as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;alphabet_rules&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;test_rules&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">]</span>
     <span class="p">}</span>
@@ -366,17 +378,17 @@ from certain grammar files</p>
 
 <dl class="attribute">
 <dt id="gramfuzz.GramFuzzer.defs">
-<code class="descname">defs</code><em class="property"> = {}</em><a class="headerlink" href="#gramfuzz.GramFuzzer.defs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">defs</code><em class="property"> = {}</em><a class="headerlink" href="#gramfuzz.GramFuzzer.defs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rule definitions by category. E.g.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 </pre></div>
 </div>
 <blockquote>
-<div><dl class="docutils">
-<dt>&#8220;category&#8221;: {</dt>
-<dd>&#8220;rule1&#8221;: [&lt;Rule1Def1&gt;, &lt;Rule1Def2&gt;],
-&#8220;rule2&#8221;: [&lt;Rule2Def1&gt;, &lt;Rule2Def2&gt;],
-...</dd>
+<div><dl class="simple">
+<dt>“category”: {</dt><dd><p>“rule1”: [&lt;Rule1Def1&gt;, &lt;Rule1Def2&gt;],
+“rule2”: [&lt;Rule2Def1&gt;, &lt;Rule2Def2&gt;],
+…</p>
+</dd>
 </dl>
 <p>}</p>
 </div></blockquote>
@@ -385,149 +397,131 @@ from certain grammar files</p>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.gen">
-<code class="descname">gen</code><span class="sig-paren">(</span><em>num</em>, <em>cat=None</em>, <em>cat_group=None</em>, <em>preferred=None</em>, <em>preferred_ratio=0.5</em>, <em>max_recursion=None</em>, <em>auto_process=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.gen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.gen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate <code class="docutils literal"><span class="pre">num</span></code> rules from category <code class="docutils literal"><span class="pre">cat</span></code>, optionally specifying
-preferred category groups <code class="docutils literal"><span class="pre">preferred</span></code> that should be preferred at
-probability <code class="docutils literal"><span class="pre">preferred_ratio</span></code> over other randomly-chosen rule definitions.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>num</strong> (<em>int</em>) &#8211; The number of rules to generate</li>
-<li><strong>cat</strong> (<em>str</em>) &#8211; The name of the category to generate <code class="docutils literal"><span class="pre">num</span></code> rules from</li>
-<li><strong>cat_group</strong> (<em>str</em>) &#8211; The category group (ie python file) to generate rules from. This
+<code class="sig-name descname">gen</code><span class="sig-paren">(</span><em class="sig-param">num</em>, <em class="sig-param">cat=None</em>, <em class="sig-param">cat_group=None</em>, <em class="sig-param">preferred=None</em>, <em class="sig-param">preferred_ratio=0.5</em>, <em class="sig-param">max_recursion=None</em>, <em class="sig-param">auto_process=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.gen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.gen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate <code class="docutils literal notranslate"><span class="pre">num</span></code> rules from category <code class="docutils literal notranslate"><span class="pre">cat</span></code>, optionally specifying
+preferred category groups <code class="docutils literal notranslate"><span class="pre">preferred</span></code> that should be preferred at
+probability <code class="docutils literal notranslate"><span class="pre">preferred_ratio</span></code> over other randomly-chosen rule definitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num</strong> (<em>int</em>) – The number of rules to generate</p></li>
+<li><p><strong>cat</strong> (<em>str</em>) – The name of the category to generate <code class="docutils literal notranslate"><span class="pre">num</span></code> rules from</p></li>
+<li><p><strong>cat_group</strong> (<em>str</em>) – The category group (ie python file) to generate rules from. This
 was added specifically to make it easier to generate data based on the name
 of the file the grammar was defined in, and is intended to work with the
-<code class="docutils literal"><span class="pre">TOP_CAT</span></code> values that may be defined in a loaded grammar file.</li>
-<li><strong>preferred</strong> (<em>list</em>) &#8211; A list of preferred category groups to generate rules from</li>
-<li><strong>preferred_ratio</strong> (<em>float</em>) &#8211; The percent probability that the preferred
-groups will be chosen over randomly choosen rule definitions from category <code class="docutils literal"><span class="pre">cat</span></code>.</li>
-<li><strong>max_recursion</strong> (<em>int</em>) &#8211; The maximum amount to allow references to recurse</li>
-<li><strong>auto_process</strong> (<em>bool</em>) &#8211; Whether rules should be automatically pruned and
-shortest reference paths determined. See <a class="reference internal" href="#gramfuzz.GramFuzzer.preprocess_rules" title="gramfuzz.GramFuzzer.preprocess_rules"><code class="xref any py py-meth docutils literal"><span class="pre">gramfuzz.GramFuzzer.preprocess_rules</span></code></a>
-for what would automatically be done.</li>
+<code class="docutils literal notranslate"><span class="pre">TOP_CAT</span></code> values that may be defined in a loaded grammar file.</p></li>
+<li><p><strong>preferred</strong> (<em>list</em>) – A list of preferred category groups to generate rules from</p></li>
+<li><p><strong>preferred_ratio</strong> (<em>float</em>) – The percent probability that the preferred
+groups will be chosen over randomly choosen rule definitions from category <code class="docutils literal notranslate"><span class="pre">cat</span></code>.</p></li>
+<li><p><strong>max_recursion</strong> (<em>int</em>) – The maximum amount to allow references to recurse</p></li>
+<li><p><strong>auto_process</strong> (<em>bool</em>) – Whether rules should be automatically pruned and
+shortest reference paths determined. See <a class="reference internal" href="#gramfuzz.GramFuzzer.preprocess_rules" title="gramfuzz.GramFuzzer.preprocess_rules"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">gramfuzz.GramFuzzer.preprocess_rules</span></code></a>
+for what would automatically be done.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.get_ref">
-<code class="descname">get_ref</code><span class="sig-paren">(</span><em>cat</em>, <em>refname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.get_ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.get_ref" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return one of the rules in the category <code class="docutils literal"><span class="pre">cat</span></code> with the name
-<code class="docutils literal"><span class="pre">refname</span></code>. If multiple rule defintions exist for the defintion name
-<code class="docutils literal"><span class="pre">refname</span></code>, use <a class="reference internal" href="rand.html#module-gramfuzz.rand" title="gramfuzz.rand"><code class="xref any py py-mod docutils literal"><span class="pre">gramfuzz.rand</span></code></a> to choose a rule at random.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>cat</strong> (<em>str</em>) &#8211; The category to look for the rule in.</li>
-<li><strong>refname</strong> (<em>str</em>) &#8211; The name of the rule definition. If the rule definition&#8217;s name is
-<code class="docutils literal"><span class="pre">&quot;*&quot;</span></code>, then a rule name will be chosen at random from within the category <code class="docutils literal"><span class="pre">cat</span></code>.</li>
+<code class="sig-name descname">get_ref</code><span class="sig-paren">(</span><em class="sig-param">cat</em>, <em class="sig-param">refname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.get_ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.get_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return one of the rules in the category <code class="docutils literal notranslate"><span class="pre">cat</span></code> with the name
+<code class="docutils literal notranslate"><span class="pre">refname</span></code>. If multiple rule defintions exist for the defintion name
+<code class="docutils literal notranslate"><span class="pre">refname</span></code>, use <a class="reference internal" href="rand.html#module-gramfuzz.rand" title="gramfuzz.rand"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">gramfuzz.rand</span></code></a> to choose a rule at random.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat</strong> (<em>str</em>) – The category to look for the rule in.</p></li>
+<li><p><strong>refname</strong> (<em>str</em>) – The name of the rule definition. If the rule definition’s name is
+<code class="docutils literal notranslate"><span class="pre">&quot;*&quot;</span></code>, then a rule name will be chosen at random from within the category <code class="docutils literal notranslate"><span class="pre">cat</span></code>.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">gramfuzz.fields.Def</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>gramfuzz.fields.Def</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="gramfuzz.GramFuzzer.instance">
-<em class="property">classmethod </em><code class="descname">instance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.instance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the singleton instance of the <code class="docutils literal"><span class="pre">GramFuzzer</span></code></p>
+<em class="property">classmethod </em><code class="sig-name descname">instance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the singleton instance of the <code class="docutils literal notranslate"><span class="pre">GramFuzzer</span></code></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.load_grammar">
-<code class="descname">load_grammar</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.load_grammar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.load_grammar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_grammar</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.load_grammar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.load_grammar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a grammar file (python file containing grammar definitions) by
-file path. When loaded, the global variable <code class="docutils literal"><span class="pre">GRAMFUZZER</span></code> will be set
+file path. When loaded, the global variable <code class="docutils literal notranslate"><span class="pre">GRAMFUZZER</span></code> will be set
 within the module. This is not always needed, but can be useful.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>str</em>) &#8211; The path to the grammar file</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The path to the grammar file</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gramfuzz.GramFuzzer.no_prunes">
-<code class="descname">no_prunes</code><em class="property"> = {}</em><a class="headerlink" href="#gramfuzz.GramFuzzer.no_prunes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">no_prunes</code><em class="property"> = {}</em><a class="headerlink" href="#gramfuzz.GramFuzzer.no_prunes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rules that have specifically asked not to be pruned,
-even if the rule can&#8217;t be reached.</p>
+even if the rule can’t be reached.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.post_revert">
-<code class="descname">post_revert</code><span class="sig-paren">(</span><em>cat</em>, <em>res</em>, <em>total_num</em>, <em>num</em>, <em>info</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.post_revert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.post_revert" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">post_revert</code><span class="sig-paren">(</span><em class="sig-param">cat</em>, <em class="sig-param">res</em>, <em class="sig-param">total_num</em>, <em class="sig-param">num</em>, <em class="sig-param">info</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.post_revert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.post_revert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Commit any staged rule definition changes (rule generation went
 smoothly).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.pre_revert">
-<code class="descname">pre_revert</code><span class="sig-paren">(</span><em>info=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.pre_revert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.pre_revert" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pre_revert</code><span class="sig-paren">(</span><em class="sig-param">info=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.pre_revert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.pre_revert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Signal to begin saving any changes that might need to be reverted</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.preprocess_rules">
-<code class="descname">preprocess_rules</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.preprocess_rules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.preprocess_rules" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">preprocess_rules</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.preprocess_rules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.preprocess_rules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate shortest reference-paths of each rule (and Or field),
 and prune all unreachable rules.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.revert">
-<code class="descname">revert</code><span class="sig-paren">(</span><em>info=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.revert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.revert" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">revert</code><span class="sig-paren">(</span><em class="sig-param">info=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.revert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.revert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Revert after a single def errored during generate (throw away all
 staged rule definition changes)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.set_cat_group_top_level_cat">
-<code class="descname">set_cat_group_top_level_cat</code><span class="sig-paren">(</span><em>cat_group</em>, <em>top_level_cat</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.set_cat_group_top_level_cat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.set_cat_group_top_level_cat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_cat_group_top_level_cat</code><span class="sig-paren">(</span><em class="sig-param">cat_group</em>, <em class="sig-param">top_level_cat</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.set_cat_group_top_level_cat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.set_cat_group_top_level_cat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the default category when generating data from the grammars defined
 in cat group. <em>Note</em> a cat group is usually just the basename of the grammar
-file, minus the <code class="docutils literal"><span class="pre">.py</span></code>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cat_group</strong> (<em>str</em>) &#8211; The category group to set the default top-level cat for</li>
-<li><strong>top_level_cat</strong> (<em>str</em>) &#8211; The top-level (default) category of the cat group</li>
+file, minus the <code class="docutils literal notranslate"><span class="pre">.py</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat_group</strong> (<em>str</em>) – The category group to set the default top-level cat for</p></li>
+<li><p><strong>top_level_cat</strong> (<em>str</em>) – The top-level (default) category of the cat group</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gramfuzz.GramFuzzer.set_max_recursion">
-<code class="descname">set_max_recursion</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.set_max_recursion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.set_max_recursion" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_max_recursion</code><span class="sig-paren">(</span><em class="sig-param">level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gramfuzz.html#GramFuzzer.set_max_recursion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gramfuzz.GramFuzzer.set_max_recursion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the maximum reference-recursion depth (not the Python system maximum stack
 recursion level). This controls how many levels deep of nested references are allowed
 before gramfuzz attempts to generate the shortest (reference-wise) rules possible.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<em>int</em>) &#8211; The new maximum reference level</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>level</strong> (<em>int</em>) – The new maximum reference level</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -537,15 +531,16 @@ before gramfuzz attempts to generate the shortest (reference-wise) rules possibl
 
 
            </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="fields.html" class="btn btn-neutral float-right" title="fields" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="fields.html" class="btn btn-neutral float-right" title="fields" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="gramfuzz - A grammar-based fuzzing library" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="gramfuzz - A grammar-based fuzzing library" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -554,11 +549,11 @@ before gramfuzz attempts to generate the shortest (reference-wise) rules possibl
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, James &#39;d0c_s4vage&#39; Johnson.
+        &copy; Copyright 2016, James &#39;d0c_s4vage&#39; Johnson
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -571,35 +566,15 @@ before gramfuzz attempts to generate the shortest (reference-wise) rules possibl
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.2.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

@@ -8,47 +8,43 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gramfuzz &mdash; gramfuzz 1.2.0 documentation</title>
+  <title>gramfuzz &mdash; gramfuzz 1.4.0 documentation</title>
   
 
   
   
+  
+  
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="gramfuzz 1.2.0 documentation" href="../index.html"/>
-        <link rel="up" title="Module code" href="index.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -62,7 +58,7 @@
             
             
               <div class="version">
-                1.2.0
+                v1.4.0
               </div>
             
           
@@ -83,7 +79,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../gramfuzz.html">gramfuzz</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../fields.html">fields</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">utils</a></li>
@@ -99,34 +98,52 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">gramfuzz</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gramfuzz</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="index.html">Module code</a> &raquo;</li>
-      
-    <li>gramfuzz</li>
+        
+      <li>gramfuzz</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -143,10 +160,11 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">gc</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 
@@ -155,7 +173,7 @@
 <span class="kn">import</span> <span class="nn">gramfuzz.utils</span> <span class="k">as</span> <span class="nn">utils</span>
 
 
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.2.0&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;v1.4.0&quot;</span>
 
 
 <div class="viewcode-block" id="GramFuzzer"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer">[docs]</a><span class="k">class</span> <span class="nc">GramFuzzer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -199,19 +217,20 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__instance__</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="GramFuzzer.instance"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.instance">[docs]</a>    <span class="k">def</span> <span class="nf">instance</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="GramFuzzer.instance"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.instance">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the singleton instance of the ``GramFuzzer``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">__instance__</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">cls</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">__instance__</span></div>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__instance__</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__instance__</span></div>
 
 
-<div class="viewcode-block" id="GramFuzzer.__init__"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GramFuzzer.__init__"><a class="viewcode-back" href="../gramfuzz.html#gramfuzz.GramFuzzer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a new ``GramFuzzer`` instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">GramFuzzer</span><span class="o">.</span><span class="n">__instance__</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">defs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">no_prunes</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cat_groups</span> <span class="o">=</span> <span class="p">{}</span>
@@ -258,8 +277,8 @@
             <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="n">code</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="s2">&quot;exec&quot;</span><span class="p">)</span>
 
-        <span class="n">locals_</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;GRAMFUZZER&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">}</span>
-        <span class="n">exec</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">locals_</span>
+        <span class="n">locals_</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;GRAMFUZZER&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;__file__&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">}</span>
+        <span class="n">exec</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">locals_</span><span class="p">,</span> <span class="n">locals_</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;TOP_CAT&quot;</span> <span class="ow">in</span> <span class="n">locals_</span><span class="p">:</span>
             <span class="n">cat_group</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -292,13 +311,20 @@
         <span class="c1"># first find all rule definitions that *don&#39;t* have</span>
         <span class="c1"># any references - these are the leaf nodes</span>
         <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">rule_name</span><span class="p">,</span> <span class="n">rules</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">rule_name</span><span class="p">,</span> <span class="n">rules</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})):</span>
                 <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
                     <span class="n">refs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_refs</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">refs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">leaf_rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
-                        <span class="n">rule_ref_lengths</span><span class="p">[</span><span class="n">cat</span> <span class="o">+</span> <span class="s2">&quot;-:-&quot;</span> <span class="o">+</span> <span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">rule</span><span class="p">])</span>
+
+                        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">):</span>
+                            <span class="n">rule_ref_lengths</span><span class="p">[</span><span class="n">cat</span> <span class="o">+</span> <span class="s2">&quot;-:-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rule</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">rule</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">rule_ref_lengths</span><span class="p">[</span><span class="n">cat</span> <span class="o">+</span> <span class="s2">&quot;-:-&quot;</span> <span class="o">+</span> <span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">rule</span><span class="p">])</span>
                     <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="s2">&quot;unprocessed_refs&quot;</span><span class="p">):</span>
+                            <span class="n">rule</span><span class="o">.</span><span class="n">unresolved_refs</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+                        <span class="n">rule</span><span class="o">.</span><span class="n">unresolved_refs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">refs</span><span class="p">)</span>
                         <span class="n">non_leaf_rules</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cat</span><span class="p">,</span> <span class="n">rule</span><span class="p">))</span>
 
         <span class="c1"># for every referenced rule, determine how many steps away</span>
@@ -331,13 +357,31 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_assign_or_shortest_vals</span><span class="p">(</span><span class="n">post_process</span><span class="p">,</span> <span class="n">rule_ref_lengths</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">cat</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">non_leaf_rules</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="s2">&quot;unresolved_refs&quot;</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">unresolved_refs</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">rule_ref_lengths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cat</span> <span class="o">+</span> <span class="s2">&quot;-:-&quot;</span> <span class="o">+</span> <span class="n">ref</span><span class="o">.</span><span class="n">refname</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pruning rule </span><span class="si">{!r}</span><span class="s2"> due to unresolvable reference: </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                            <span class="n">ref</span><span class="o">.</span><span class="n">refname</span><span class="p">,</span>
+                        <span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pruning rule </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
         <span class="c1"># these should be pruned</span>
         <span class="k">return</span> <span class="n">non_leaf_rules</span>
 
     <span class="k">def</span> <span class="nf">_prune_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">non_leaf_rules</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">cat</span><span class="p">,</span><span class="n">rule</span> <span class="ow">in</span> <span class="n">non_leaf_rules</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">cat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_prunes</span> <span class="ow">and</span> <span class="n">rule</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_prunes</span><span class="p">[</span><span class="n">cat</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Should prune </span><span class="si">{!r}</span><span class="s2">, but no_prune = True&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="p">))</span>
                 <span class="k">continue</span>
+
             <span class="n">rule_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span>
             <span class="n">rule_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rule_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -358,7 +402,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="o">.</span><span class="n">Or</span><span class="p">):</span>
             <span class="n">min_ref</span> <span class="o">=</span> <span class="mh">0xffffff</span>
             <span class="n">min_vals</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
                 <span class="n">val_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_shortest_ref</span><span class="p">(</span>
                     <span class="n">cat</span><span class="p">,</span>
                     <span class="n">val</span><span class="p">,</span>
@@ -369,15 +413,18 @@
                     <span class="k">continue</span>
                 <span class="k">elif</span> <span class="n">val_ref</span> <span class="o">&lt;</span> <span class="n">min_ref</span><span class="p">:</span>
                     <span class="n">min_ref</span> <span class="o">=</span> <span class="n">val_ref</span>
-                    <span class="n">min_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span><span class="p">]</span>
+                    <span class="n">min_vals</span> <span class="o">=</span> <span class="p">[(</span><span class="n">val</span><span class="p">,</span> <span class="n">idx</span><span class="p">)]</span>
                 <span class="k">elif</span> <span class="n">val_ref</span> <span class="o">==</span> <span class="n">min_ref</span><span class="p">:</span>
-                    <span class="n">min_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                    <span class="n">min_vals</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">val</span><span class="p">,</span> <span class="n">idx</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">min_ref</span> <span class="o">==</span> <span class="mh">0xffffff</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
 
             <span class="k">if</span> <span class="n">assign_or</span><span class="p">:</span>
-                <span class="n">field</span><span class="o">.</span><span class="n">shortest_vals</span> <span class="o">=</span> <span class="n">min_vals</span>
+                <span class="c1"># WeightedOr needs to know the indices of the values that are</span>
+                <span class="c1"># shortest to be able to use the correct weights</span>
+                <span class="n">field</span><span class="o">.</span><span class="n">shortest_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">min_vals</span><span class="p">]</span>
+                <span class="n">field</span><span class="o">.</span><span class="n">shortest_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">min_vals</span><span class="p">]</span>
 
             <span class="k">return</span> <span class="n">min_ref</span>
 
@@ -429,11 +476,11 @@
         <span class="k">if</span> <span class="n">acc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acc</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
 
-        <span class="kn">from</span> <span class="nn">gramfuzz.fields</span> <span class="k">import</span> <span class="n">Opt</span>
+        <span class="kn">from</span> <span class="nn">gramfuzz.fields</span> <span class="kn">import</span> <span class="n">Opt</span>
         <span class="k">if</span> <span class="n">no_opt</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item_val</span><span class="p">,</span> <span class="n">Opt</span><span class="p">)</span> <span class="ow">or</span> <span class="n">item_val</span><span class="o">.</span><span class="n">shortest_is_nothing</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">acc</span>
 
-        <span class="kn">from</span> <span class="nn">gramfuzz.fields</span> <span class="k">import</span> <span class="n">Ref</span>
+        <span class="kn">from</span> <span class="nn">gramfuzz.fields</span> <span class="kn">import</span> <span class="n">Ref</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item_val</span><span class="p">,</span> <span class="n">Ref</span><span class="p">):</span>
             <span class="n">acc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item_val</span><span class="p">)</span>
 
@@ -506,7 +553,7 @@
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span><span class="p">(</span><span class="s2">&quot;referenced definition category (</span><span class="si">{!r}</span><span class="s2">) not defined&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cat</span><span class="p">))</span>
         
         <span class="k">if</span> <span class="n">refname</span> <span class="o">==</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span>
-            <span class="n">refname</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">refname</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
             
         <span class="k">if</span> <span class="n">refname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span><span class="p">(</span><span class="s2">&quot;referenced definition (</span><span class="si">{!r}</span><span class="s2">) not defined&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">refname</span><span class="p">))</span>
@@ -545,7 +592,7 @@
                     <span class="s2">&quot;cat_group </span><span class="si">{!r}</span><span class="s2"> did not define a TOP_CAT variable&quot;</span>
                 <span class="p">)</span>
             <span class="n">cat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cat_group_defaults</span><span class="p">[</span><span class="n">cat_group</span><span class="p">]</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">gramfuzz</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">GramFuzzError</span><span class="p">(</span>
                     <span class="s2">&quot;cat_group </span><span class="si">{!r}</span><span class="s2">&#39;s TOP_CAT variable was not a string&quot;</span>
                 <span class="p">)</span>
@@ -560,6 +607,7 @@
             <span class="n">preferred</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">res</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+            
         <span class="n">cat_defs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span>
 
         <span class="c1"># optimizations</span>
@@ -569,7 +617,7 @@
         <span class="n">_maybe</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">maybe</span>
         <span class="n">_val</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">val</span>
 
-        <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_pref_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pref_keys</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">preferred</span><span class="p">)</span>
         <span class="c1"># be sure to set this *after* fetching the pref keys (above^)</span>
@@ -662,6 +710,7 @@
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
   
@@ -670,11 +719,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, James &#39;d0c_s4vage&#39; Johnson.
+        &copy; Copyright 2016, James &#39;d0c_s4vage&#39; Johnson
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -687,35 +736,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.2.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>
