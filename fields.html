@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>fields &mdash; gramfuzz 1.4.0 documentation</title>
+  <title>fields &mdash; gramfuzz v1.4.0 documentation</title>
   
 
   
@@ -247,19 +247,19 @@ different options:</p>
 </div>
 <p>A <a class="reference internal" href="#gramfuzz.fields.WeightedOr" title="gramfuzz.fields.WeightedOr"><code class="xref any py py-class docutils literal notranslate"><span class="pre">gramfuzz.fields.WeightedOr</span></code></a> class (aliased to <a class="reference internal" href="#gramfuzz.fields.WOr" title="gramfuzz.fields.WOr"><code class="xref any py py-attr docutils literal notranslate"><span class="pre">gramfuzz.fields.WOr</span></code></a>)
 also exists to allow weighted probabilities in <cite>Or</cite> choices:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">WeightedOr</span><span class="p">([</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">WeightedOr</span><span class="p">(</span>
    <span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="c1"># 10% chance</span>
    <span class="p">(</span><span class="n">UInt</span><span class="p">,</span>    <span class="mf">0.7</span><span class="p">),</span> <span class="c1"># 70% chance</span>
    <span class="p">(</span><span class="mf">3.14</span><span class="p">,</span>    <span class="mf">0.3</span><span class="p">),</span> <span class="c1"># 30% chance</span>
-<span class="p">])</span>
+<span class="p">)</span>
 
 <span class="c1"># or</span>
 
-<span class="n">WOr</span><span class="p">([</span>
+<span class="n">WOr</span><span class="p">(</span>
    <span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="c1"># 10% chance</span>
    <span class="p">(</span><span class="n">UInt</span><span class="p">,</span>    <span class="mf">0.7</span><span class="p">),</span> <span class="c1"># 70% chance</span>
    <span class="p">(</span><span class="mf">3.14</span><span class="p">,</span>    <span class="mf">0.3</span><span class="p">),</span> <span class="c1"># 30% chance</span>
-<span class="p">])</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1071,19 +1071,19 @@ list.</p>
 random as the result of a call to the <code class="docutils literal notranslate"><span class="pre">build()</span></code> method. Takes an
 odds array rather than just direct values. Also aliased to <code class="docutils literal notranslate"><span class="pre">WOr</span></code>.</p>
 <p>E.g.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">WeightedOr</span><span class="p">([</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">WeightedOr</span><span class="p">(</span>
     <span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="c1"># 10% chance</span>
     <span class="p">(</span><span class="n">UInt</span><span class="p">,</span>    <span class="mf">0.7</span><span class="p">),</span> <span class="c1"># 70% chance</span>
     <span class="p">(</span><span class="mf">3.14</span><span class="p">,</span>    <span class="mf">0.3</span><span class="p">),</span> <span class="c1"># 30% chance</span>
-<span class="p">])</span>
+<span class="p">)</span>
 
 <span class="c1"># or</span>
 
-<span class="n">WOr</span><span class="p">([</span>
+<span class="n">WOr</span><span class="p">(</span>
     <span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="c1"># 10% chance</span>
     <span class="p">(</span><span class="n">UInt</span><span class="p">,</span>    <span class="mf">0.7</span><span class="p">),</span> <span class="c1"># 70% chance</span>
     <span class="p">(</span><span class="mf">3.14</span><span class="p">,</span>    <span class="mf">0.3</span><span class="p">),</span> <span class="c1"># 30% chance</span>
-<span class="p">])</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <dl class="method">

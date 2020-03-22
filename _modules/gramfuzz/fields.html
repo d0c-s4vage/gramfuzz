@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gramfuzz.fields &mdash; gramfuzz 1.4.0 documentation</title>
+  <title>gramfuzz.fields &mdash; gramfuzz v1.4.0 documentation</title>
   
 
   
@@ -740,19 +740,19 @@
 
 <span class="sd">    .. code-block:: python</span>
 
-<span class="sd">        WeightedOr([</span>
+<span class="sd">        WeightedOr(</span>
 <span class="sd">            (&quot;hello&quot;, 0.1), # 10% chance</span>
 <span class="sd">            (UInt,    0.7), # 70% chance</span>
 <span class="sd">            (3.14,    0.3), # 30% chance</span>
-<span class="sd">        ])</span>
+<span class="sd">        )</span>
 
 <span class="sd">        # or</span>
 
-<span class="sd">        WOr([</span>
+<span class="sd">        WOr(</span>
 <span class="sd">            (&quot;hello&quot;, 0.1), # 10% chance</span>
 <span class="sd">            (UInt,    0.7), # 70% chance</span>
 <span class="sd">            (3.14,    0.3), # 30% chance</span>
-<span class="sd">        ])</span>
+<span class="sd">        )</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="WeightedOr.__init__"><a class="viewcode-back" href="../../fields.html#gramfuzz.fields.WeightedOr.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
