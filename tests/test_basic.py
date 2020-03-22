@@ -294,6 +294,53 @@ class TestFields(unittest.TestCase):
                 LOOP_NUM,
                 diff
             ))
+
+    def test_weighted_or_probabilities(self):
+        """Make sure that WeightedOr does its probabilities correctly
+        """
+        counts = {
+            "int": {
+                "prob": 0.1,
+                "val": UInt,
+                "count": 0,
+                "match": lambda x: re.match(gutils.binstr(r'^\d+$'), x) is not None
+            },
+            "hello": {
+                "prob": 0.6,
+                "val": "hello",
+                "count": 0,
+                "match": lambda x: x == "hello"
+            },
+            "a": {
+                "prob": 0.3,
+                "val": "a",
+                "count": 0,
+                "match": lambda x: x == "a"
+            },
+        }
+        values = [(v["val"], v["prob"]) for k, v in counts.items()]
+        data = WeightedOr(*values)
+
+        for x in six.moves.range(LOOP_NUM):
+            res = data.build()
+            val = gutils.val(res)
+            matched = False
+            for val_name, val_info in counts.items():
+                if val_info["match"](val):
+                    val_info["count"] += 1
+                    matched = True
+            if matched is False:
+                raise Exception("Something went wrong, could not match to a value")
+
+        for val_name, val_info in counts.items():
+            percent = val_info["count"] / float(LOOP_NUM)
+            diff = abs(percent - val_info["prob"])
+            self.assertLess(diff, PERCENT_ERROR, "{}: {}/{} == {}% error, bad".format(
+                val_name,
+                val_info["count"],
+                LOOP_NUM,
+                diff
+            ))
     
     def test_opt(self):
         hello_count = 0

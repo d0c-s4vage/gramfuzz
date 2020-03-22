@@ -161,7 +161,7 @@ class Field(six.with_metaclass(MetaField)):
             return other
         else:
             return Or(self, other, rolling=True)
-    
+
     def _odds_val(self):
         """Determine a new random value derived from the
         defined :any:`gramfuzz.fields.Field.odds` value.
@@ -175,7 +175,6 @@ class Field(six.with_metaclass(MetaField)):
         total = 0
         for percent,v in self.odds:
             if total <= rand_val < total+percent:
-                found_v = v
                 break
             total += percent
 
@@ -547,6 +546,7 @@ class Or(Field):
         # when building with shortest=True, one of these values will
         # be chosen instead of self.values
         self.shortest_vals = None
+        self.shortest_indices = None
 
         self.values = list(map(maybe_binstr, values))
         if "options" in kwargs and len(values) == 0:
@@ -557,7 +557,8 @@ class Or(Field):
         """Build the ``Or`` instance
 
         :param list pre: The prerequisites list
-        :param bool shortest: Whether or not the shortest reference-chain (most minimal) version of the field should be generated.
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal)
+            version of the field should be generated.
         """
         if pre is None:
             pre = []
@@ -565,10 +566,68 @@ class Or(Field):
         # self.shortest_vals will be set by the GramFuzzer and will
         # contain a list of value options that have a minimal reference
         # chain
+        # 
+        # see https://narly.me/posts/controlling-recursion-depth-in-grammars/
+        # for an in-depth discussion
         if shortest and self.shortest_vals is not None:
-            return utils.val(rand.choice(self.shortest_vals), pre, shortest=shortest)
+            chosen_val = rand.choice(self.shortest_vals)
         else:
-            return utils.val(rand.choice(self.values), pre, shortest=shortest)
+            chosen_val = rand.choice(self.values)
+
+        return utils.val(chosen_val, pre, shortest=shortest)
+
+
+class WeightedOr(Field):
+    """A ``Field`` subclass that chooses one of the provided values at
+    random as the result of a call to the ``build()`` method. Takes an
+    odds array rather than just direct values."""
+
+    def __init__(self, *values, **kwargs):
+        """Create a new ``WeightedOr`` instance with the provided values.
+
+        :param list values: A list of tuples of the form
+                            ``[(value, probability), ...]``
+        """
+        # when building with shortest=True, one of these values will
+        # be chosen instead of self.values
+        self.shortest_vals = None
+        # this will also be set by the GramFuzzer and indicates the index within
+        # self.values of each shortest_val so that the correct weight can be used
+        self.shortest_indices = None
+
+        vals = [x[0] for x in values]
+        self.values= list(map(maybe_binstr, vals))
+        self.weights = [x[1] for x in values]
+
+        if abs(1.0 - sum(self.weights)) > 0.0001:
+            raise("Weights in WeightedOr don't sum to 1.0: {}".format(self.weights))
+        if "options" in kwargs and len(values) == 0:
+            self.values = list(map(maybe_binstr, kwargs["options"]))
+        self.rolling = kwargs.setdefault("rolling", False)
+
+    def build(self, pre=None, shortest=False):
+        """
+        :param list pre: The prerequisites list
+        :param bool shortest: Whether or not the shortest reference-chain (most minimal) 
+            version of the field should be generated.
+        """
+        if pre is None:
+            pre = []
+
+        # self.shortest_vals will be set by the GramFuzzer and will
+        # contain a list of value options that have a minimal reference chain
+        # 
+        # see https://narly.me/posts/controlling-recursion-depth-in-grammars/
+        # for an in-depth discussion
+        if shortest and self.shortest_vals is not None:
+            chosen_weights = [self.weights[idx] for idx in self.shortest_indices]
+            chosen_vals = self.shortest_vals
+        else:
+            chosen_weights = self.weights
+            chosen_vals = self.values
+
+        val = rand.weighted_choice(chosen_vals, chosen_weights)
+        return utils.val(val, pre, shortest=shortest)
 
 
 class Opt(And):

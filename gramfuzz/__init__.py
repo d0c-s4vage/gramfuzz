@@ -250,7 +250,7 @@ class GramFuzzer(object):
         if isinstance(field, fields.Or):
             min_ref = 0xffffff
             min_vals = []
-            for val in field.values:
+            for idx, val in enumerate(field.values):
                 val_ref = self._process_shortest_ref(
                     cat,
                     val,
@@ -261,15 +261,18 @@ class GramFuzzer(object):
                     continue
                 elif val_ref < min_ref:
                     min_ref = val_ref
-                    min_vals = [val]
+                    min_vals = [(val, idx)]
                 elif val_ref == min_ref:
-                    min_vals.append(val)
+                    min_vals.append((val, idx))
 
             if min_ref == 0xffffff:
                 return None
 
             if assign_or:
-                field.shortest_vals = min_vals
+                # WeightedOr needs to know the indices of the values that are
+                # shortest to be able to use the correct weights
+                field.shortest_vals = [x[0] for x in min_vals]
+                field.shortest_indices = [x[1] for x in min_vals]
 
             return min_ref
 
