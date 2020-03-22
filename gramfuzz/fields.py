@@ -577,7 +577,7 @@ class Or(Field):
         return utils.val(chosen_val, pre, shortest=shortest)
 
 
-class WeightedOr(Field):
+class WeightedOr(Or):
     """A ``Field`` subclass that chooses one of the provided values at
     random as the result of a call to the ``build()`` method. Takes an
     odds array rather than just direct values. Also aliased to ``WOr``.
