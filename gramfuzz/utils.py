@@ -60,3 +60,10 @@ def maybe_binstr(val):
     if not isinstance(val, six.string_types):
         return val
     return binstr(val)
+
+
+def file_open(path, mode):
+    kwargs = {}
+    if six.PY3:
+        kwargs["encoding"] = "utf-8"
+    return open(path, mode, **kwargs)
