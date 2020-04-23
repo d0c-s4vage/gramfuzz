@@ -121,10 +121,9 @@ class GramFuzzer(object):
         if grammar_path not in sys.path:
             sys.path.append(grammar_path)
 
-        with open(path, "r") as f:
+        with utils.file_open(path, "r") as f:
             data = f.read()
         code = compile(data, path, "exec")
-
         locals_ = {"GRAMFUZZER": self, "__file__": path}
         exec(code, locals_, locals_)
 
