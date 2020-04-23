@@ -11,7 +11,6 @@ which rules are defined and rules are randomly generated.
 from collections import deque
 import copy
 import gc
-import importlib.util
 import os
 import six
 import sys
