@@ -341,6 +341,30 @@ class TestFields(unittest.TestCase):
                 LOOP_NUM,
                 diff
             ))
+
+    def test_weighted_or_shortest_path(self):
+        """Make sure that WeightedOr correctly scales probabilities when
+        ``shortest=True``.
+        """
+        Def("nested3", "hello", cat="other")
+        Def("nested2", Or("Hello there", Ref("nested3", cat="other")), cat="other")
+        Def("nested1", Or("SIMPLE", Ref("nested2", cat="other")), cat="other")
+
+        Def("test", WOr(
+            # should always be this value
+            ("SIMPLE", 0.2),
+            # should be excluded if we set max recursion to 1
+            (Ref("nested1", cat="other"), 0.8),
+        ))
+        fuzzer = gramfuzz.GramFuzzer.instance()
+        fuzzer.preprocess_rules()
+
+        wor = fuzzer.get_ref("default", "test").values[0]
+        self.assertEqual(wor.shortest_vals, [b"SIMPLE"])
+        self.assertEqual(wor.shortest_indices, [0])
+
+        for x in range(100):
+            self.assertEqual(wor.build(shortest=True), b"SIMPLE")
     
     def test_opt(self):
         hello_count = 0

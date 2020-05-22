@@ -641,6 +641,13 @@ class WeightedOr(Or):
         if shortest and self.shortest_vals is not None:
             chosen_weights = [self.weights[idx] for idx in self.shortest_indices]
             chosen_vals = self.shortest_vals
+
+            total_percent = sum(chosen_weights)
+            # scale the percent weights up if the new chosen weights don't sum
+            # to 1.0
+            if total_percent != 1.0:
+                scale = 1.0 / total_percent
+                chosen_weights = [x * scale for x in chosen_weights]
         else:
             chosen_weights = self.weights
             chosen_vals = self.values
