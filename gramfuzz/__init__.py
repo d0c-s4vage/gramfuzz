@@ -146,7 +146,7 @@ class GramFuzzer(object):
         and prune all unreachable rules.
         """
         to_prune = self._find_shortest_paths()
-        #self._prune_rules(to_prune)
+        self._prune_rules(to_prune)
 
         self._rules_processed = True
 
@@ -172,7 +172,7 @@ class GramFuzzer(object):
                         if not hasattr(rule, "unprocessed_refs"):
                             rule.unresolved_refs = deque()
                         rule.unresolved_refs.extend(refs)
-                        non_leaf_rules.append((cat, rule_name, rule))
+                        non_leaf_rules.append((cat, rule))
 
         # for every referenced rule, determine how many steps away
         # from a leaf node it is
@@ -184,17 +184,17 @@ class GramFuzzer(object):
             if unprocessed_count // len(non_leaf_rules) == 2:
                 break
 
-            cat, rule_name, curr_rule = non_leaf_rules.popleft()
+            cat, curr_rule = non_leaf_rules.popleft()
 
             ref_length = self._process_shortest_ref(cat, curr_rule, rule_ref_lengths)
             if ref_length is None:
-                non_leaf_rules.append((cat, rule_name, curr_rule))
+                non_leaf_rules.append((cat, curr_rule))
                 unprocessed_count += 1
                 continue
 
             unprocessed_count = 0
 
-            ref_key = cat + "-:-" + rule_name
+            ref_key = cat + "-:-" + curr_rule.name
             if ref_key not in rule_ref_lengths or ref_length < rule_ref_lengths[ref_key][0]:
                 rule_ref_lengths[ref_key] = (ref_length, [curr_rule])
             elif ref_length == rule_ref_lengths[ref_key][0]:
@@ -205,34 +205,34 @@ class GramFuzzer(object):
         self._assign_or_shortest_vals(post_process, rule_ref_lengths)
 
         if self.debug:
-            for cat, rule_name, rule in non_leaf_rules:
+            for cat, rule in non_leaf_rules:
                 if hasattr(rule, "unresolved_refs"):
                     for ref in rule.unresolved_refs:
                         if rule_ref_lengths.get(cat + "-:-" + ref.refname, None) is not None:
                             continue
                         print("Pruning rule {!r} due to unresolvable reference: {!r}".format(
-                            rule_name,
+                            rule.name,
                             ref.refname,
                         ))
                 else:
-                    print("Pruning rule {!r}".format(rule_name))
+                    print("Pruning rule {!r}".format(rule.name))
 
         # these should be pruned
         return non_leaf_rules
 
     def _prune_rules(self, non_leaf_rules):
-        for cat,rule_name,rule in non_leaf_rules:
-            if cat in self.no_prunes and rule_name in self.no_prunes[cat]:
+        for cat,rule in non_leaf_rules:
+            if cat in self.no_prunes and rule.name in self.no_prunes[cat]:
                 if self.debug:
                     print("Should prune {!r}, but no_prune = True".format(
-                        rule_name,
+                        rule.name,
                     ))
                 continue
 
-            rule_list = self.defs.get(cat, {}).get(rule_name, [])
+            rule_list = self.defs.get(cat, {}).get(rule.name, [])
             rule_list.remove(rule)
             if len(rule_list) == 0:
-                del self.defs.get(cat, {})[rule_name]
+                del self.defs.get(cat, {})[rule.name]
 
     def _assign_or_shortest_vals(self, fields, rule_ref_lengths):
         for cat,field in fields:
